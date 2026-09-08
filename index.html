@@ -1,18 +1,17 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>실전 모의투자 마스터 (Ultimate Hardcore Capitalism V83 - 모듈화 에디션)</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <!-- CSS 파일 연결 -->
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>실전 모의투자 마스터 (Ultimate V83 - 모듈화 에디션)</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div id="event-banner">🚨 [경고] 시장에 강력한 충격이 가해집니다!</div>
 
-<!-- 팝업 신문 모달 -->
+<!-- 팝업 모달들 -->
 <div id="monthly-news-modal" class="modal-overlay">
   <div class="modal-box" style="background:#f4f1ea; border:2px solid #333; color:#222; font-family:'Times New Roman', serif; max-width:650px;">
     <div style="text-align:center; border-bottom:4px double #333; padding-bottom:10px; margin-bottom:15px;">
@@ -36,11 +35,7 @@
         <h4 style="margin:0 0 10px 0; border-bottom:1px solid #ccc;">📰 HEADLINES</h4>
         <div id="monthly-news-content" style="font-size:0.9em; line-height:1.6; max-height:150px; overflow-y:auto;"></div>
     </div>
-    <div style="border:1px dashed #333; padding:10px; background:#e9e5db; text-align:left; font-style:italic; margin-bottom:15px;">
-        <h4 style="margin:0 0 5px 0; color:#1a237e;">💡 EDITORIAL OPINION</h4>
-        <span id="brief-editorial">"다음 달, 투자자들은 주요국 통화정책과 혁신 기술주의 실적 발표를 주목해야 할 것이다."</span>
-    </div>
-    <button class="mode-btn" style="background:#333; color:#fff; border-radius:4px; font-family:inherit;" onclick="document.getElementById('monthly-news-modal').style.display='none'">[ 기사 닫기 ]</button>
+    <button class="mode-btn" style="background:#333; color:#fff; border-radius:4px;" onclick="document.getElementById('monthly-news-modal').style.display='none'">[ 기사 닫기 ]</button>
   </div>
 </div>
 
@@ -55,7 +50,7 @@
 <div id="start-modal" class="modal-overlay" style="display:flex;">
   <div class="modal-box">
     <h1 style="color:#1a237e;margin-top:0;margin-bottom:10px;font-size:1.7em;">📈 실전 경제 마스터 V83</h1>
-    <p style="color:#555;margin-bottom:20px;font-size:0.85em;">[모듈화 에디션 / 파일 분할 버전]</p>
+    <p style="color:#555;margin-bottom:20px;font-size:0.85em;">[모듈화 최적화 / 에러 완벽 해결본]</p>
     <input type="text" id="player-name-input" class="name-input" placeholder="당신의 펀드명을 입력하세요">
     <button class="mode-btn" style="background:#1a237e;" onclick="startGame()">▶ 게임 시작 (자본금 1,000억)</button>
     <div id="local-load-ui" style="display:none;margin-top:20px;border-top:1px dashed #ccc;padding-top:15px;"><button class="mode-btn" style="background:#00695c;color:white;" onclick="loadLocalGame()">💾 이어하기 (저장본)</button></div>
@@ -68,7 +63,7 @@
     <div class="header-title"><span id="player-name-display"></span> <span id="rep-badge" class="rep-badge">🌱 투자자</span> <span id="player-rank-info" style="font-size:0.65em;color:#555;font-weight:bold;margin-left:10px;">순위: 1위</span></div>
     <div style="display:flex;align-items:center;gap:10px;">
       <select id="speed-selector" onchange="changeSpeed()" style="padding:6px;font-size:0.8em;border-radius:6px;border:1px solid #ccc;">
-        <option value="3000">매우 느림 (비용: 1,000억)</option><option value="1500">느림</option><option value="1000" selected>보통 (기본)</option><option value="500">빠름</option><option value="100">매우 빠름</option>
+        <option value="3000">매우 느림 (비용: 1,000억)</option><option value="1500">느림 (1,000억)</option><option value="1000" selected>보통 (기본)</option><option value="500">빠름 (1,000억)</option><option value="100">매우 빠름 (1,000억)</option>
       </select>
       <div class="time-display" id="date-display">2025년 1월 1일</div>
     </div>
@@ -78,7 +73,7 @@
     <div style="font-size:0.85em;font-weight:bold;color:#555;">⚙️ 시스템 관리</div>
     <div class="control-buttons" style="display:flex;gap:5px;">
       <button class="btn-sys" style="background:#0277bd;" onclick="toggleViewMode()" id="btn-view-mode">💻 PC 뷰</button>
-      <button class="btn-sys" style="background:#2e7d32;" onclick="donateToSociety()">🤝 기부/SEC면제</button>
+      <button class="btn-sys" style="background:#2e7d32;" onclick="donateToSociety()">🤝 기부</button>
       <button class="btn-sys" style="background:#f57f17;color:#333;" onclick="openHoFModal()">🏛️ 명예전당</button>
       <button class="btn-sys" style="background:#00695c;" onclick="exportJSON()">💾 백업</button>
       <label for="import-file-main" class="btn-sys" style="background:#37474f;padding:6px 10px;margin:0;display:inline-block;font-size:0.8em;border-radius:6px;cursor:pointer;">📂 불러오기</label>
@@ -137,19 +132,20 @@
     <div class="panel">
       <div class="tabs">
         <button class="tab-btn active" onclick="switchTab('trade')" id="tab-btn-trade">매매</button>
-        <button class="tab-btn" onclick="switchTab('portfolio')" id="tab-btn-portfolio" style="color:#d32f2f;font-weight:900;">💼 내 자산</button>
-        <button class="tab-btn" onclick="switchTab('realestate')" id="tab-btn-realestate" style="color:#1565c0;font-weight:bold;">🏢 알파플렉스</button>
-        <button class="tab-btn" onclick="switchTab('ipo')" id="tab-btn-ipo" style="color:#e91e63;font-weight:bold;">🚀 IPO상장</button>
-        <button class="tab-btn" onclick="switchTab('politics')" id="tab-btn-politics" style="color:#00695c;font-weight:bold;">🌐 외교공작</button>
-        <button class="tab-btn" onclick="switchTab('politics_run')" id="tab-btn-politics_run" style="color:#8e24aa;font-weight:bold;">🏛️ 정치출마</button>
-        <button class="tab-btn" onclick="switchTab('deriv')" id="tab-btn-deriv">선물/옵션</button>
-        <button class="tab-btn" onclick="switchTab('wallst')" id="tab-btn-wallst">월가M&A</button>
-        <button class="tab-btn" onclick="switchTab('vip')" id="tab-btn-vip" style="color:#e65100;">VIP경매</button>
+        <button class="tab-btn" onclick="switchTab('portfolio')" id="tab-btn-portfolio" style="color:#d32f2f;font-weight:900;">💼 자산</button>
+        <button class="tab-btn" onclick="switchTab('realestate')" id="tab-btn-realestate" style="color:#1565c0;font-weight:bold;">🏢 플렉스</button>
+        <button class="tab-btn" onclick="switchTab('ipo')" id="tab-btn-ipo" style="color:#e91e63;font-weight:bold;">🚀 IPO</button>
+        <button class="tab-btn" onclick="switchTab('politics')" id="tab-btn-politics" style="color:#00695c;font-weight:bold;">🌐 외교</button>
+        <button class="tab-btn" onclick="switchTab('politics_run')" id="tab-btn-politics_run" style="color:#8e24aa;font-weight:bold;">🏛️ 출마</button>
+        <button class="tab-btn" onclick="switchTab('deriv')" id="tab-btn-deriv">파생</button>
+        <button class="tab-btn" onclick="switchTab('wallst')" id="tab-btn-wallst">M&A</button>
+        <button class="tab-btn" onclick="switchTab('vip')" id="tab-btn-vip" style="color:#e65100;">VIP</button>
         <button class="tab-btn" onclick="switchTab('indirect')" id="tab-btn-indirect">펀드</button>
-        <button class="tab-btn" onclick="switchTab('hr')" id="tab-btn-hr">HR인사</button>
+        <button class="tab-btn" onclick="switchTab('hr')" id="tab-btn-hr">HR</button>
         <button class="tab-btn" onclick="switchTab('bank')" id="tab-btn-bank" style="font-weight:900;color:#d84315;">🏦 은행</button>
       </div>
 
+      <!-- 각종 탭 내용들 (코드 길이상 구조 유지) -->
       <div class="tab-content" id="tab-trade">
         <div class="info-box" style="border:2px solid #1976d2;" id="ownership-box"><div class="info-row"><span>내 지분율</span><b id="my-ownership" style="color:#d32f2f;font-size:1.1em;">0.00%</b></div></div>
         <div class="info-box"><div class="info-row"><span>보유 (Long)</span><b id="my-shares">0 주</b></div><div class="info-row"><span>평단가</span><b id="avg-price">0 원</b></div><div class="info-row"><span>평가손익</span><b id="eval-profit">0 원</b></div></div>
@@ -179,17 +175,17 @@
         <div id="flex-re-view" style="display:flex;flex-direction:column;"><div style="background:#e3f2fd;padding:8px;border-radius:6px;font-size:0.8em;margin-bottom:6px;">🏢 10개국 글로벌 부동산 (매월 월세)</div><div class="re-country-tabs" id="re-country-tabs"></div><div id="realestate-list" style="display:flex;flex-direction:column;gap:6px;flex:1;overflow-y:auto;max-height:350px;"></div></div>
         <div id="flex-flex-view" style="display:none;flex-direction:column;gap:8px;">
             <div class="info-box" style="display:flex;justify-content:space-between;align-items:center;"><div><b>프라이빗 아일랜드</b><br><span style="font-size:0.8em;color:#666;">1조 원</span></div><button class="action-btn" style="background:#8e24aa;padding:6px 10px;" onclick="buyFlex('island')">1조 매입</button></div>
-            <div class="info-box" style="display:flex;justify-content:space-between;align-items:center;"><div><b>유니세프 자선 기부</b><br><span style="font-size:0.8em;color:#666;">500억 원 (SEC 하락)</span></div><button class="action-btn" style="background:#43a047;padding:6px 10px;" onclick="buyFlex('charity')">500억 기부</button></div>
+            <div class="info-box" style="display:flex;justify-content:space-between;align-items:center;"><div><b>유니세프 자선 기부</b><br><span style="font-size:0.8em;color:#666;">500억 원 (SEC 수배도 하락)</span></div><button class="action-btn" style="background:#43a047;padding:6px 10px;" onclick="buyFlex('charity')">500억 기부</button></div>
             <div class="info-box" style="display:flex;justify-content:space-between;align-items:center;"><div><b>민간 국제기구 창설</b><br><span style="font-size:0.8em;color:#666;">10조 원</span></div><button class="action-btn" style="background:#1a237e;padding:6px 10px;" onclick="buyFlex('org')">10조 창설</button></div>
             <div class="info-box" style="display:flex;justify-content:space-between;align-items:center;"><div><b>사립대학/도서관 설립</b><br><span style="font-size:0.8em;color:#666;">5조 원</span></div><button class="action-btn" style="background:#1976d2;padding:6px 10px;" onclick="buyFlex('school')">5조 설립</button></div>
             <div class="info-box" style="display:flex;justify-content:space-between;align-items:center;"><div><b>대자연 사파리 건설</b><br><span style="font-size:0.8em;color:#666;">2조 원</span></div><button class="action-btn" style="background:#2e7d32;padding:6px 10px;" onclick="buyFlex('safari')">2조 건설</button></div>
             <div class="info-box" style="display:flex;justify-content:space-between;align-items:center;"><div><b>세계 프랜차이즈/국가/강</b><br><span style="font-size:0.8em;color:#666;">수십조~수백조</span></div><button class="action-btn" style="background:#00695c;padding:6px 10px;" onclick="buyFlex('mega')">초거대 매입</button></div>
-            <div class="info-box" style="border:1px solid #d32f2f;"><div><b>난치병 신약 3상 투자</b><br><span style="font-size:0.8em;color:#666;">5,000억 | 연계주 폭등</span></div><div style="display:flex;gap:5px;margin-top:5px;"><select id="flex-bio-sel" style="flex:1;"></select><button class="action-btn" style="background:#d32f2f;" onclick="devDrug()">투자</button></div></div>
-            <div class="info-box" style="border:1px solid #1976d2;"><div><b>글로벌 R&D 대규모 투자</b><br><span style="font-size:0.8em;color:#666;">1조 원 | 연계주 급등</span></div><div style="display:flex;gap:5px;margin-top:5px;"><select id="flex-rnd-sel" style="flex:1;"></select><button class="action-btn" style="background:#1976d2;" onclick="investRND()">투자</button></div></div>
+            <div class="info-box" style="border:1px solid #d32f2f;"><div><b>난치병 신약 3상 투자</b><br><span style="font-size:0.8em;color:#666;">5,000억 | 바이오주 연동</span></div><div style="display:flex;gap:5px;margin-top:5px;"><select id="flex-bio-sel" style="flex:1;"></select><button class="action-btn" style="background:#d32f2f;" onclick="devDrug()">투자</button></div></div>
+            <div class="info-box" style="border:1px solid #1976d2;"><div><b>글로벌 R&D 대규모 투자</b><br><span style="font-size:0.8em;color:#666;">1조 원 | 전 종목 연동</span></div><div style="display:flex;gap:5px;margin-top:5px;"><select id="flex-rnd-sel" style="flex:1;"></select><button class="action-btn" style="background:#1976d2;" onclick="investRND()">투자</button></div></div>
             <div class="info-box" style="border:1px solid #f57c00;"><div><b>최고층 랜드마크 건설</b><br><select id="tower-country" style="width:80px;padding:4px;"><option value="한국">한국</option><option value="미국">미국</option><option value="일본">일본</option><option value="영국">영국</option><option value="프랑스">프랑스</option><option value="스페인">스페인</option><option value="호주">호주</option><option value="중국">중국</option><option value="싱가포르">싱가포르</option><option value="홍콩">홍콩</option></select> <input type="number" id="tower-floors" placeholder="층수(50+)" style="width:80px;padding:4px;"><br><span style="font-size:0.7em;color:#666;">층당 500억</span></div><button class="action-btn" style="background:#f57c00;width:100%;margin-top:5px;" onclick="buildMegaTower()">건설</button></div>
         </div>
         <div id="flex-concert-view" style="display:none;flex-direction:column;gap:8px;">
-            <div style="background:#fff;padding:15px;border-radius:8px;border:1px solid #e0e0e0;"><h4 style="margin:0 0 10px 0;color:#1a237e;">🎤 엔터 투어 개최 (80팀)</h4><div class="input-row" style="margin-bottom:8px;"><select id="concert-artist" style="flex:1;width:100%;font-size:0.9em;"></select></div><div class="input-row" style="margin-bottom:10px;"><input type="number" id="concert-days" placeholder="투어 일수 (1~100일)" min="1" max="100" style="flex:1;width:100%;"></div><button class="action-btn" style="width:100%;background:#8e24aa;padding:10px;" onclick="hostConcert()">개최 실행</button></div>
+            <div style="background:#fff;padding:15px;border-radius:8px;border:1px solid #e0e0e0;"><h4 style="margin:0 0 10px 0;color:#1a237e;">🎤 엔터 투어 개최</h4><div class="input-row" style="margin-bottom:8px;"><select id="concert-artist" style="flex:1;width:100%;font-size:0.9em;"></select></div><div class="input-row" style="margin-bottom:10px;"><input type="number" id="concert-days" placeholder="투어 일수 (1~100일)" min="1" max="100" style="flex:1;width:100%;"></div><button class="action-btn" style="width:100%;background:#8e24aa;padding:10px;" onclick="hostConcert()">개최 실행</button></div>
         </div>
         <div id="flex-sports-view" style="display:none;flex-direction:column;gap:8px;">
             <div class="input-row" style="margin-bottom:6px;">
@@ -320,7 +316,7 @@
   </div>
 </div>
 
-<!-- 스크립트 연결 부분 (다음 단계에서 제공될 app.js 연결 준비) -->
+<!-- 여기에 자바스크립트가 들어갑니다 -->
 <script type="module" src="app.js"></script>
 </body>
 </html>
