@@ -273,8 +273,8 @@ window.initGameSystem = function() {
       if(cash>9e15){ let ex=cash-9e15; cash=9e15; depPrin+=ex; showToast("⚠️ 현금 한도 초과 자동 예금 전환", "black"); }
 
       if(m===1 && d===1) {
-          if(futureEvents[y]) {
-              let ev = futureEvents[y]; showToast(`🌍 [시대 전환] ${ev.title}`, "event"); addNewsBoard(`[메가트렌드] ${ev.news}`);
+          if(D.futureEvents[y]) {
+              let ev = D.futureEvents[y]; showToast(`🌍 [시대 전환] ${ev.title}`, "event"); addNewsBoard(`[메가트렌드] ${ev.news}`);
               if(ev.buffTag) stocks.filter(s=>s.tag===ev.buffTag).forEach(s=>s.price=Math.round(s.price*1.5));
               if(ev.nerfTag) stocks.filter(s=>s.tag===ev.nerfTag).forEach(s=>s.price=Math.round(s.price*0.7));
               if(ev.newStock) stocks.push({id:'s'+(idCounter++), name:ev.newStock, market:"NASDAQ", tag:"미래산업", price:100000, beta:3.0, issued:10000000, isEquity:true, shares:0, cost:0, shortShares:0, shortCost:0, history:Array(365).fill(100000), ma20_history:Array(365).fill(100000)});
@@ -370,4 +370,3 @@ window.initGameSystem = function() {
       window.updateUI();
     } catch(e) { console.log("Loop Error:", e); }
   };
-</script>
