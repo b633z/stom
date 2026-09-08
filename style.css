@@ -83,7 +83,6 @@ table.data-table th { background: #f0f0f0; }
 .re-c-btn { padding: 6px 12px; border-radius: 20px; border: 1px solid #ccc; background: #f9f9f9; cursor: pointer; font-size: 0.8em; font-weight: bold; white-space: nowrap; color: #555; }
 .re-c-btn.active { background: #1565c0; color: white; border-color: #1565c0; }
 @media screen and (max-width: 1024px) { .main-grid { grid-template-columns: 1fr; height: auto; } .panel { min-height: 400px; height: auto; } }
-/* 개선: 대시보드 옆 연혁 버튼/타임라인 */
+/* V3 stability */
 #btn-history-top{font-weight:900;}
 .history-event{padding:10px 10px 10px 14px;border-left:3px solid #6a1b9a;margin:0 0 10px 6px;background:#faf7fc;border-radius:0 6px 6px 0;}
-@media(max-width:700px){.control-buttons{flex-wrap:wrap;} #btn-history-top{display:inline-block;} }
