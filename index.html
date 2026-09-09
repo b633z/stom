@@ -3,84 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>실전 모의투자 마스터 (Ultimate V83 - 절대 무결점 최종본)</title>
+<title>실전 모의투자 마스터 (Ultimate V83 - 모듈화 완벽판)</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<style>
-:root{--up-color:#d32f2f;--down-color:#1976d2;--bg-color:#eef2f6;--primary:#1a237e;--short-color:#6a1b9a;--deriv-color:#00838f;--wallst-color:#4e342e;--event-color:#b71c1c}
-body{font-family:'Pretendard','Malgun Gothic',sans-serif;background-color:var(--bg-color);margin:0;padding:10px;color:#333;user-select:none}
-.wrapper{max-width:1540px;margin:0 auto;display:flex;flex-direction:column;gap:10px;transition:max-width 0.3s ease}
-.modal-overlay{display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.85);justify-content:center;align-items:center;z-index:9999;padding:15px;box-sizing:border-box}
-.modal-box{background:white;padding:25px;border-radius:16px;text-align:center;width:100%;max-width:720px;box-shadow:0 10px 30px rgba(0,0,0,0.5);max-height:88vh;overflow-y:auto}
-.name-input{width:100%;padding:12px;margin-bottom:20px;font-size:1.1em;border:2px solid #1a237e;border-radius:8px;text-align:center;box-sizing:border-box}
-.mode-btn{display:block;width:100%;padding:12px;margin:8px 0;font-size:1.05em;font-weight:bold;border:none;border-radius:8px;cursor:pointer;transition:0.2s;background:#1976d2;color:white}
-header{display:flex;justify-content:space-between;align-items:center;background:white;padding:10px 20px;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.05);flex-wrap:wrap;gap:10px}
-.header-title{font-size:1.2em;font-weight:800;color:var(--primary);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.eco-badge,.rep-badge{padding:4px 10px;border-radius:20px;font-size:0.75em;color:white;white-space:nowrap}
-.eco-badge{background:#2e7d32} .rep-badge{background:#546e7a}
-.time-display{font-size:1em;font-weight:bold;color:#fff;background:var(--primary);padding:6px 14px;border-radius:20px;white-space:nowrap}
-.dashboard{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
-.card{background:white;padding:12px 10px;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,0.04);border-left:5px solid var(--primary)}
-.card.asset-card{border-left-color:#2e7d32} .card.debt-card{border-left-color:#d84315} .card.bank-card{border-left-color:#fbc02d}
-.card-title{font-size:0.75em;color:#666;margin-bottom:4px;font-weight:bold} .card-val{font-size:1.05em;font-weight:900;word-break:keep-all}
-.ticker-container{background:#1a237e;color:white;border-radius:8px;overflow:hidden;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,0.1);padding:10px 0;display:flex;position:relative}
-.ticker-track{display:flex;gap:30px;animation:marquee 80s linear infinite;font-size:0.9em;font-weight:bold;padding-left:100%}
-.control-bar{display:flex;justify-content:space-between;background:white;padding:8px 15px;border-radius:8px;align-items:center;flex-wrap:wrap;gap:8px}
-.btn-sys{padding:6px 10px;font-weight:bold;border:none;border-radius:6px;cursor:pointer;font-size:0.8em;color:white;transition:0.2s;white-space:nowrap}
-.main-grid{display:grid;grid-template-columns:320px 1fr 490px;gap:10px;height:750px;transition:all 0.3s ease}
-.panel{background:white;border-radius:12px;display:flex;flex-direction:column;overflow:hidden}
-.market-tabs{display:flex;border-bottom:2px solid #1a237e;background:#e8eaf6;overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch}
-.m-tab{flex:1;padding:10px 6px;font-size:0.8em;font-weight:bold;border:none;background:transparent;cursor:pointer;color:#555;white-space:nowrap}
-.m-tab.active{background:#1a237e;color:white}
-.stock-items{overflow-y:auto;flex:1}
-.stock-item{padding:9px 12px;border-bottom:1px solid #f0f0f0;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-size:0.83em}
-.stock-item.active{background:#e3f2fd;border-left:4px solid #1976d2}
-.stock-tag{font-size:0.65em;padding:2px 5px;border-radius:4px;margin-left:4px;background:#e0e0e0}
-.chart-panel{position:relative;padding:15px;display:flex;flex-direction:column}
-.chart-info{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:5px;flex-wrap:wrap;gap:10px}
-.selected-title{font-size:1.2em;font-weight:900;display:flex;align-items:center;gap:8px}
-.selected-price{font-size:1.5em;font-weight:900}
-.ceo-btn{background:#8e24aa;color:white;border:none;padding:4px 10px;border-radius:4px;font-size:0.75em;cursor:pointer;font-weight:bold}
-.tf-btn{padding:4px 8px;font-size:0.75em;font-weight:bold;border:1px solid #ccc;background:#f9f9f9;border-radius:4px;cursor:pointer}
-.tf-btn.active{background:var(--primary);color:white;border-color:var(--primary)}
-.chart-container{flex:1;position:relative;width:100%;min-height:120px;max-height:140px}
-.tabs{display:flex;border-bottom:1px solid #eee;flex-wrap:wrap;background:#f9f9f9;border-radius:8px 8px 0 0}
-.tab-btn{padding:10px 8px;text-align:center;font-weight:800;cursor:pointer;background:transparent;border:none;border-bottom:3px solid transparent;font-size:0.78em;flex-grow:1;min-width:65px;color:#555}
-.tab-btn.active{background:white;border-bottom-color:var(--primary);color:var(--primary)}
-.tab-content{padding:14px;flex:1;display:flex;flex-direction:column;gap:8px;overflow-y:auto}
-.info-box{background:#f8fafd;padding:12px;border-radius:8px;font-size:0.85em;display:flex;flex-direction:column;gap:5px;border:1px solid #e0e0e0}
-.info-row{display:flex;justify-content:space-between;align-items:center}
-.input-row{display:flex;gap:5px;align-items:center;width:100%}
-input[type="number"],input[type="text"],select{flex:1;padding:8px;font-size:0.95em;border:1px solid #ccc;border-radius:6px;box-sizing:border-box;max-width:100%}
-.btn-grid-4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:6px}
-button.action-btn{padding:9px;font-size:0.82em;font-weight:bold;border:none;border-radius:6px;cursor:pointer;color:white;box-sizing:border-box}
-.btn-buy{background:var(--up-color)} .btn-sell{background:var(--down-color)} .btn-short{background:var(--short-color)} .btn-cover{background:#00838f}
-.btn-quick{background:#546e7a;font-size:0.7em;padding:4px;border:none;border-radius:4px;color:white;cursor:pointer;flex:1}
-.btn-clear{background:#e53935;color:white;font-size:0.75em;padding:4px 8px;border:none;border-radius:4px;cursor:pointer}
-.text-up{color:var(--up-color)} .text-down{color:var(--down-color)}
-table.data-table{width:100%;border-collapse:collapse;font-size:0.8em;margin-top:5px;text-align:center}
-table.data-table th,table.data-table td{border:1px solid #ddd;padding:6px} table.data-table th{background:#f0f0f0}
-#toast-container{position:fixed;top:20px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;gap:10px;z-index:10000;pointer-events:none;width:90%;max-width:420px}
-.toast{background:rgba(0,0,0,0.9);color:white;padding:12px 18px;border-radius:8px;font-size:0.95em;font-weight:bold;box-shadow:0 4px 12px rgba(0,0,0,0.3);text-align:center}
-.toast.event{background:var(--event-color);font-size:1.05em;border:2px solid #ffeb3b}
-.wallst-container{display:flex;gap:10px;height:100%} .wallst-list{flex:1;border-right:1px solid #eee;overflow-y:auto;padding-right:5px} .wallst-detail{flex:1.5;padding-left:5px;overflow-y:auto}
-.fund-item{padding:8px;border:1px solid #ddd;border-radius:6px;margin-bottom:6px;cursor:pointer;font-size:0.8em;transition:0.1s} .fund-item.active{background:#efebe9;border-color:var(--wallst-color);font-weight:bold}
-#event-banner{display:none;background:var(--event-color);color:white;padding:10px;text-align:center;font-weight:bold;font-size:1.05em;animation:flash 2s infinite}
-@keyframes flash{0%{opacity:1} 50%{opacity:0.8;background:#d32f2f} 100%{opacity:1}}
-.person-img{width:60px;height:60px;border-radius:50%;border:2px solid #f57f17;display:flex;justify-content:center;align-items:center;font-size:2em;background:#fff3e0}
-.black-ops-box{background:#121212;color:#fff;padding:15px;border-radius:8px;border:2px solid #b71c1c;margin-top:10px;max-height:50vh;overflow-y:auto}
-.ops-grid{display:flex;flex-direction:column;gap:8px}
-.ops-btn{background:#b71c1c;color:white;border:1px solid #ff5252;padding:10px;border-radius:6px;cursor:pointer;font-size:0.82em;text-align:left;line-height:1.4}
-.ceo-modal-btn{display:flex;flex-direction:column;gap:4px;background:#fdfdfd;border:1px solid #8e24aa;border-radius:8px;padding:12px;margin-bottom:10px;cursor:pointer;text-align:left}
-.port-item{display:flex;justify-content:space-between;align-items:center;background:#fff;padding:12px;border:1px solid #ddd;border-radius:8px;margin-bottom:8px;font-size:0.85em;cursor:pointer}
-.re-c-btn{padding:6px 12px;border-radius:20px;border:1px solid #ccc;background:#f9f9f9;cursor:pointer;font-size:0.8em;font-weight:bold;white-space:nowrap;color:#555}
-.re-c-btn.active{background:#1565c0;color:white;border-color:#1565c0}
-@media screen and (max-width:1024px){.main-grid{grid-template-columns:1fr;height:auto} .panel{min-height:400px;height:auto}}
-</style>
+<link rel="stylesheet" href="./style.css">
 </head>
 <body>
 
 <div id="event-banner">🚨 [경고] 시장에 강력한 충격이 가해집니다!</div>
 
+<!-- 팝업 모달들 -->
 <div id="monthly-news-modal" class="modal-overlay">
   <div class="modal-box" style="background:#f4f1ea; border:2px solid #333; color:#222; font-family:'Times New Roman', serif; max-width:650px;">
     <div style="text-align:center; border-bottom:4px double #333; padding-bottom:10px; margin-bottom:15px;">
@@ -104,7 +35,7 @@ table.data-table th,table.data-table td{border:1px solid #ddd;padding:6px} table
         <h4 style="margin:0 0 10px 0; border-bottom:1px solid #ccc;">📰 HEADLINES</h4>
         <div id="monthly-news-content" style="font-size:0.9em; line-height:1.6; max-height:150px; overflow-y:auto;"></div>
     </div>
-    <button class="mode-btn" style="background:#333; color:#fff; border-radius:4px; font-family:inherit;" onclick="document.getElementById('monthly-news-modal').style.display='none'">[ 기사 닫기 ]</button>
+    <button class="mode-btn" style="background:#333; color:#fff; border-radius:4px;" onclick="document.getElementById('monthly-news-modal').style.display='none'">[ 기사 닫기 ]</button>
   </div>
 </div>
 
@@ -115,24 +46,24 @@ table.data-table th,table.data-table td{border:1px solid #ddd;padding:6px} table
 <div id="bankrupt-modal" class="modal-overlay"><div class="modal-box" style="border:5px solid #d32f2f;"><h1 style="color:#d32f2f;font-size:2em;margin:0 0 10px 0;">🚨 펀드 청산</h1><p>자본잠식으로 파산했습니다.</p><button class="mode-btn btn-retail" onclick="location.reload()">다시하기</button></div></div>
 <div id="settlement-modal" class="modal-overlay"><div class="modal-box"><h2 style="color:#d32f2f;margin-top:0;">🏆 연말 정산</h2><div id="settlement-details" style="text-align:left;font-size:0.9em;line-height:1.5;background:#f9f9f9;padding:15px;border-radius:8px;margin-bottom:10px;"></div><div style="max-height:200px;overflow-y:auto;border:1px solid #ccc;margin-bottom:15px;"><table class="data-table" id="rank-table-body"></table></div><button class="mode-btn btn-retail" onclick="closeSettlement()">내년으로 이동</button></div></div>
 
-<!-- 시작 화면 (무조건 보장됨) -->
+<!-- 시작 화면 -->
 <div id="start-modal" class="modal-overlay" style="display:flex;">
   <div class="modal-box">
     <h1 style="color:#1a237e;margin-top:0;margin-bottom:10px;font-size:1.7em;">📈 실전 경제 마스터 V83</h1>
-    <p style="color:#555;margin-bottom:20px;font-size:0.85em;">[에러 영구 차단 / 즉시 시작 완벽판]</p>
+    <p style="color:#555;margin-bottom:20px;font-size:0.85em;">[모듈화 최적화 / 7대 피드백 적용본]</p>
     <input type="text" id="player-name-input" class="name-input" placeholder="당신의 펀드명을 입력하세요">
-    <button class="mode-btn" onclick="startGame()">▶ 게임 시작 (자본금 1,000억)</button>
-    <div id="local-load-ui" style="display:none;margin-top:20px;border-top:1px dashed #ccc;padding-top:15px;"><button class="mode-btn" style="background:#00695c;color:white;" onclick="loadLocalGame()">💾 이어하기 (저장본)</button></div>
+    <button class="mode-btn" style="background:#1a237e;" onclick="window.startGame()">▶ 게임 시작 (자본금 1,000억)</button>
+    <div id="local-load-ui" style="display:none;margin-top:20px;border-top:1px dashed #ccc;padding-top:15px;"><button class="mode-btn" style="background:#00695c;color:white;" onclick="window.loadLocalGame()">💾 이어하기 (저장본)</button></div>
   </div>
 </div>
 
 <div class="wrapper" style="filter:blur(5px);" id="main-wrapper">
   <div id="toast-container"></div>
   <header>
-    <div class="header-title"><span id="player-name-display"></span> <span id="rep-badge" class="rep-badge">🌱 투자자</span> <span id="player-rank-info" style="font-size:0.65em;color:#555;font-weight:bold;margin-left:10px;">순위:1위</span></div>
+    <div class="header-title"><span id="player-name-display"></span> <span id="rep-badge" class="rep-badge">🌱 투자자</span> <span id="player-rank-info" style="font-size:0.65em;color:#555;font-weight:bold;margin-left:10px;">순위: 1위</span></div>
     <div style="display:flex;align-items:center;gap:10px;">
-      <select id="speed-selector" onchange="changeSpeed()" style="padding:6px;font-size:0.8em;border-radius:6px;border:1px solid #ccc;">
-        <option value="3000">매우 느림 (비용: 1,000억)</option><option value="1500">느림</option><option value="1000" selected>보통 (기본)</option><option value="500">빠름</option><option value="100">매우 빠름</option>
+      <select id="speed-selector" onchange="window.changeSpeed()" style="padding:6px;font-size:0.8em;border-radius:6px;border:1px solid #ccc;">
+        <option value="3000">매우 느림 (비용: 1,000억)</option><option value="1500">느림 (1,000억)</option><option value="1000" selected>보통 (기본)</option><option value="500">빠름 (1,000억)</option><option value="100">매우 빠름 (1,000억)</option>
       </select>
       <div class="time-display" id="date-display">2025년 1월 1일</div>
     </div>
@@ -141,13 +72,15 @@ table.data-table th,table.data-table td{border:1px solid #ddd;padding:6px} table
   <div class="control-bar">
     <div style="font-size:0.85em;font-weight:bold;color:#555;">⚙️ 시스템 관리</div>
     <div class="control-buttons" style="display:flex;gap:5px;">
-      <button class="btn-sys" style="background:#0277bd;" onclick="toggleViewMode()" id="btn-view-mode">💻 PC 뷰</button>
-      <button class="btn-sys" style="background:#2e7d32;" onclick="donateToSociety()">🤝 기부</button>
-      <button class="btn-sys" style="background:#f57f17;color:#333;" onclick="openHoFModal()">🏛️ 랭킹</button>
-      <button class="btn-sys" style="background:#00695c;" onclick="exportJSON()">💾 백업</button>
-      <label for="import-file-main" class="btn-sys" style="background:#37474f;padding:6px 10px;margin:0;display:inline-block;font-size:0.8em;border-radius:6px;cursor:pointer;">📂 로드</label>
-      <input type="file" id="import-file-main" accept=".json" onchange="importJSON(event)" style="display:none;">
-      <button class="btn-sys" style="background:#c62828;" onclick="returnToMenu()">초기화</button>
+      <button class="btn-sys" style="background:#0277bd;" onclick="window.toggleViewMode()" id="btn-view-mode">💻 PC 뷰</button>
+      <!-- 개선사항 7: 연혁 버튼을 위로 올림 -->
+      <button class="btn-sys" style="background:#6a1b9a;" onclick="window.switchTab('history')" id="btn-history-top">📜 연혁</button>
+      <button class="btn-sys" style="background:#2e7d32;" onclick="window.donateToSociety()">🤝 기부</button>
+      <button class="btn-sys" style="background:#f57f17;color:#333;" onclick="window.openHoFModal()">🏛️ 명예전당</button>
+      <button class="btn-sys" style="background:#00695c;" onclick="window.exportJSON()">💾 백업</button>
+      <label for="import-file-main" class="btn-sys" style="background:#37474f;padding:6px 10px;margin:0;display:inline-block;font-size:0.8em;border-radius:6px;cursor:pointer;">📂 불러오기</label>
+      <input type="file" id="import-file-main" accept=".json" onchange="window.importJSON(event)" style="display:none;">
+      <button class="btn-sys" style="background:#c62828;" onclick="window.returnToMenu()">초기화</button>
     </div>
   </div>
 
@@ -166,12 +99,12 @@ table.data-table th,table.data-table td{border:1px solid #ddd;padding:6px} table
   <div class="main-grid">
     <div class="panel">
       <div class="market-tabs">
-        <button class="m-tab active" id="mtab-KOSPI" onclick="setMarket('KOSPI')">KOSPI</button>
-        <button class="m-tab" id="mtab-KOSDAQ" onclick="setMarket('KOSDAQ')">KOSDAQ</button>
-        <button class="m-tab" id="mtab-NASDAQ" onclick="setMarket('NASDAQ')">NASDAQ</button>
-        <button class="m-tab" id="mtab-SNP500" onclick="setMarket('SNP500')">S&P500</button>
-        <button class="m-tab" id="mtab-CRYPTO" onclick="setMarket('CRYPTO')" style="color:#f57c00;font-weight:900;">코인</button>
-        <button class="m-tab" id="mtab-BOND" onclick="setMarket('BOND')" style="color:#2e7d32;font-weight:900;">국채</button>
+        <button class="m-tab active" id="mtab-KOSPI" onclick="window.setMarket('KOSPI')">KOSPI</button>
+        <button class="m-tab" id="mtab-KOSDAQ" onclick="window.setMarket('KOSDAQ')">KOSDAQ</button>
+        <button class="m-tab" id="mtab-NASDAQ" onclick="window.setMarket('NASDAQ')">NASDAQ</button>
+        <button class="m-tab" id="mtab-SNP500" onclick="window.setMarket('SNP500')">S&P500</button>
+        <button class="m-tab" id="mtab-CRYPTO" onclick="window.setMarket('CRYPTO')" style="color:#f57c00;font-weight:900;">코인</button>
+        <button class="m-tab" id="mtab-BOND" onclick="window.setMarket('BOND')" style="color:#2e7d32;font-weight:900;">국채</button>
       </div>
       <div class="stock-items" id="stock-list"></div>
     </div>
@@ -179,16 +112,19 @@ table.data-table th,table.data-table td{border:1px solid #ddd;padding:6px} table
     <div class="panel chart-panel">
       <div class="chart-info">
         <div style="width:100%;">
-          <div class="selected-title" style="justify-content:space-between;"><span id="chart-title">종목명</span><button class="ceo-btn" id="ceo-btn" style="display:none;" onclick="openCEOModal()">👑 경영개입</button></div>
+          <div class="selected-title" style="justify-content:space-between;"><span id="chart-title">종목명</span><button class="ceo-btn" id="ceo-btn" style="display:none;" onclick="window.openCEOModal()">👑 경영개입</button></div>
           <div style="display:flex;justify-content:space-between;flex-wrap:wrap;margin-top:5px;font-size:0.8em;color:#555;background:#f9f9f9;padding:5px;border-radius:6px;"><div id="chart-desc">시가총액: - | 발행수량: -</div><div id="chart-finance">PER: - | EPS: -</div></div>
         </div>
         <div class="selected-price text-up" id="chart-price" style="margin-top:5px;">0 원</div>
       </div>
       <div class="chart-timeframe">
-        <button class="tf-btn active" onclick="setTimeframe(90, this)">3달</button><button class="tf-btn" onclick="setTimeframe(180, this)">6달</button><button class="tf-btn" onclick="setTimeframe(365, this)">1년</button><span style="font-size:0.75em;margin-left:auto;color:#f57c00;font-weight:bold;">-- MA20</span>
+        <button class="tf-btn active" onclick="window.setTimeframe(90, this)">3달</button>
+        <button class="tf-btn" onclick="window.setTimeframe(180, this)">6달</button>
+        <button class="tf-btn" onclick="window.setTimeframe(365, this)">1년</button>
+        <span style="font-size:0.75em;margin-left:auto;color:#f57c00;font-weight:bold;">-- MA20</span>
       </div>
       <div class="chart-container"><canvas id="mainChart"></canvas></div>
-      <div style="text-align:right; margin-top:5px;"><button class="btn-quick" style="background:#555; padding:2px 8px;" onclick="toggleOrderbook()">10호가 ↕</button></div>
+      <div style="text-align:right; margin-top:5px;"><button class="btn-quick" style="background:#555; padding:2px 8px;" onclick="window.toggleOrderbook()">10호가 ↕</button></div>
       <div style="display:flex;margin-top:5px;gap:10px;border-top:1px solid #eee;padding-top:5px;">
         <div style="flex:1;border:1px solid #bbdefb;border-radius:6px;padding:5px;background:#fff;"><div style="text-align:center;font-size:0.7em;font-weight:bold;color:#1976d2;margin-bottom:5px;">매도호가</div><div id="mid-ask-book"></div></div>
         <div style="flex:1;border:1px solid #ffcdd2;border-radius:6px;padding:5px;background:#fff;"><div style="text-align:center;font-size:0.7em;font-weight:bold;color:#d32f2f;margin-bottom:5px;">매수호가</div><div id="mid-bid-book"></div></div>
@@ -197,65 +133,64 @@ table.data-table th,table.data-table td{border:1px solid #ddd;padding:6px} table
 
     <div class="panel">
       <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab('trade')" id="tab-btn-trade">매매</button>
-        <button class="tab-btn" onclick="switchTab('portfolio')" id="tab-btn-portfolio" style="color:#d32f2f;font-weight:900;">💼 자산</button>
-        <button class="tab-btn" onclick="switchTab('realestate')" id="tab-btn-realestate" style="color:#1565c0;font-weight:bold;">🏢 플렉스</button>
-        <button class="tab-btn" onclick="switchTab('ipo')" id="tab-btn-ipo" style="color:#e91e63;font-weight:bold;">🚀 IPO</button>
-        <button class="tab-btn" onclick="switchTab('politics')" id="tab-btn-politics" style="color:#00695c;font-weight:bold;">🌐 외교</button>
-        <button class="tab-btn" onclick="switchTab('politics_run')" id="tab-btn-politics_run" style="color:#8e24aa;font-weight:bold;">🏛️ 출마</button>
-        <button class="tab-btn" onclick="switchTab('deriv')" id="tab-btn-deriv">파생</button>
-        <button class="tab-btn" onclick="switchTab('wallst')" id="tab-btn-wallst">M&A</button>
-        <button class="tab-btn" onclick="switchTab('vip')" id="tab-btn-vip" style="color:#e65100;">VIP</button>
-        <button class="tab-btn" onclick="switchTab('indirect')" id="tab-btn-indirect">펀드</button>
-        <button class="tab-btn" onclick="switchTab('hr')" id="tab-btn-hr">HR</button>
-        <button class="tab-btn" onclick="switchTab('bank')" id="tab-btn-bank" style="font-weight:900;color:#d84315;">🏦 은행</button>
+        <button class="tab-btn active" onclick="window.switchTab('trade')" id="tab-btn-trade">매매</button>
+        <button class="tab-btn" onclick="window.switchTab('portfolio')" id="tab-btn-portfolio" style="color:#d32f2f;font-weight:900;">💼 자산</button>
+        <button class="tab-btn" onclick="window.switchTab('realestate')" id="tab-btn-realestate" style="color:#1565c0;font-weight:bold;">🏢 플렉스</button>
+        <button class="tab-btn" onclick="window.switchTab('ipo')" id="tab-btn-ipo" style="color:#e91e63;font-weight:bold;">🚀 IPO</button>
+        <button class="tab-btn" onclick="window.switchTab('politics')" id="tab-btn-politics" style="color:#00695c;font-weight:bold;">🌐 외교</button>
+        <button class="tab-btn" onclick="window.switchTab('politics_run')" id="tab-btn-politics_run" style="color:#8e24aa;font-weight:bold;">🏛️ 출마</button>
+        <button class="tab-btn" onclick="window.switchTab('deriv')" id="tab-btn-deriv">파생</button>
+        <button class="tab-btn" onclick="window.switchTab('wallst')" id="tab-btn-wallst">M&A</button>
+        <button class="tab-btn" onclick="window.switchTab('vip')" id="tab-btn-vip" style="color:#e65100;">VIP</button>
+        <button class="tab-btn" onclick="window.switchTab('indirect')" id="tab-btn-indirect">펀드</button>
+        <button class="tab-btn" onclick="window.switchTab('hr')" id="tab-btn-hr">HR</button>
+        <button class="tab-btn" onclick="window.switchTab('bank')" id="tab-btn-bank" style="font-weight:900;color:#d84315;">🏦 은행</button>
       </div>
 
       <div class="tab-content" id="tab-trade">
         <div class="info-box" style="border:2px solid #1976d2;" id="ownership-box"><div class="info-row"><span>내 지분율</span><b id="my-ownership" style="color:#d32f2f;font-size:1.1em;">0.00%</b></div></div>
         <div class="info-box"><div class="info-row"><span>보유 (Long)</span><b id="my-shares">0 주</b></div><div class="info-row"><span>평단가</span><b id="avg-price">0 원</b></div><div class="info-row"><span>평가손익</span><b id="eval-profit">0 원</b></div></div>
         <div class="info-box" style="background:#f3e5f5;border:1px solid #ce93d8;margin-bottom:5px;"><div class="info-row"><span style="color:var(--short-color);font-weight:bold;">공매도 (Short)</span><b id="short-shares" style="color:var(--short-color);">0 주</b></div><div class="info-row"><span style="color:#888;font-size:0.9em;">평단가</span><b id="short-avg-price">0 원</b></div><div class="info-row"><span style="color:#888;font-size:0.9em;">손익</span><b id="short-eval-profit">0 원</b></div></div>
-        
         <div style="margin-bottom:4px;font-size:0.75em;">
-          <div style="display:flex;justify-content:space-between;gap:2px;margin-bottom:4px;"><span style="font-size:0.7em;font-weight:bold;color:#d32f2f;align-self:center;width:45px;">매수/숏</span><button class="btn-quick" style="background:#d32f2f;" onclick="setTradeQtyPct('buy', 0.1)">10%</button><button class="btn-quick" style="background:#d32f2f;" onclick="setTradeQtyPct('buy', 0.25)">25%</button><button class="btn-quick" style="background:#d32f2f;" onclick="setTradeQtyPct('buy', 0.5)">50%</button><button class="btn-quick" style="background:#d32f2f;" onclick="setTradeQtyPct('buy', 0.75)">75%</button><button class="btn-quick" style="background:#b71c1c;" onclick="setTradeQtyPct('buy', 1)">MAX</button></div>
-          <div style="display:flex;justify-content:space-between;gap:2px;margin-bottom:8px;"><span style="font-size:0.7em;font-weight:bold;color:#1976d2;align-self:center;width:45px;">매도/청산</span><button class="btn-quick" style="background:#1976d2;" onclick="setTradeQtyPct('sell', 0.1)">10%</button><button class="btn-quick" style="background:#1976d2;" onclick="setTradeQtyPct('sell', 0.25)">25%</button><button class="btn-quick" style="background:#1976d2;" onclick="setTradeQtyPct('sell', 0.5)">50%</button><button class="btn-quick" style="background:#1976d2;" onclick="setTradeQtyPct('sell', 0.75)">75%</button><button class="btn-quick" style="background:#0d47a1;" onclick="setTradeQtyPct('sell', 1)">MAX</button></div>
+          <div style="display:flex;justify-content:space-between;gap:2px;margin-bottom:4px;"><span style="font-size:0.7em;font-weight:bold;color:#d32f2f;align-self:center;width:45px;">매수/숏</span><button class="btn-quick" style="background:#d32f2f;" onclick="window.setTradeQtyPct('buy', 0.1)">10%</button><button class="btn-quick" style="background:#d32f2f;" onclick="window.setTradeQtyPct('buy', 0.25)">25%</button><button class="btn-quick" style="background:#d32f2f;" onclick="window.setTradeQtyPct('buy', 0.5)">50%</button><button class="btn-quick" style="background:#d32f2f;" onclick="window.setTradeQtyPct('buy', 0.75)">75%</button><button class="btn-quick" style="background:#b71c1c;" onclick="window.setTradeQtyPct('buy', 1)">MAX</button></div>
+          <div style="display:flex;justify-content:space-between;gap:2px;margin-bottom:8px;"><span style="font-size:0.7em;font-weight:bold;color:#1976d2;align-self:center;width:45px;">매도/청산</span><button class="btn-quick" style="background:#1976d2;" onclick="window.setTradeQtyPct('sell', 0.1)">10%</button><button class="btn-quick" style="background:#1976d2;" onclick="window.setTradeQtyPct('sell', 0.25)">25%</button><button class="btn-quick" style="background:#1976d2;" onclick="window.setTradeQtyPct('sell', 0.5)">50%</button><button class="btn-quick" style="background:#1976d2;" onclick="window.setTradeQtyPct('sell', 0.75)">75%</button><button class="btn-quick" style="background:#0d47a1;" onclick="window.setTradeQtyPct('sell', 1)">MAX</button></div>
         </div>
         <div class="input-row" style="margin-bottom:5px;"><input type="number" id="trade-qty" placeholder="수량 입력 (또는 버튼 클릭)"></div>
-        <div class="btn-grid-4"><button class="action-btn btn-buy" onclick="placeOrder('buy')">매수</button><button class="action-btn btn-sell" onclick="placeOrder('sell')">매도</button><button class="action-btn btn-short" onclick="placeOrder('short')">공매도</button><button class="action-btn btn-cover" onclick="placeOrder('cover')">숏청산</button></div>
-        <button class="action-btn" style="width:100%;background:#ff9800;color:#fff;margin-top:5px;padding:10px;" onclick="indiscriminateBuy()">🔥 무차별 시장가 올인 (SEC 감시 폭증)</button>
+        <div class="btn-grid-4"><button class="action-btn btn-buy" onclick="window.placeOrder('buy')">매수</button><button class="action-btn btn-sell" onclick="window.placeOrder('sell')">매도</button><button class="action-btn btn-short" onclick="window.placeOrder('short')">공매도</button><button class="action-btn btn-cover" onclick="window.placeOrder('cover')">숏청산</button></div>
+        <button class="action-btn" style="width:100%;background:#ff9800;color:#fff;margin-top:5px;padding:10px;" onclick="window.indiscriminateBuy()">🔥 무차별 시장가 올인 (SEC 감시 폭증)</button>
       </div>
 
       <div class="tab-content" id="tab-portfolio" style="display:none;padding:10px;">
-        <div style="display:flex;gap:4px;margin-bottom:8px;overflow-x:auto;"><button class="re-c-btn active" onclick="renderPortfolioFilter('all', this)">전체</button><button class="re-c-btn" onclick="renderPortfolioFilter('stock', this)">주식</button><button class="re-c-btn" onclick="renderPortfolioFilter('realestate', this)">부동산</button><button class="re-c-btn" onclick="renderPortfolioFilter('vip', this)">VIP</button><button class="re-c-btn" onclick="renderPortfolioFilter('fund', this)">펀드/국채</button><button class="re-c-btn" onclick="renderPortfolioFilter('deriv', this)">파생</button></div>
+        <div style="display:flex;gap:4px;margin-bottom:8px;overflow-x:auto;"><button class="re-c-btn active" onclick="window.renderPortfolioFilter('all', this)">전체</button><button class="re-c-btn" onclick="window.renderPortfolioFilter('stock', this)">주식</button><button class="re-c-btn" onclick="window.renderPortfolioFilter('realestate', this)">부동산</button><button class="re-c-btn" onclick="window.renderPortfolioFilter('vip', this)">VIP</button><button class="re-c-btn" onclick="window.renderPortfolioFilter('fund', this)">펀드/국채</button><button class="re-c-btn" onclick="window.renderPortfolioFilter('deriv', this)">파생</button></div>
         <div id="portfolio-list" style="display:flex;flex-direction:column;gap:6px;flex:1;overflow-y:auto;"></div>
       </div>
 
       <div class="tab-content" id="tab-realestate" style="display:none;padding:10px;">
         <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px;padding-bottom:5px;border-bottom:1px solid #ccc;">
-            <button class="re-c-btn active" style="flex:1;min-width:30%;" onclick="switchFlexTab('re', this)">🏢 부동산</button>
-            <button class="re-c-btn" style="flex:1;min-width:30%;" onclick="switchFlexTab('flex', this)">💎 플렉스</button>
-            <button class="re-c-btn" style="flex:1;min-width:30%;" onclick="switchFlexTab('concert', this)">🎤 콘서트</button>
-            <button class="re-c-btn" style="flex:1;min-width:30%;" onclick="switchFlexTab('sports', this)">⚽ 스포츠</button>
-            <button class="re-c-btn" style="flex:1;min-width:30%;" onclick="switchFlexTab('media', this)">📺 미디어</button>
+            <button class="re-c-btn active" style="flex:1;min-width:30%;" onclick="window.switchFlexTab('re', this)">🏢 부동산</button>
+            <button class="re-c-btn" style="flex:1;min-width:30%;" onclick="window.switchFlexTab('flex', this)">💎 플렉스</button>
+            <button class="re-c-btn" style="flex:1;min-width:30%;" onclick="window.switchFlexTab('concert', this)">🎤 콘서트</button>
+            <button class="re-c-btn" style="flex:1;min-width:30%;" onclick="window.switchFlexTab('sports', this)">⚽ 스포츠</button>
+            <button class="re-c-btn" style="flex:1;min-width:30%;" onclick="window.switchFlexTab('media', this)">📺 미디어</button>
         </div>
-        <div id="flex-re-view" style="display:flex;flex-direction:column;"><div style="background:#e3f2fd;padding:8px;border-radius:6px;font-size:0.8em;margin-bottom:6px;">🏢 글로벌 10개국 부동산 (매월 월세)</div><div class="re-country-tabs" id="re-country-tabs"></div><div id="realestate-list" style="display:flex;flex-direction:column;gap:6px;flex:1;overflow-y:auto;max-height:350px;"></div></div>
+        <div id="flex-re-view" style="display:flex;flex-direction:column;"><div style="background:#e3f2fd;padding:8px;border-radius:6px;font-size:0.8em;margin-bottom:6px;">🏢 10개국 글로벌 부동산 (매월 월세)</div><div class="re-country-tabs" id="re-country-tabs"></div><div id="realestate-list" style="display:flex;flex-direction:column;gap:6px;flex:1;overflow-y:auto;max-height:350px;"></div></div>
         <div id="flex-flex-view" style="display:none;flex-direction:column;gap:8px;">
-            <div class="info-box" style="display:flex;justify-content:space-between;align-items:center;"><div><b>프라이빗 아일랜드</b><br><span style="font-size:0.8em;color:#666;">1조 원</span></div><button class="action-btn" style="background:#8e24aa;padding:6px 10px;" onclick="buyFlex('island')">1조 매입</button></div>
-            <div class="info-box" style="display:flex;justify-content:space-between;align-items:center;"><div><b>유니세프 자선 기부</b><br><span style="font-size:0.8em;color:#666;">500억 원 (SEC 수배도 하락)</span></div><button class="action-btn" style="background:#43a047;padding:6px 10px;" onclick="buyFlex('charity')">500억 기부</button></div>
-            <div class="info-box" style="display:flex;justify-content:space-between;align-items:center;"><div><b>민간 국제기구 창설</b><br><span style="font-size:0.8em;color:#666;">10조 원</span></div><button class="action-btn" style="background:#1a237e;padding:6px 10px;" onclick="buyFlex('org')">10조 창설</button></div>
-            <div class="info-box" style="display:flex;justify-content:space-between;align-items:center;"><div><b>사립대학/도서관 설립</b><br><span style="font-size:0.8em;color:#666;">5조 원</span></div><button class="action-btn" style="background:#1976d2;padding:6px 10px;" onclick="buyFlex('school')">5조 설립</button></div>
-            <div class="info-box" style="display:flex;justify-content:space-between;align-items:center;"><div><b>대자연 사파리 건설</b><br><span style="font-size:0.8em;color:#666;">2조 원</span></div><button class="action-btn" style="background:#2e7d32;padding:6px 10px;" onclick="buyFlex('safari')">2조 건설</button></div>
-            <div class="info-box" style="display:flex;justify-content:space-between;align-items:center;"><div><b>세계 프랜차이즈/국가/강</b><br><span style="font-size:0.8em;color:#666;">수십조~수백조</span></div><button class="action-btn" style="background:#00695c;padding:6px 10px;" onclick="buyFlex('mega')">초거대 매입</button></div>
-            <div class="info-box" style="border:1px solid #d32f2f;"><div><b>난치병 신약 3상 투자</b><br><span style="font-size:0.8em;color:#666;">5,000억 | 바이오주 연동</span></div><div style="display:flex;gap:5px;margin-top:5px;"><select id="flex-bio-sel" style="flex:1;"></select><button class="action-btn" style="background:#d32f2f;" onclick="devDrug()">투자</button></div></div>
-            <div class="info-box" style="border:1px solid #1976d2;"><div><b>글로벌 R&D 대규모 투자</b><br><span style="font-size:0.8em;color:#666;">1조 원 | 전 종목 연동</span></div><div style="display:flex;gap:5px;margin-top:5px;"><select id="flex-rnd-sel" style="flex:1;"></select><button class="action-btn" style="background:#1976d2;" onclick="investRND()">투자</button></div></div>
-            <div class="info-box" style="border:1px solid #f57c00;"><div><b>최고층 랜드마크 건설</b><br><select id="tower-country" style="width:80px;padding:4px;"><option value="한국">한국</option><option value="미국">미국</option><option value="일본">일본</option><option value="영국">영국</option><option value="프랑스">프랑스</option><option value="스페인">스페인</option><option value="호주">호주</option><option value="중국">중국</option><option value="싱가포르">싱가포르</option><option value="홍콩">홍콩</option></select> <input type="number" id="tower-floors" placeholder="층수(50+)" style="width:80px;padding:4px;"><br><span style="font-size:0.7em;color:#666;">층당 500억</span></div><button class="action-btn" style="background:#f57c00;width:100%;margin-top:5px;" onclick="buildMegaTower()">건설</button></div>
+            <div class="info-box" style="display:flex;justify-content:space-between;align-items:center;"><div><b>프라이빗 아일랜드</b><br><span style="font-size:0.8em;color:#666;">1조 원</span></div><button class="action-btn" style="background:#8e24aa;padding:6px 10px;" onclick="window.buyFlex('island')">1조 매입</button></div>
+            <div class="info-box" style="display:flex;justify-content:space-between;align-items:center;"><div><b>유니세프 자선 기부</b><br><span style="font-size:0.8em;color:#666;">500억 원 (SEC 수배도 하락)</span></div><button class="action-btn" style="background:#43a047;padding:6px 10px;" onclick="window.buyFlex('charity')">500억 기부</button></div>
+            <div class="info-box" style="display:flex;justify-content:space-between;align-items:center;"><div><b>민간 국제기구 창설</b><br><span style="font-size:0.8em;color:#666;">10조 원</span></div><button class="action-btn" style="background:#1a237e;padding:6px 10px;" onclick="window.buyFlex('org')">10조 창설</button></div>
+            <div class="info-box" style="display:flex;justify-content:space-between;align-items:center;"><div><b>사립대학/도서관 설립</b><br><span style="font-size:0.8em;color:#666;">5조 원</span></div><button class="action-btn" style="background:#1976d2;padding:6px 10px;" onclick="window.buyFlex('school')">5조 설립</button></div>
+            <div class="info-box" style="display:flex;justify-content:space-between;align-items:center;"><div><b>대자연 사파리 건설</b><br><span style="font-size:0.8em;color:#666;">2조 원</span></div><button class="action-btn" style="background:#2e7d32;padding:6px 10px;" onclick="window.buyFlex('safari')">2조 건설</button></div>
+            <div class="info-box" style="display:flex;justify-content:space-between;align-items:center;"><div><b>세계 프랜차이즈/국가/강</b><br><span style="font-size:0.8em;color:#666;">수십조~수백조</span></div><button class="action-btn" style="background:#00695c;padding:6px 10px;" onclick="window.buyFlex('mega')">초거대 매입</button></div>
+            <div class="info-box" style="border:1px solid #d32f2f;"><div><b>난치병 신약 3상 투자</b><br><span style="font-size:0.8em;color:#666;">5,000억 | 바이오주 연동</span></div><div style="display:flex;gap:5px;margin-top:5px;"><select id="flex-bio-sel" style="flex:1;"></select><button class="action-btn" style="background:#d32f2f;" onclick="window.devDrug()">투자</button></div></div>
+            <div class="info-box" style="border:1px solid #1976d2;"><div><b>글로벌 R&D 대규모 투자</b><br><span style="font-size:0.8em;color:#666;">1조 원 | 전 종목 연동</span></div><div style="display:flex;gap:5px;margin-top:5px;"><select id="flex-rnd-sel" style="flex:1;"></select><button class="action-btn" style="background:#1976d2;" onclick="window.investRND()">투자</button></div></div>
+            <div class="info-box" style="border:1px solid #f57c00;"><div><b>최고층 랜드마크 건설</b><br><select id="tower-country" style="width:80px;padding:4px;"><option value="한국">한국</option><option value="미국">미국</option><option value="일본">일본</option><option value="영국">영국</option><option value="프랑스">프랑스</option><option value="스페인">스페인</option><option value="호주">호주</option><option value="중국">중국</option><option value="싱가포르">싱가포르</option><option value="홍콩">홍콩</option></select> <input type="number" id="tower-floors" placeholder="층수(50+)" style="width:80px;padding:4px;"><br><span style="font-size:0.7em;color:#666;">층당 500억</span></div><button class="action-btn" style="background:#f57c00;width:100%;margin-top:5px;" onclick="window.buildMegaTower()">건설</button></div>
         </div>
         <div id="flex-concert-view" style="display:none;flex-direction:column;gap:8px;">
-            <div style="background:#fff;padding:15px;border-radius:8px;border:1px solid #e0e0e0;"><h4 style="margin:0 0 10px 0;color:#1a237e;">🎤 엔터 투어 개최</h4><div class="input-row" style="margin-bottom:8px;"><select id="concert-artist" style="flex:1;width:100%;font-size:0.9em;"></select></div><div class="input-row" style="margin-bottom:10px;"><input type="number" id="concert-days" placeholder="투어 일수 (1~100일)" min="1" max="100" style="flex:1;width:100%;"></div><button class="action-btn" style="width:100%;background:#8e24aa;padding:10px;" onclick="hostConcert()">개최 실행</button></div>
+            <div style="background:#fff;padding:15px;border-radius:8px;border:1px solid #e0e0e0;"><h4 style="margin:0 0 10px 0;color:#1a237e;">🎤 엔터 투어 개최</h4><div class="input-row" style="margin-bottom:8px;"><select id="concert-artist" style="flex:1;width:100%;font-size:0.9em;"></select></div><div class="input-row" style="margin-bottom:10px;"><input type="number" id="concert-days" placeholder="투어 일수 (1~100일)" min="1" max="100" style="flex:1;width:100%;"></div><button class="action-btn" style="width:100%;background:#8e24aa;padding:10px;" onclick="window.hostConcert()">개최 실행</button></div>
         </div>
         <div id="flex-sports-view" style="display:none;flex-direction:column;gap:8px;">
             <div class="input-row" style="margin-bottom:6px;">
-              <select id="sports-country" onchange="renderClubs()" style="flex:1;width:100%;">
+              <select id="sports-country" onchange="window.renderClubs()" style="flex:1;width:100%;">
                 <option value="영국 (EPL/축구)">🇬🇧 영국 (EPL 축구)</option><option value="스페인 (라리가/축구)">🇪🇸 스페인 (라리가 축구)</option><option value="미국 (NBA/농구)">🇺🇸 미국 (NBA 농구)</option><option value="미국 (MLB/야구)">🇺🇸 미국 (MLB 야구)</option><option value="미국 (NFL/미식축구)">🇺🇸 미국 (NFL 미식축구)</option><option value="유럽 (F1/레이싱)">🏎️ 유럽 (F1 레이싱)</option><option value="한국 (KBO/야구)">🇰🇷 한국 (KBO 야구)</option><option value="한국 (K리그1/축구)">🇰🇷 한국 (K리그1 축구)</option><option value="글로벌 (E-스포츠)">🎮 글로벌 (E-스포츠)</option>
               </select>
             </div>
@@ -281,9 +216,9 @@ table.data-table th,table.data-table td{border:1px solid #ddd;padding:6px} table
       <div class="tab-content" id="tab-politics_run" style="display:none;padding:10px;">
         <h4 style="margin:0 0 5px 0;color:#1a237e;">🏛️ 정계 진출 (출마 및 로비)</h4>
         <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:15px;">
-            <div style="background:#fff;border:1px solid #ddd;padding:10px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;"><div><b>국회의원 출마</b><br><span style="font-size:0.8em;color:#666;">비용 100억</span></div><button class="action-btn" style="background:#1976d2;" onclick="runForPolitics('assembly')">출마</button></div>
-            <div style="background:#fff;border:1px solid #ddd;padding:10px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;"><div><b>장관 로비</b><br><span style="font-size:0.8em;color:#666;">비용 500억</span></div><button class="action-btn" style="background:#8e24aa;" onclick="runForPolitics('minister')">로비</button></div>
-            <div style="background:#fff;border:1px solid #ddd;padding:10px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;"><div><b>대통령 대선 출마</b><br><span style="font-size:0.8em;color:#666;">비용 1조</span></div><button class="action-btn" style="background:#d32f2f;" onclick="runForPolitics('president')">출마</button></div>
+            <div style="background:#fff;border:1px solid #ddd;padding:10px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;"><div><b>국회의원 출마</b><br><span style="font-size:0.8em;color:#666;">비용 100억</span></div><button class="action-btn" style="background:#1976d2;" onclick="window.runForPolitics('assembly')">출마</button></div>
+            <div style="background:#fff;border:1px solid #ddd;padding:10px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;"><div><b>장관 로비</b><br><span style="font-size:0.8em;color:#666;">비용 500억</span></div><button class="action-btn" style="background:#8e24aa;" onclick="window.runForPolitics('minister')">로비</button></div>
+            <div style="background:#fff;border:1px solid #ddd;padding:10px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;"><div><b>대통령 대선 출마</b><br><span style="font-size:0.8em;color:#666;">비용 1조</span></div><button class="action-btn" style="background:#d32f2f;" onclick="window.runForPolitics('president')">출마</button></div>
         </div>
         <h4 style="margin:0 0 5px 0;color:#1a237e;border-top:1px dashed #ccc;padding-top:10px;">🛡️ 내 첩자 현황</h4><div id="my-politicians-list" style="display:flex;flex-direction:column;gap:8px;"></div>
       </div>
@@ -291,43 +226,44 @@ table.data-table th,table.data-table td{border:1px solid #ddd;padding:6px} table
       <div class="tab-content" id="tab-deriv" style="display:none;padding:10px;">
         <div style="max-width:600px;margin:0 auto;width:100%;">
             <div class="input-row" style="margin-bottom:5px;">
-              <select id="opt-asset" onchange="updateOptPrice()" style="flex:1.5;"><option value="kospi">KOSPI 200</option><option value="nasdaq" selected>NASDAQ 100</option><option value="wti">WTI (원유)</option><option value="gold">Gold (금)</option><option value="bond10">미 10년 국채</option><option value="비트코인(BTC)">비트코인(BTC)</option><option value="이더리움(ETH)">이더리움(ETH)</option><option value="삼성전자">삼성전자</option><option value="SK하이닉스">SK하이닉스</option><option value="Tesla">테슬라</option><option value="Nvidia">엔비디아</option></select>
-              <select id="opt-margin-mode" style="flex:1;" onchange="updateOptPrice()"><option value="isolated" selected>격리</option><option value="cross">교차</option></select>
+              <select id="opt-asset" onchange="window.updateOptPrice()" style="flex:1.5;"><option value="kospi">KOSPI 200</option><option value="nasdaq" selected>NASDAQ 100</option><option value="wti">WTI (원유)</option><option value="gold">Gold (금)</option><option value="bond10">미 10년 국채</option><option value="비트코인(BTC)">비트코인(BTC)</option><option value="이더리움(ETH)">이더리움(ETH)</option><option value="삼성전자">삼성전자</option><option value="SK하이닉스">SK하이닉스</option><option value="Tesla">테슬라</option><option value="Nvidia">엔비디아</option></select>
+              <select id="opt-margin-mode" style="flex:1;" onchange="window.updateOptPrice()"><option value="isolated" selected>격리</option><option value="cross">교차</option></select>
             </div>
             <div class="input-row" style="margin-bottom:5px;background:#e8eaf6;padding:8px;border-radius:6px;border:1px solid #c5cae9;">
-              <span style="font-size:0.85em;font-weight:bold;color:#1a237e;white-space:nowrap;">🔥 레버리지: <span id="lev-display" style="color:#d32f2f;">10</span>x</span><input type="range" id="opt-leverage" min="1" max="100" value="10" style="flex:1;cursor:pointer;" oninput="updateOptPrice()">
+              <span style="font-size:0.85em;font-weight:bold;color:#1a237e;white-space:nowrap;">🔥 레버리지: <span id="lev-display" style="color:#d32f2f;">10</span>x</span><input type="range" id="opt-leverage" min="1" max="100" value="10" style="flex:1;cursor:pointer;" oninput="window.updateOptPrice()">
             </div>
             <div class="input-row" style="margin-bottom:5px;">
-              <input type="number" id="opt-strike" placeholder="목표 행사가 (아래 호가 클릭)" onchange="updateOptPrice()" style="flex:1;">
-              <input type="number" id="opt-qty" value="1" min="1" placeholder="계약수" onchange="updateOptPrice()" style="flex:1;">
+              <input type="number" id="opt-strike" placeholder="목표 행사가 (아래 호가 클릭)" onchange="window.updateOptPrice()" style="flex:1;">
+              <input type="number" id="opt-qty" value="1" min="1" placeholder="계약수" onchange="window.updateOptPrice()" style="flex:1;">
             </div>
             <div style="display:flex;gap:4px;margin-bottom:10px;">
-              <button class="btn-quick" style="background:#546e7a;" onclick="setOptQty(0.1)">10%</button><button class="btn-quick" style="background:#546e7a;" onclick="setOptQty(0.25)">25%</button><button class="btn-quick" style="background:#546e7a;" onclick="setOptQty(0.5)">50%</button><button class="btn-quick" style="background:#546e7a;" onclick="setOptQty(0.75)">75%</button><button class="btn-quick" style="background:#1a237e;" onclick="setOptQty(1)">MAX</button>
+              <button class="btn-quick" style="background:#546e7a;" onclick="window.setOptQty(0.1)">10%</button><button class="btn-quick" style="background:#546e7a;" onclick="window.setOptQty(0.25)">25%</button><button class="btn-quick" style="background:#546e7a;" onclick="window.setOptQty(0.5)">50%</button><button class="btn-quick" style="background:#546e7a;" onclick="window.setOptQty(0.75)">75%</button><button class="btn-quick" style="background:#1a237e;" onclick="window.setOptQty(1)">MAX</button>
             </div>
         </div>
         <div style="display:flex;flex-direction:row;flex-wrap:wrap;gap:10px;margin-bottom:10px;font-size:0.85em;background:#fff;padding:8px;border:1px solid #1a237e;border-radius:6px;box-shadow:inset 0 0 5px rgba(0,0,0,0.05);">
           <div style="flex:1;min-width:130px;border-right:1px dashed #ccc;padding-right:8px;display:flex;flex-direction:column;gap:2px;" id="opt-orderbook"></div>
           <div style="flex:1.5;min-width:180px;display:flex;flex-direction:column;gap:5px;">
-            <div style="display:flex;gap:2px;margin-bottom:2px;"><button class="tf-btn opt-tf-btn" onclick="setOptTimeframe(30, this)">1달</button><button class="tf-btn opt-tf-btn active" onclick="setOptTimeframe(90, this)">3달</button><button class="tf-btn opt-tf-btn" onclick="setOptTimeframe(180, this)">6달</button><button class="tf-btn opt-tf-btn" onclick="setOptTimeframe(365, this)">1년</button></div>
+            <div style="display:flex;gap:2px;margin-bottom:2px;"><button class="tf-btn opt-tf-btn" onclick="window.setOptTimeframe(30, this)">1달</button><button class="tf-btn opt-tf-btn active" onclick="window.setOptTimeframe(90, this)">3달</button><button class="tf-btn opt-tf-btn" onclick="window.setOptTimeframe(180, this)">6달</button><button class="tf-btn opt-tf-btn" onclick="window.setOptTimeframe(365, this)">1년</button></div>
             <div style="flex:1;position:relative;min-height:100px;background:#f5f7fa;border-radius:4px;"><canvas id="optChart"></canvas></div>
             <div style="background:#fff;padding:4px;border:1px solid #ccc;border-radius:4px;font-size:0.9em;margin-top:2px;">
-                <div style="color:#6a1b9a;">상태: <span id="opt-status">-</span></div>
-                <div>가치: <span id="opt-curr-val">0</span>원 | <span style="color:#d32f2f;font-weight:bold;" id="opt-liq-display">청산가: 0원</span></div>
+                <div style="color:#6a1b9a;">상태: <span id="opt-status">-</span> (수수료 0.04%)</div>
+                <div>가치: <span id="opt-curr-val">0</span>원</div>
+                <div style="color:#d32f2f;font-weight:bold;" id="opt-liq-display">청산가: 0원</div>
             </div>
           </div>
         </div>
-        <div class="btn-grid-4" style="margin-bottom:10px;"><button class="action-btn" style="background:#d32f2f;" onclick="tradeFutures('long')">선물 Long</button><button class="action-btn" style="background:#1976d2;" onclick="tradeFutures('short')">선물 Short</button><button class="action-btn" style="background:#e53935;" onclick="tradeOption('call', 'buy')">Call 옵션</button><button class="action-btn" style="background:#1e88e5;" onclick="tradeOption('put', 'buy')">Put 옵션</button></div>
+        <div class="btn-grid-4" style="margin-bottom:10px;"><button class="action-btn" style="background:#d32f2f;" onclick="window.tradeFutures('long')">선물 Long</button><button class="action-btn" style="background:#1976d2;" onclick="window.tradeFutures('short')">선물 Short</button><button class="action-btn" style="background:#e53935;" onclick="window.tradeOption('call', 'buy')">Call 옵션</button><button class="action-btn" style="background:#1e88e5;" onclick="window.tradeOption('put', 'buy')">Put 옵션</button></div>
         <div style="flex:1;overflow-y:auto;"><table class="data-table" id="opt-position-table"></table></div>
       </div>
 
       <div class="tab-content" id="tab-wallst" style="display:none;padding:10px;">
-        <div style="display:flex;gap:6px;margin-bottom:8px;"><button class="re-c-btn active" onclick="switchWallStTab('list', this)">M&A 시장</button><button class="re-c-btn" onclick="switchWallStTab('org', this)">조직도 (자회사)</button></div>
+        <div style="display:flex;gap:6px;margin-bottom:8px;"><button class="re-c-btn active" onclick="window.switchWallStTab('list', this)">M&A 시장</button><button class="re-c-btn" onclick="window.switchWallStTab('org', this)">조직도 (자회사)</button></div>
         <div class="wallst-container" id="wallst-market-view"><div class="wallst-list" id="wallst-fund-list"></div><div class="wallst-detail" id="wallst-fund-detail"></div></div>
         <div id="wallst-org-view" style="display:none;flex:1;overflow-y:auto;"></div>
       </div>
 
       <div class="tab-content" id="tab-vip" style="display:none;padding:10px;">
-        <div class="input-row" style="margin-bottom:6px;"><select id="vip-category-filter" onchange="renderVipStore()"><option value="all">전체 수집품 (500종)</option><option value="미술품">미술품</option><option value="한국미술">한국미술</option><option value="조각">조각</option><option value="고서">희귀 고서</option><option value="음악IP">음악IP</option><option value="건축물">글로벌 건축물</option><option value="국내건축">국내 건축물</option><option value="디지털/기념품">NFT/기념품</option><option value="클래식카">클래식카</option><option value="보석시계">보석/시계</option></select></div>
+        <div class="input-row" style="margin-bottom:6px;"><select id="vip-category-filter" onchange="window.renderVipStore()"><option value="all">전체 수집품 (500종)</option><option value="미술품">미술품</option><option value="한국미술">한국미술</option><option value="조각">조각</option><option value="고서">희귀 고서</option><option value="음악IP">음악IP</option><option value="건축물">글로벌 건축물</option><option value="국내건축">국내 건축물</option><option value="디지털/기념품">NFT/기념품</option><option value="클래식카">클래식카</option><option value="보석시계">보석/시계</option></select></div>
         <div id="vip-items-list" style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:8px;"></div>
       </div>
 
@@ -335,16 +271,16 @@ table.data-table th,table.data-table td{border:1px solid #ddd;padding:6px} table
       
       <div class="tab-content" id="tab-hr" style="display:none;padding:10px;">
         <div style="display:flex;gap:4px;margin-bottom:10px;overflow-x:auto;padding-bottom:5px;border-bottom:1px solid #ccc;">
-            <button class="re-c-btn active" onclick="switchHRTab('fa', this)">🌟 글로벌 인재</button>
-            <button class="re-c-btn" onclick="switchHRTab('pol', this)">🏛️ 정계 인사</button>
-            <button class="re-c-btn" onclick="switchHRTab('hired', this)">💼 고용리스트</button>
-            <button class="re-c-btn" onclick="switchHRTab('manage', this)">🏢 사내 조직</button>
+            <button class="re-c-btn active" onclick="window.switchHRTab('fa', this)">🌟 글로벌 인재</button>
+            <button class="re-c-btn" onclick="window.switchHRTab('pol', this)">🏛️ 정계 인사</button>
+            <button class="re-c-btn" onclick="window.switchHRTab('hired', this)">💼 고용리스트</button>
+            <button class="re-c-btn" onclick="window.switchHRTab('manage', this)">🏢 사내 조직</button>
         </div>
         <div id="hr-fa-view" style="display:block;"><div id="hr-transfer-market" style="max-height:450px;overflow-y:auto;background:#f0f4f8;padding:8px;border-radius:6px;border:1px solid #1a237e;"></div></div>
         <div id="hr-hired-view" style="display:none;">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;">
                 <h4 style="margin:0;color:#1a237e;">내 소속 인재</h4>
-                <div style="display:flex;gap:4px;"><button class="btn-quick" style="background:#555;" onclick="currentHiredFilter='all'; hrPage=1; renderHR();">전체</button><button class="btn-quick" style="background:#1976d2;" onclick="currentHiredFilter='corp'; hrPage=1; renderHR();">기업</button><button class="btn-quick" style="background:#b71c1c;" onclick="currentHiredFilter='pol'; hrPage=1; renderHR();">정치인</button></div>
+                <div style="display:flex;gap:4px;"><button class="btn-quick" style="background:#555;" onclick="currentHiredFilter='all'; hrPage=1; window.renderHR();">전체</button><button class="btn-quick" style="background:#1976d2;" onclick="currentHiredFilter='corp'; hrPage=1; window.renderHR();">기업</button><button class="btn-quick" style="background:#b71c1c;" onclick="currentHiredFilter='pol'; hrPage=1; window.renderHR();">정치인</button></div>
             </div>
             <div id="hr-employee-list" style="min-height:100px;background:#f9f9f9;padding:8px;border-radius:6px;margin-bottom:5px;"></div>
             <div id="hr-pagination" style="text-align:center; margin-bottom:10px;"></div>
@@ -357,20 +293,20 @@ table.data-table th,table.data-table td{border:1px solid #ddd;padding:6px} table
 
       <div class="tab-content" id="tab-bank" style="display:none;padding:10px;">
         <div style="display:flex;gap:4px;margin-bottom:10px;">
-            <button class="re-c-btn active" style="flex:1;" onclick="switchBankTab('loan', this)">🏦 예금/대출 및 내 사채</button>
-            <button class="re-c-btn" style="flex:1;" onclick="switchBankTab('bond', this)">📜 시장 회사채 (투자)</button>
+            <button class="re-c-btn active" style="flex:1;" onclick="window.switchBankTab('loan', this)">🏦 예금/대출 및 내 사채</button>
+            <button class="re-c-btn" style="flex:1;" onclick="window.switchBankTab('bond', this)">📜 시장 회사채 (투자)</button>
         </div>
         <div id="bank-loan-view" style="display:block;">
             <h4 style="margin:0 0 5px 0;color:#1a237e;">🏦 예금 관리 (연 <span id="bank-dep-rate">3.5</span>%)</h4>
-            <div style="display:flex;gap:4px;margin-bottom:5px;"><button class="btn-quick" style="background:#43a047;" onclick="setBankQty('dep', 0.1)">10%</button><button class="btn-quick" style="background:#43a047;" onclick="setBankQty('dep', 0.5)">50%</button><button class="btn-quick" style="background:#1b5e20;" onclick="setBankQty('dep', 1)">MAX</button><button class="btn-quick" style="background:#1b5e20;" onclick="setBankQty('with', 0.5)">출금 50%</button><button class="btn-quick" style="background:#003300;" onclick="setBankQty('with', 1)">MAX</button></div>
-            <div class="input-row"><input type="number" id="bank-manual-dep" placeholder="금액 직접입력"><button class="action-btn" style="background:#43a047;" onclick="manualBank('deposit')">예금</button><button class="action-btn" style="background:#1b5e20;" onclick="manualBank('withdraw')">출금</button></div>
+            <div style="display:flex;gap:4px;margin-bottom:5px;"><button class="btn-quick" style="background:#43a047;" onclick="window.setBankQty('dep', 0.1)">10%</button><button class="btn-quick" style="background:#43a047;" onclick="window.setBankQty('dep', 0.5)">50%</button><button class="btn-quick" style="background:#1b5e20;" onclick="window.setBankQty('dep', 1)">MAX</button><button class="btn-quick" style="background:#1b5e20;" onclick="window.setBankQty('with', 0.5)">출금 50%</button><button class="btn-quick" style="background:#003300;" onclick="window.setBankQty('with', 1)">MAX</button></div>
+            <div class="input-row"><input type="number" id="bank-manual-dep" placeholder="금액 직접입력"><button class="action-btn" style="background:#43a047;" onclick="window.manualBank('deposit')">예금</button><button class="action-btn" style="background:#1b5e20;" onclick="window.manualBank('withdraw')">출금</button></div>
             <hr style="margin:15px 0;"><h4 style="margin:0 0 5px 0;color:#d84315;">💳 대출 관리 (연 <span id="bank-loan-rate">6.0</span>%)</h4>
-            <div style="display:flex;gap:4px;margin-bottom:5px;"><button class="btn-quick" style="background:#f57c00;" onclick="setBankQty('bor', 0.1)">10%</button><button class="btn-quick" style="background:#f57c00;" onclick="setBankQty('bor', 0.5)">50%</button><button class="btn-quick" style="background:#e65100;" onclick="setBankQty('bor', 1)">MAX</button><button class="btn-quick" style="background:#bf360c;" onclick="setBankQty('rep', 0.5)">상환 50%</button><button class="btn-quick" style="background:#3e2723;" onclick="setBankQty('rep', 1)">MAX</button></div>
-            <div class="input-row"><input type="number" id="bank-manual-loan" placeholder="금액 직접입력"><button class="action-btn" style="background:#f57c00;" onclick="manualBank('borrow')">대출</button><button class="action-btn" style="background:#bf360c;" onclick="manualBank('repay')">상환</button></div>
+            <div style="display:flex;gap:4px;margin-bottom:5px;"><button class="btn-quick" style="background:#f57c00;" onclick="window.setBankQty('bor', 0.1)">10%</button><button class="btn-quick" style="background:#f57c00;" onclick="window.setBankQty('bor', 0.5)">50%</button><button class="btn-quick" style="background:#e65100;" onclick="window.setBankQty('bor', 1)">MAX</button><button class="btn-quick" style="background:#bf360c;" onclick="window.setBankQty('rep', 0.5)">상환 50%</button><button class="btn-quick" style="background:#3e2723;" onclick="window.setBankQty('rep', 1)">MAX</button></div>
+            <div class="input-row"><input type="number" id="bank-manual-loan" placeholder="금액 직접입력"><button class="action-btn" style="background:#f57c00;" onclick="window.manualBank('borrow')">대출</button><button class="action-btn" style="background:#bf360c;" onclick="window.manualBank('repay')">상환</button></div>
             <hr style="margin:15px 0;"><h4 style="margin:0 0 5px 0;color:#4e342e;">📜 내 회사채 발행</h4>
             <div style="font-size:0.8em;color:#555;margin-bottom:5px;">내 신용등급: <b id="my-corp-rating" style="color:#1a237e;">A</b> | 고정금리: <b id="my-corp-rate">0%</b><br>시장가 상환 비용: <b id="my-corp-bond-market" style="color:#d32f2f;">0 원</b> <span id="my-corp-bond-due" style="color:#b71c1c; font-weight:bold; margin-left:5px;"></span></div>
-            <div style="display:flex;gap:4px;margin-bottom:5px;"><button class="btn-quick" style="background:#4e342e;" onclick="setBankQty('ibond', 0.1)">발행 10%</button><button class="btn-quick" style="background:#4e342e;" onclick="setBankQty('ibond', 0.5)">발행 50%</button><button class="btn-quick" style="background:#4e342e;" onclick="setBankQty('ibond', 1)">MAX</button><button class="btn-quick" style="background:#3e2723;" onclick="setBankQty('rbond', 0.5)">상환 50%</button><button class="btn-quick" style="background:#271815;" onclick="setBankQty('rbond', 1)">MAX</button></div>
-            <div class="input-row"><input type="number" id="bank-manual-corpbond" placeholder="발행 금액 / 상환 잔액 직접입력"><button class="action-btn" style="background:#4e342e;" onclick="manualBank('issue_bond')">발행(90일)</button><button class="action-btn" style="background:#3e2723;" onclick="manualBank('repay_bond')">상환</button></div>
+            <div style="display:flex;gap:4px;margin-bottom:5px;"><button class="btn-quick" style="background:#4e342e;" onclick="window.setBankQty('ibond', 0.1)">발행 10%</button><button class="btn-quick" style="background:#4e342e;" onclick="window.setBankQty('ibond', 0.5)">발행 50%</button><button class="btn-quick" style="background:#4e342e;" onclick="window.setBankQty('ibond', 1)">MAX</button><button class="btn-quick" style="background:#3e2723;" onclick="window.setBankQty('rbond', 0.5)">상환 50%</button><button class="btn-quick" style="background:#271815;" onclick="window.setBankQty('rbond', 1)">MAX</button></div>
+            <div class="input-row"><input type="number" id="bank-manual-corpbond" placeholder="발행 금액 / 상환 잔액 직접입력"><button class="action-btn" style="background:#4e342e;" onclick="window.manualBank('issue_bond')">발행(90일)</button><button class="action-btn" style="background:#3e2723;" onclick="window.manualBank('repay_bond')">상환</button></div>
         </div>
         <div id="bank-bond-view" style="display:none; flex-direction:column; gap:8px;">
             <p style="font-size:0.8em;color:#555;">다양한 신용등급의 시장 회사채를 매매합니다. 부도 위험이 존재합니다.</p>
@@ -382,548 +318,10 @@ table.data-table th,table.data-table td{border:1px solid #ddd;padding:6px} table
   </div>
 </div>
 
-<script>
-  // ==============================================================================
-  // 코어 로직 & 데이터 선언 (에러 완벽 차단 및 단일 스코프, 전역 바인딩 철저)
-  // ==============================================================================
-  const $id = id => document.getElementById(id);
-  const setTxt = (id, t) => { let e=$id(id); if(e) e.innerText=t; };
-  const setHTML = (id, h) => { let e=$id(id); if(e) e.innerHTML=h; };
-  const setClass = (id, c) => { let e=$id(id); if(e) e.className=c; };
-  const setDisplay = (id, d) => { let e=$id(id); if(e) e.style.display=d; };
+<!-- ============================================================================== -->
+<!-- 3. 핵심 로직 연결 (반드시 index.html 맨 마지막에 위치해야 합니다) -->
+<!-- ============================================================================== -->
+<script type="module" src="./app.js"></script>
 
-  function format(v){if(isNaN(v)||!isFinite(v))return"0";return Math.round(v).toLocaleString('ko-KR',{useGrouping:true});}
-  function formatCap(v){if(isNaN(v)||!isFinite(v))return"0";if(v>=1e16)return(v/1e16).toFixed(2)+"경";if(v>=1e12)return(v/1e12).toFixed(2)+"조";if(v>=1e8)return Math.floor(v/1e8)+"억";return format(v);}
-  function formatK(v){let abs=Math.abs(v);if(abs>=1e12)return(v/1e12).toFixed(2)+"조";if(abs>=1e8)return(v/1e8).toFixed(1)+"억";if(abs>=1e4)return(v/1e4).toFixed(0)+"만";return v;}
-  window.showToast = function(m,t="black"){let b=document.createElement('div');b.className='toast'+(t==="event"?' event':'');if(t==="red")b.style.background="rgba(211,47,47,0.95)";if(t==="blue")b.style.background="rgba(25,118,210,0.95)";b.innerText=m;$id('toast-container').appendChild(b);setTimeout(()=>b.remove(),3000);};
-
-  let stocks=[], realEstates=[], vipAssets=[], rivalFunds=[], acquiredFunds=[], indirectFunds=[], optPositions=[];
-  let companyHistory=[], monthlyNewsList=[], myEmployees=[], transferMarket=[], globalLeaders=[], blackOpsList=[];
-  let hofYearlyData=[], myClubs=[], marketBonds=[], mediaList=[], myMedias=[];
-  
-  let megaEventTriggered=false, gameInterval=null, currentSpeed=1000, speedTimeout=null;
-  let gameMode="hedge", maxLoan=1e10, playerName="투자자", cash=100000000000, depPrin=0, loanPrin=0, corpBond=0, corpBondDueDate=null;
-  let hofPoints=0, secRisk=0, selectedId=null, currentMarket="KOSPI", currentTimeframe=90, lastMonth=1;
-  let selectedFundId=null, selectedReCountry="한국", idCounter=1, currentPortFilter='all', currentHRTab='corp';
-  let currentHiredFilter='all', hrPage=1, optTimeframeVal=90, myIpoLevel=0, obExpanded=false, isMobileView=false;
-  let currentDate = new Date(2025, 0, 1);
-  let gChart=null, oChart=null;
-
-  window.addNewsBoard = function(title){monthlyNewsList.push(title);};
-  window.addCompanyHistory = function(title,desc){let y=currentDate.getFullYear();let q=Math.ceil((currentDate.getMonth()+1)/3);companyHistory.unshift({year:y,date:`${y}년 ${q}분기`,title,desc});};
-
-  let hrDepts = { trading:{name:"트레이딩 본부",count:0,salary:5e8,desc:"매일 수익",agencies:["BlackRock","Vanguard"],effDesc:"가동팀당 10억 현금 생성"}, research:{name:"리서치 센터",count:0,salary:3e8,desc:"호재 파악",agencies:["WPP","Omnicom"],effDesc:"매월 보유주식 급등 이벤트"}, lobby:{name:"로비실",count:0,salary:8e8,desc:"SEC 방어",agencies:["김앤장"],effDesc:"매월 SEC지수 지속 차감"} };
-  let macroIndices = { kospi:{val:2600,prev:2600,name:"KOSPI"}, kosdaq:{val:850,prev:850,name:"KOSDAQ"}, nasdaq:{val:18000,prev:18000,name:"NASDAQ"}, snp500:{val:5500,prev:5500,name:"S&P500"}, usdkrw:{val:1350,prev:1350,name:"USD/KRW"}, gold:{val:2500,prev:2500,name:"Gold"}, wti:{val:80,prev:80,name:"WTI원유"}, bond10:{val:4.10,prev:4.10,name:"미10년국채"}, bond30:{val:4.35,prev:4.35,name:"미30년국채"}, reIndex:{val:1000,prev:1000,name:"부동산지수"} };
-
-  let personPool = [];
-  const ppStr = "존 메이너드 케인스|거시경제학 창시자|📚/하이에크|오스트리아학파 거장|🏛️/조제프 슘페터|창조적 파괴|🔥/밀턴 프리드먼|통화주의 학파|💰/폴 새뮤얼슨|신고전파 종합|📘/일론 머스크|테슬라 CEO|🚀/제프 베이조스|아마존 창업자|📦/워런 버핏|투자의 현인|👴/레이 달리오|브리지워터 창립자|📉/사토시 나카모토|비트코인 창시자|🪙";
-  const futureEvents = { 2030: { title: "AI·클라우드 시대 만개", news: "AI 인프라 및 전력망 관련주 폭등 기대", buffTag: "빅테크", nerfTag: "일반" }, 2035: { title: "Physical AI 및 로봇 상용화", news: "산업용 로봇과 자율주행 기업 주도권 확보", buffTag: "반도체", nerfTag: "일반" }, 2040: { title: "완전 자동화 모빌리티 시대", news: "기존 자동차 기업들, 자율주행 모빌리티로 진화 완료", newStock: "Autonomous Mobility Systems" }, 2050: { title: "고령화 및 생명 연장 혁명", news: "수명 연장 및 세포치료제 기업 부각", buffTag: "바이오", nerfTag: "빅테크" }, 2060: { title: "기후변화 위기 최고조", news: "물, 식량, 대체에너지 관련 자산 가치 폭등", newStock: "Global Desalination & Energy" }, 2080: { title: "초인류 프로젝트 본격화", news: "인간 능력 증강(BCI) 바이오 기업 등장", newStock: "Neural Computing Systems" }, 2100: { title: "상온 핵융합 상용화 성공", news: "에너지 무한대 시대 돌입, 전력 비용 0 수렴", buffTag: "가상화폐", nerfTag: "에너지" }, 2120: { title: "우주 경제 개막", news: "달 기지 건설 및 소행성 채굴 상업화 시대", newStock: "Planetary Logistics Corp" }, 2140: { title: "태양계 인프라 완성", news: "태양계 무역망 형성, 주식시장 우주 자본주의로 개편", newStock: "Solar System Network" } };
-  const rawKospi = "삼성전자,SK하이닉스,LG에너지솔루션,삼성바이오로직스,현대차,기아,셀트리온,POSCO홀딩스,NAVER,삼성SDI,LG화학,삼성물산,KB금융,신한지주,카카오,포스코퓨처엠,삼성생명,하나금융지주,LG전자,메리츠금융지주,SK,카카오뱅크,한국전력,두산에너빌리티,삼성화재,HD현대중공업,KT&G,한화에어로스페이스,크래프톤,삼성전기,SK이노베이션,우리금융지주,고려아연,기업은행,에코프로머티,한미반도체,KT,대한항공,SK텔레콤,HD한국조선해양,한화오션,S-Oil,아모레퍼시픽,삼성에스디에스,포스코인터내셔널,HD현대일렉트릭,LG생활건강,현대글로비스,삼성중공업,현대모비스";
-  const rawKosdaq = "에코프로비엠,에코프로,알테오젠,HLB,엔켐,리노공업,셀트리온제약,HPSP,레인보우로보틱스,이오테크닉스,펄어비스,클래시스,동진쎄미켐,휴젤,실리콘투,삼천당제약,JYP Ent.,카카오게임즈,솔브레인,원익IPS,LS머트리얼즈,에스엠,파마리서치,피에스케이,보로노이,주성엔지니어링,이가켐바이오,테크윙,에이비엘바이오,에스티팜,하나마이크론,두산테스나,디앤디파마텍,제주반도체,심텍,ISC,신성델타테크,루닛,펩트론,대주전자재료,에스앤에스텍,제이앤티씨,솔브레인홀딩스,고영,네이처셀,오스코텍,유진테크,씨젠,테스,와이씨";
-  const rawNasdaq = "Apple,Microsoft,Nvidia,Amazon,Alphabet,Meta,Tesla,Broadcom,Costco,ASML,Netflix,AMD,Cisco,PepsiCo,Adobe,Intel,Texas Instruments,Comcast,Qualcomm,Intuit,Amgen,Applied Materials,Honeywell,Starbucks,Intuitive Surgical,Gilead,Booking,Mondelez,Analog Devices,Automatic Data,Vertex,ISRG,Regeneron,Zoetis,Fiserv,PayPal,CSX,KLA,Micron,Snowflake,Palo Alto,MercadoLibre,CrowdStrike,Monster,Lululemon,Marriott,DexCom,Cadence,Synopsys,Workday";
-  const rawSnp = "Eli Lilly,JPMorgan,Berkshire Hathaway,UnitedHealth,Johnson & Johnson,ExxonMobil,Visa,Procter & Gamble,Mastercard,Home Depot,Chevron,Merck,AbbVie,Bank of America,Coca-Cola,Walmart,PepsiCo,Thermo Fisher,McDonald's,Abbott,Danaher,Walt Disney,IBM,Caterpillar,Pfizer,Oracle,Salesforce,GE,Verizon,AT&T,Nike,Boeing,Union Pacific,Honeywell,American Express,Goldman Sachs,Morgan Stanley,Lockheed Martin,BlackRock,Citigroup,CVS,Starbucks,3M,Deere,Target,FedEx,Ford,GM,Delta";
-  const rawCrypto = "비트코인(BTC),이더리움(ETH),솔라나(SOL),리플(XRP),도지코인(DOGE),에이다(ADA),아발란체(AVAX),체인링크(LINK),폴카닷(DOT),폴리곤(MATIC)";
-  const realStockData = {"삼성전자":{p:75000,v:5969000000},"SK하이닉스":{p:190000,v:728000000},"현대차":{p:250000,v:210000000},"기아":{p:120000,v:390000000},"NAVER":{p:170000,v:162000000},"카카오":{p:40000,v:440000000},"셀트리온":{p:190000,v:218000000},"LG에너지솔루션":{p:400000,v:234000000},"Apple":{p:280000,v:15300000000},"Microsoft":{p:580000,v:7430000000},"Nvidia":{p:160000,v:24500000000},"Tesla":{p:300000,v:3180000000},"Amazon":{p:250000,v:10400000000},"Alphabet":{p:230000,v:12400000000},"Meta":{p:650000,v:2500000000}};
-
-  const gLeadStr = "us|🇺🇸 미국|대통령/kr|🇰🇷 한국|대통령/cn|🇨🇳 중국|국가주석/jp|🇯🇵 일본|총리/ru|🇷🇺 러시아|대통령/sa|🇸🇦 사우디|왕세자/de|🇩🇪 독일|총리/gb|🇬🇧 영국|총리/fr|🇫🇷 프랑스|대통령/in|🇮🇳 인도|총리";
-  const boStr = "📉 한국 국채 타깃 공매도|60|한국 국채 폭락 유도|금융|-0.15/💴 엔 캐리 트레이드 청산|80|아시아 자본 이탈|ALL|-0.05/💻 금융결제원 사이버 테러|40|은행망 마비|금융|-0.25/🚢 해상봉쇄 훈련|55|해상 운송로 차단|반도체|-0.20/🏢 PF 부실 평가|45|건설사 신용경색|건설|-0.30/💵 안보-외환 스왑|60|달러 무제한 공급|ALL|0.05/🤝 통화 안전기금|70|외국 자본 대량 매수|반도체|0.25/🕊️ 코리아 본드 발행|100|디스카운트 해소|건설|0.30/🇨🇳 위안화 결제 허브|50|유동성 집중 유입|금융|0.30/⚡ 차세대 전략 자원 발표|40|국가 자산가치 재평가|에너지|0.35/🌐 아시아 CBDC 허브|65|핀테크 자본 집중|IT|0.25/📉 대규모 파산|80|금융섹터 초토화|금융|-0.25/🛢️ 테러 자금 지원|40|국제유가 폭등|에너지|0.20/🗣️ 빅테크 스캔들|35|나스닥 폭락|빅테크|-0.15/💥 국지전 도발|200|글로벌 대폭락|ALL|-0.10/🏭 공급망 마비|70|반도체 공급망 마비|반도체|0.20/🚚 희토류 수출 통제|50|2차전지 조달 마비|2차전지|-0.15/🏢 기준금리 폭등 조작|60|부동산 시장 대폭락|건설|-0.20/🏗️ 양적완화 압박|50|부동산 폭등|건설|0.25/🏠 LTV 무제한 특례|40|영끌 매수세 유입|금융|0.15/🦠 팬데믹 조작|80|바이오주 폭등|바이오|0.35/🇪🇺 브렉시트 재현|50|유럽/금융주 타격|금융|-0.10/🚢 유조선 고의 좌초|30|물류주 폭등|자동차|-0.05/🌊 대지진 조작|40|에너지 폭등|원전|-0.30/💻 닷컴 버블 붕괴 조장|90|빅테크 투매 유도|빅테크|-0.40/🪙 코인 법정통화 로비|60|가상화폐 폭등|가상화폐|0.50/🚫 코인 거래소 해킹|45|가상화폐 패닉셀|가상화폐|-0.40/⚔️ 무력 분쟁 격화|55|방산주 폭등|방산|0.25/🛢️ 석유시설 드론 테러|45|유가 초급등|에너지|0.25/📉 서브프라임 재현|95|연쇄 폭락|금융|-0.30/🇺🇸 무역 관세 폭탄|70|소비재 치명적 타격|빅테크|-0.15/🇨🇳 건설사 파산 촉발|55|부동산 폭락|건설|-0.25/🤖 AI 수출 통제|75|AI 대학살|반도체|-0.25";
-  const reCountriesList=["한국","미국","일본","영국","프랑스","스페인","호주","중국","싱가포르","홍콩","글로벌"];
-  const reN={"한국":["롯데월드타워","삼성동 GBC","파크원","IFC 서울","더현대 서울","아크로 서울포레스트","나인원 한남","한남더힐","갤러리아 포레","트리마제"],"미국":["뉴욕 센트럴파크 타워","맨해튼 원57","비벌리힐스 저택","실리콘밸리 토지","마이애미 빌라","시카고 윌리스","라스베가스 콘도","보스턴 빌딩","시애틀 아파트","텍사스 물류센터"],"일본":["도쿄 롯폰기 힐즈","긴자 식스","신주쿠 오피스","시부야 파크타워","오사카 우메다","교토 상업토지","후쿠오카 맨션","도쿄만 타워맨션","나고야 물류센터","홋카이도 리조트"],"영국":["런던 하이드파크","켄싱턴 멘션","메이페어 타운하우스","카나리워프 오피스","첼시 상업빌딩","런던 리버사이드","맨체스터 창고","에든버러 빌딩","소호 부티크","런던 브릿지 펜트하우스"],"프랑스":["파리 샹젤리제 상가","코트다쥐르 빌라","파리 에펠탑 아파트","모나코 펜트하우스","라데팡스 오피스","마르세유 콘도","보르도 포도원","리옹 상업빌딩","칸 저택","몽마르트 호텔"],"스페인":["마드리드 그란비아","바르셀로나 대저택","이비자 빌라","마요르카 리조트","발렌시아 아파트","세비야 상가","마드리드 오피스","말라가 토지","바르셀로나 고딕건물","코스타델솔 펜트하우스"],"호주":["시드니 오페라 펜트","멜버른 오피스","골드코스트 빌라","브리즈번 아파트","퍼스 물류센터","본다이비치 상가","애들레이드 타워","시드니 CBD 토지","캔버라 포도원","다윈 상업빌딩"],"중국":["상하이 루자쭈이","베이징 톰슨리비에라","선전 마천루","광저우 쇼핑몰","항저우 펜트하우스","홍차오 빌라","베이징 산리툰","마카오 카지노부지","칭다오 아파트","상하이 징안 주택"],"싱가포르":["마리나베이 펜트하우스","오차드로드 상가","센토사 빌라","탄종파가 타워","부킷티마 방갈로","클라키 아파트","주롱 물류센터","마리나사우스 토지","파야레바 콤플렉스","도심 콘도미니엄"],"홍콩":["빅토리아피크 저택","센트럴 금융센터","리펄스베이 맨션","카우룽 오피스","코즈웨이베이 펜트","미드레벨 아파트","침사추이 쇼핑몰","홍콩섬 빌라","해피밸리 주거단지","완차이 빌딩"],"글로벌":["사설 연구소","프랜차이즈","우주 기지","강 소유권","심해 자원","다국적 펀드","희귀 원자재","외딴 섬","인공위성","군사 벙커"]};
-  const hFunds = [{name:"Blackstone",type:"PE"},{name:"KKR",type:"PE"},{name:"Citadel",type:"헤지펀드"},{name:"Bridgewater",type:"헤지펀드"},{name:"Apollo",type:"PE"},{name:"Carlyle",type:"PE"},{name:"Renaissance",type:"퀀트펀드"},{name:"Elliott",type:"행동주의"},{name:"AQR Capital",type:"퀀트펀드"},{name:"Two Sigma",type:"퀀트펀드"},{name:"Point72",type:"헤지펀드"},{name:"Bain Capital",type:"PE"},{name:"Oaktree",type:"PE"},{name:"Ares",type:"대체투자"},{name:"TPG",type:"PE"}];
-  const bondGrades = [{g:'AAA',y:0.04,r:0},{g:'AA',y:0.05,r:0.0001},{g:'A',y:0.06,r:0.0005},{g:'BBB',y:0.08,r:0.001},{g:'BB',y:0.12,r:0.003},{g:'B',y:0.18,r:0.008},{g:'C',y:0.25,r:0.015},{g:'D',y:0.40,r:0.03}];
-  const clubsData = { "영국 (EPL/축구)":[{id:'c1',n:"맨체스터 C",p:3e12},{id:'c2',n:"아스널",p:2.5e12},{id:'c3',n:"토트넘",p:1.5e12}], "스페인 (라리가/축구)":[{id:'c7',n:"레알 마드리드",p:4.5e12},{id:'c8',n:"바르셀로나",p:3.8e12}], "미국 (NBA/농구)":[{id:'c4',n:"LA 레이커스",p:6e12},{id:'c5',n:"골든스테이트 워리어스",p:7e12},{id:'c6',n:"뉴욕 닉스",p:6.5e12}], "미국 (MLB/야구)":[{id:'c11',n:"NY 양키스",p:7e12},{id:'c12',n:"LA 다저스",p:6e12}], "미국 (NFL/미식축구)":[{id:'c13',n:"댈러스 카우보이스",p:10e12},{id:'c14',n:"NE 패트리어츠",p:7e12}], "유럽 (F1/레이싱)":[{id:'c15',n:"페라리 F1팀",p:4e12},{id:'c16',n:"메르세데스 F1팀",p:3.5e12}], "한국 (KBO/야구)":[{id:'c17',n:"LG 트윈스",p:2e11},{id:'c18',n:"KIA 타이거즈",p:1.5e11}], "한국 (K리그1/축구)":[{id:'c19',n:"FC서울",p:5e10},{id:'c20',n:"울산HD",p:4e10},{id:'c21',n:"전북현대",p:4.5e10}], "글로벌 (E-스포츠)":[{id:'c22',n:"T1 (LoL)",p:1.5e11},{id:'c23',n:"Fnatic",p:1e11}] };
-  const mediaStr = "m1|KBS (한국방송)|5e12|0.005/m2|MBC (문화방송)|3e12|0.006/m3|SBS (서울방송)|2.5e12|0.006/m4|JTBC|2e12|0.007/m5|TV조선|1.5e12|0.007/m6|조선일보|1.2e12|0.008/m7|중앙일보|1e12|0.008/m8|동아일보|8e11|0.008/m9|매일경제|7e11|0.009/m10|한국경제|7e11|0.009";
-  const cArtStr = "K-POP|BTS|1e11|2.5/K-POP|블랙핑크|8e10|2.3/K-POP|세븐틴|6e10|2.0/K-POP|뉴진스|6e10|2.1/트로트|임영웅|9e10|2.4/트로트|송가인|4e10|1.8/J-POP|YOASOBI|5e10|1.9/J-POP|요네즈 켄시|5.5e10|2.0/해외팝|테일러 스위프트|2e11|3.0/해외팝|마이클 잭슨|2.5e11|3.5/해외팝|비욘세|1.5e11|2.8/해외팝|위켄드|1.2e11|2.6";
-
-  window.getPlayerNetAssets = function() {
-    let stockVal=0, shortVal=0, vipVal=0, reVal=0, indirectVal=0, optNetVal=0, countryVal=0, mediaVal=0;
-    if(stocks) stockVal=stocks.reduce((s, x)=>s+(x.shares*x.price),0);
-    if(stocks) shortVal=stocks.reduce((s, x)=>x.shortShares>0?s+x.shortCost+(x.shortCost-(x.shortShares*x.price)):s,0);
-    if(vipAssets) vipVal=vipAssets.reduce((s, v)=>s+(v.owned*v.usdPrice*macroIndices.usdkrw.val),0);
-    if(realEstates) reVal=realEstates.reduce((s, r)=>s+(r.owned*r.price),0);
-    if(indirectFunds) indirectVal=indirectFunds.reduce((s, f)=>s+f.invested,0);
-    if(mediaList) mediaVal=mediaList.reduce((s, m)=>s+(myMedias.includes(m.id)?m.p:0),0);
-    if(optPositions) optPositions.forEach(p=>{ let c=window.getAssetPrice(p.asset,p.entryPrice); let m=window.getAssetMult(p.asset); optNetVal+=(c-p.entryPrice)*m*p.qty*(p.type==='long'||p.type==='call'?1:-1)+(p.isFut?p.margin:p.prem); });
-    if(globalLeaders) countryVal=globalLeaders.reduce((s, l)=>s+(l.invest?l.invest.current:0),0);
-    let net = cash + depPrin - loanPrin - corpBond + stockVal + shortVal + vipVal + indirectVal + optNetVal + countryVal + reVal + mediaVal;
-    return Math.min(net, 90000000000000000); 
-  };
-
-  window.getReputation = function() {
-    let net = window.getPlayerNetAssets(); let empCount = myEmployees.length; for(let k in hrDepts) empCount += hrDepts[k].count * 10;
-    let compSize = empCount < 10 ? "스타트업" : (empCount < 30 ? "중소기업" : (empCount < 50 ? "중견기업" : (empCount < 100 ? "대기업" : "글로벌기업")));
-    let level = 1; let text = `🌱 ${compSize} 투자자`;
-    if(net >= 1e11) { level = 4; text = `🌍 메이저 ${compSize}`; } if(net >= 1e12) { level = 5; text = `👑 월가 지배자 (${compSize})`; }
-    return { text, level, compSize, empCount };
-  };
-
-  window.getAssetPrice = function(a, fb) { if(macroIndices[a]) return macroIndices[a].val; let s=stocks.find(x=>x.name===a); return s?s.price:fb; };
-  window.getAssetMult = function(a) { return macroIndices[a]?50000:1; };
-  window.initChartSafe = function() { if(!gChart){let c=$id('mainChart');if(c){try{gChart=new Chart(c.getContext('2d'),{type:'line',data:{labels:[],datasets:[{label:'주가',data:[],borderColor:'#d32f2f',backgroundColor:'rgba(211,47,47,0.1)',borderWidth:2,fill:true,pointRadius:0,tension:0.1},{label:'MA20',data:[],borderColor:'#f57c00',borderWidth:1.5,borderDash:[5,5],pointRadius:0,fill:false,tension:0.2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},animation:false,scales:{x:{display:false},y:{display:true,position:'right',ticks:{callback:function(v){return formatK(v);}}}}}});}catch(e){}}} };
-  window.initOptChartSafe = function() { if(!oChart){let c=$id('optChart');if(c){try{oChart=new Chart(c.getContext('2d'),{type:'line',data:{labels:[],datasets:[{label:'가격',data:[],borderColor:'#00838f',borderWidth:2,pointRadius:0,tension:0.1},{label:'평균가',data:[],borderColor:'#1976d2',borderWidth:1.5,borderDash:[5,5],pointRadius:0,fill:false,tension:0},{label:'청산가',data:[],borderColor:'#d32f2f',borderWidth:1.5,borderDash:[2,2],pointRadius:0,fill:false,tension:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},animation:false,scales:{x:{display:false},y:{display:true,position:'right',ticks:{callback:function(v){return formatK(v);}}}}}});}catch(e){}}} };
-  
-  window.buildStocks = function() {
-    stocks = []; idCounter = 1;
-    let sLists = [ {m:"KOSPI", str:rawKospi, p:80000}, {m:"KOSDAQ", str:rawKosdaq, p:65000}, {m:"NASDAQ", str:rawNasdaq, p:250000}, {m:"SNP500", str:rawSnp, p:180000}, {m:"CRYPTO", str:rawCrypto, p:150000} ];
-    sLists.forEach(l => {
-      l.str.split(',').forEach(n => {
-        let tag="일반"; if(l.m==='CRYPTO')tag="가상화폐"; else if(/(반도체|Nvidia|AMD|Intel|ASML|삼성전자|SK하이닉스|TSMC)/.test(n))tag="반도체"; else if(/(Apple|Microsoft|Amazon|Alphabet|Meta|Tesla|Netflix)/.test(n))tag="빅테크"; else if(/(바이오|셀트리온|HLB|알테오젠|Eli Lilly)/.test(n))tag="바이오";
-        let p=Math.floor(l.p*(0.6+Math.random()*1.5)); let isIssued=20000000;
-        if(n.includes('비트코인')){p=95000000; isIssued=19000000;} else if(n.includes('이더리움')){p=4200000; isIssued=120000000;} 
-        if(realStockData[n]){p=realStockData[n].p; isIssued=realStockData[n].v;}
-        stocks.push({id:'s'+(idCounter++), name:n, market:l.m, tag:tag, price:Math.max(10,p), beta:l.m==='CRYPTO'?4.0:1.0, issued:isIssued, isEquity:true, shares:0, cost:0, shortShares:0, shortCost:0, history:[], ma20_history:[]});
-      });
-    });
-    ["미국","한국","일본","중국"].forEach(c => { [10,30].forEach(t => stocks.push({id:'s'+(idCounter++), name:`${c} 국채 ${t}년물`, market:'BOND', tag:'안전자산', price:10000, beta:-0.5, issued:50000000, isEquity:false, shares:0, cost:0, shortShares:0, shortCost:0, history:[], ma20_history:[]})); });
-    [{t:"삼성전자",m:"KOSPI"},{t:"SK하이닉스",m:"KOSPI"}].forEach(o=>{[2,3,5,10].forEach(m=>stocks.push({id:'s'+(idCounter++), name:`${o.t} ${m}X 레버리지`, market:o.m, tag:"레버리지", price:10000, beta:m, issued:5000000, isEquity:true, underlying:o.t, shares:0, cost:0, shortShares:0, shortCost:0, history:[], ma20_history:[]})); });
-    [{n:"KOSDAQ",m:"KOSDAQ"},{n:"NASDAQ",m:"NASDAQ"},{n:"비트코인(BTC)",m:"CRYPTO"},{n:"미국 국채 10년물",m:"BOND"}].forEach(o=>{[2,3,10].forEach(m=>stocks.push({id:'s'+(idCounter++), name:`${o.n} ${m}X 레버리지`, market:o.m, tag:"레버리지", price:10000, beta:m, issued:5000000, isEquity:true, underlying:o.n, shares:0, cost:0, shortShares:0, shortCost:0, history:[], ma20_history:[]})); });
-    stocks.push({id:'s'+(idCounter++), name:"TQQQ (나스닥 3X)", market:"NASDAQ", tag:"레버리지", price:10000, beta:3.0, issued:10000000, isEquity:true, underlying:"NASDAQ", shares:0, cost:0, shortShares:0, shortCost:0, history:[], ma20_history:[]});
-    stocks.push({id:'s'+(idCounter++), name:"SQQQ (나스닥 인버스 3X)", market:"NASDAQ", tag:"인버스", price:10000, beta:-3.0, issued:10000000, isEquity:true, underlying:"NASDAQ", shares:0, cost:0, shortShares:0, shortCost:0, history:[], ma20_history:[]});
-    stocks.push({id:'s'+(idCounter++), name:"SOXL (반도체 3X)", market:"NASDAQ", tag:"레버리지", price:10000, beta:3.0, issued:10000000, isEquity:true, underlying:"Nvidia", shares:0, cost:0, shortShares:0, shortCost:0, history:[], ma20_history:[]}); 
-    stocks.push({id:'s'+(idCounter++), name:"SOXS (반도체 인버스 3X)", market:"NASDAQ", tag:"인버스", price:10000, beta:-3.0, issued:10000000, isEquity:true, underlying:"Nvidia", shares:0, cost:0, shortShares:0, shortCost:0, history:[], ma20_history:[]});
-    stocks.forEach(s => {
-      s.initialPrice=s.price; s.per=(10+Math.random()*20).toFixed(1); s.eps=Math.floor(s.price/s.per); let simP=s.initialPrice; let vol=s.market==='CRYPTO'?4.0:(s.market==='BOND'?0.3:1.0); for(let i=0;i<365;i++){ simP=Math.max(10,Math.round(simP*(1+(Math.random()-0.495)*0.015*vol))); s.history.push(simP); s.ma20_history.push(simP); } s.price=simP;
-    });
-  };
-
-  window.buildVipCollection = function() {
-    vipAssets = [];
-    const vipA=["18세기","중세","전설적인","황실","고대","미지의","르네상스","비잔틴","오스만","청나라","마리 앙투아네트의","나폴레옹의","빅토리아 여왕의","파라오의","신성 로마 제국"];
-    const vipN=["블루 다이아몬드","루비 목걸이","황금 마차","순백 백자","마스터피스 회화","대리석 조각","비밀 고서","스트라디바리우스 첼로","운석 파편","에메랄드 브로치","제국 왕관","성배","전설의 명검"];
-    const cats=["미술품","한국미술","조각","고서","음악IP","건축물","국내건축","디지털/기념품","클래식카","보석시계"];
-    for(let i=0; i<500; i++) { 
-        let isM = Math.random() > 0.8; let p = isM ? 4000000000 : (i+1)*5000000;
-        let n = isM ? `[무가/평가불능] ${vipA[Math.floor(Math.random()*vipA.length)]} ${vipN[Math.floor(Math.random()*vipN.length)]} #${i+1}` : `[희귀경매] ${vipA[Math.floor(Math.random()*vipA.length)]} ${vipN[Math.floor(Math.random()*vipN.length)]}`;
-        vipAssets.push({ id: 'vip_'+(i+1), name: n, category: cats[i%10], usdPrice: p, owned: 0 }); 
-    }
-  };
-
-  window.fillHRMarket = function() {
-      const fNs=["제임스","존","로버트","마이클","윌리엄","데이비드","리차드","조셉","토마스","찰스"];
-      const lNs=["스미스","존슨","윌리엄스","브라운","존스","밀러","데이비스","가르시아"];
-      const nts=["미국","한국","영국","일본","중국","독일","프랑스","싱가포르"];
-      const sps=["CEO","투자총괄","수석애널리스트","M&A전문가","퀀트 트레이더"];
-      while(transferMarket.length < 300) {
-          let rS=Math.random(); let st=rS>0.95?"S급":(rS>0.75?"A급":(rS>0.4?"B급":"C급"));
-          let cst=st==="S급"?(5e8+Math.random()*5e8):(st==="A급"?(1e8+Math.random()*4e8):(st==="B급"?5e7+Math.random()*5e7:1e7));
-          let nm=lNs[Math.floor(Math.random()*lNs.length)]+" "+fNs[Math.floor(Math.random()*fNs.length)];
-          transferMarket.push({id:'hr_r_'+Date.now()+Math.random(),name:nm,comp:"FA(자유계약)",nation:nts[Math.floor(Math.random()*nts.length)],spec:sps[Math.floor(Math.random()*sps.length)],cost:cst,stat:st});
-      }
-  };
-
-  window.initGameSystem = function() {
-    window.buildStocks(); 
-    realEstates=[]; let rid=1; 
-    reCountriesList.forEach(c => {
-        if(reN[c]){
-            let names = reN[c]; const types = ["아파트", "고급빌라", "상업용빌딩", "핵심토지", "호텔지분", "오피스텔", "복합쇼핑몰", "물류센터", "도심재개발", "펜트하우스"];
-            for(let i=0; i<10; i++) { let bp = (i+1) * 3500000000; realEstates.push({ id: `re_${rid++}`, country: c, name: names[i], type: types[i], price: bp, cost: 0, rent: Math.floor(bp * 0.0035), owned: 0 }); }
-        }
-    });
-    window.buildVipCollection();
-    indirectFunds=[]; for(let i=0;i<10;i++){indirectFunds.push({id:'i'+(i+1),name:`월가 프라이빗 인덱스#${i+1}`,type:"복합",invested:0});}
-    
-    rivalFunds=hFunds.map((f,i)=>({id:'hf'+(i+1),name:f.name,type:f.type,assets:Math.floor((20-i)*1e11 + Math.random()*1e11),issued:1000000,myShares:0}));
-    
-    let gL = gLeadStr.split('/'); globalLeaders=[];
-    gL.forEach(x=>{ let p=x.split('|'); globalLeaders.push({id:p[0],country:p[1],name:p[2],rep:0,state:['us','sa','in'].includes(p[0])?'호황':(['cn','ru'].includes(p[0])?'위기':'보통'),invest:{cost:0,current:0}}); });
-    
-    let bO = boStr.split('/'); blackOpsList=[];
-    bO.forEach((x,i)=>{ let p=x.split('|'); blackOpsList.push({id:'op'+(i+1),title:p[0],cost:parseFloat(p[1])*1000000000,desc:p[2],tag:p[3],tagRate:parseFloat(p[4]),eff:{}}); });
-
-    let mList = mediaStr.split('/'); mediaList=[];
-    mList.forEach(x=>{ let p=x.split('|'); mediaList.push({id:p[0],n:p[1],p:parseFloat(p[2]),r:parseFloat(p[3])}); });
-
-    let cArt = cArtStr.split('/'); window.concertArtistsList=[];
-    cArt.forEach(x=>{ let p=x.split('|'); window.concertArtistsList.push({g:p[0],n:p[1],b:parseFloat(p[2]),m:parseFloat(p[3])}); });
-    
-    let pL = ppStr.split('/'); personPool = [];
-    pL.forEach(x=>{ let p=x.split('|'); personPool.push({n:p[0], d:p[1], i:p[2]}); });
-
-    transferMarket=[]; window.fillHRMarket();
-    optPositions=[]; hofPoints=0; secRisk=0; companyHistory=[]; monthlyNewsList=[]; myEmployees=[]; acquiredFunds=[]; myIpoLevel=0; myClubs=[]; myMedias=[];
-    
-    marketBonds = []; bondGrades.forEach(gr => { for(let i=0; i<3; i++) { marketBonds.push({id:'bd_'+Date.now()+Math.random(), name:`${gr.g}급 신규채권`, grade:gr.g, y:gr.y, r:gr.r, face:100000000, price:100000000, owned:0, default:false}); } });
-    corpBondDueDate = null;
-    
-    for(let k in macroIndices) macroIndices[k].history=Array(365).fill(macroIndices[k].val);
-    window.addCompanyHistory("펀드 설립", "자본시장에 출범했습니다.");
-
-    let sel=$id('concert-artist'); if(sel){ sel.innerHTML=""; let groups=[...new Set(window.concertArtistsList.map(a=>a.g))]; groups.forEach(g=>{ let og=document.createElement('optgroup'); og.label=g; window.concertArtistsList.forEach((a,i)=>{if(a.g===g){let o=document.createElement('option');o.value=i;o.innerText=a.n;og.appendChild(o);}}); sel.appendChild(og); }); }
-    
-    selectedId = stocks[0].id;
-  };
-
-  window.toggleViewMode = function() {
-      isMobileView = !isMobileView;
-      let wr = $id('main-wrapper'); let mg = document.querySelector('.main-grid'); let btn = $id('btn-view-mode');
-      if(isMobileView) { wr.style.maxWidth = '500px'; mg.style.gridTemplateColumns = '1fr'; mg.style.height = 'auto'; btn.innerText = '💻 PC 뷰'; } 
-      else { wr.style.maxWidth = '1540px'; mg.style.gridTemplateColumns = '320px 1fr 490px'; mg.style.height = '750px'; btn.innerText = '📱 모바일 뷰'; }
-      if(gChart) gChart.resize(); if(oChart) oChart.resize();
-  };
-
-  window.onload = function() { try { if(localStorage.getItem('econ_v83_save')) setDisplay('local-load-ui', 'block'); } catch(e){} };
-
-  window.startGame = function() {
-    try {
-      cash = 100000000000;
-      let ni = $id('player-name-input');
-      playerName = (ni && ni.value.trim() !== "") ? ni.value.trim() : "글로벌 마스터";
-      setTxt('player-name-display', playerName); 
-      let sm = $id('start-modal'); if(sm) sm.style.display = 'none'; 
-      let mw = $id('main-wrapper'); if(mw) mw.style.filter = 'none';
-      window.initChartSafe(); window.initOptChartSafe(); window.initGameSystem(); window.setMarket('KOSPI'); window.updateUI(); 
-      if(gameInterval) clearInterval(gameInterval); gameInterval = setInterval(window.gameLoop, currentSpeed);
-    } catch(e) { alert("시작 중 오류 발생: " + e.message); console.error(e); }
-  };
-
-  window.changeSpeed = function() {
-      let val = parseInt($id('speed-selector').value);
-      if(val !== 1000 && cash < 100000000000) { alert("비용 1,000억 부족."); $id('speed-selector').value = currentSpeed; return; }
-      if(val !== 1000) cash -= 100000000000; currentSpeed = val;
-      if(gameInterval) clearInterval(gameInterval);
-      gameInterval = setInterval(window.gameLoop, currentSpeed);
-      showToast("⏳ 시간 조작 완료", "blue"); window.updateUI();
-      if(speedTimeout) clearTimeout(speedTimeout);
-      speedTimeout = setTimeout(() => { currentSpeed = 1000; if(gameInterval) clearInterval(gameInterval); gameInterval = setInterval(window.gameLoop, currentSpeed); $id('speed-selector').value = "1000"; showToast("⏰ 조작 종료.", "black"); }, 300000);
-  };
-
-  window.exportJSON = function() { const st={timeValue:currentDate.getTime(),playerName,gameMode,cash,depPrin,loanPrin,corpBond,corpBondDueDate:corpBondDueDate?corpBondDueDate.getTime():null,hofPoints,secRisk,stocks,realEstates,vipAssets,indirectFunds,rivalFunds,acquiredFunds,optPositions,macroIndices,globalLeaders,companyHistory,myEmployees,hrDepts,transferMarket,hofYearlyData,myIpoLevel,myClubs,marketBonds,myMedias}; const blob=new Blob([JSON.stringify(st)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`econ_master_v83.json`; a.click(); showToast("💾 백업 완료!","blue"); };
-  window.importJSON = function(e) { const file=e.target.files[0]; if(!file)return; const reader=new FileReader(); reader.onload=function(ev){try{window.applySaveData(JSON.parse(ev.target.result));}catch(err){alert("불러오기 실패.");}}; reader.readAsText(file); };
-  window.applySaveData = function(st) { currentDate=new Date(st.timeValue); playerName=st.playerName; gameMode=st.gameMode; cash=st.cash; depPrin=st.depPrin||0; loanPrin=st.loanPrin||0; corpBond=st.corpBond||0; corpBondDueDate=st.corpBondDueDate?new Date(st.corpBondDueDate):null; hofPoints=st.hofPoints||0; secRisk=st.secRisk||0; stocks=st.stocks||stocks; realEstates=st.realEstates||realEstates; vipAssets=st.vipAssets||vipAssets; indirectFunds=st.indirectFunds||indirectFunds; rivalFunds=st.rivalFunds||rivalFunds; acquiredFunds=st.acquiredFunds||acquiredFunds; optPositions=st.optPositions||[]; macroIndices=st.macroIndices||macroIndices; globalLeaders=st.globalLeaders||globalLeaders; companyHistory=st.companyHistory||companyHistory; myEmployees=st.myEmployees||[]; hrDepts=st.hrDepts||hrDepts; transferMarket=st.transferMarket||transferMarket; hofYearlyData=st.hofYearlyData||[]; myIpoLevel=st.myIpoLevel||0; myClubs=st.myClubs||[]; marketBonds=st.marketBonds||marketBonds; myMedias=st.myMedias||[]; setTxt('player-name-display', playerName); $id('start-modal').style.display='none'; $id('main-wrapper').style.filter='none'; window.initChartSafe(); window.initOptChartSafe(); window.setMarket('KOSPI'); window.updateUI(); if(gameInterval) clearInterval(gameInterval); gameInterval = setInterval(window.gameLoop, currentSpeed); showToast("✅ 로드 성공!","red"); };
-  window.loadLocalGame = function() { try{const d=localStorage.getItem('econ_v83_save'); if(d)window.applySaveData(JSON.parse(d));}catch(e){} };
-  window.saveLocalGame = function() { try{const st={timeValue:currentDate.getTime(),playerName,gameMode,cash,depPrin,loanPrin,corpBond,corpBondDueDate:corpBondDueDate?corpBondDueDate.getTime():null,hofPoints,secRisk,stocks,realEstates,vipAssets,indirectFunds,rivalFunds,acquiredFunds,optPositions,macroIndices,globalLeaders,companyHistory,myEmployees,hrDepts,transferMarket,hofYearlyData,myIpoLevel,myClubs,marketBonds,myMedias}; localStorage.setItem('econ_v83_save',JSON.stringify(st));}catch(e){} };
-  window.returnToMenu = function() { if(confirm("초기화하시겠습니까?")){clearInterval(gameInterval); localStorage.removeItem('econ_v83_save'); location.reload();} };
-  
-  window.renderSettlement = function() { let net = window.getPlayerNetAssets(); let b = $id('settlement-details'); if(b) b.innerHTML = `<b>${currentDate.getFullYear()-1}년 결산 완료!</b><br>자산: ${formatCap(net)}원<br>명성: ${hofPoints}점`; let t = $id('rank-table-body'); if(t) { t.innerHTML = "<tr><th>순위</th><th>이름</th><th>자산</th></tr>"; let allF = [...rivalFunds, {name: playerName, assets: net}].sort((a,b)=>b.assets-a.assets); allF.forEach((f, i) => { t.innerHTML += `<tr style="${f.name===playerName?'background:#e3f2fd;font-weight:bold;':''}"><td>${i+1}</td><td>${f.name}</td><td>${formatCap(f.assets)}</td></tr>`; }); hofYearlyData.push({year: currentDate.getFullYear()-1, first: allF[0], second: allF[1], third: allF[2]}); } };
-  window.closeSettlement = function() { setDisplay('settlement-modal', 'none'); if(gameInterval) clearInterval(gameInterval); gameInterval = setInterval(window.gameLoop, currentSpeed); };
-
-  window.donateToSociety = function() { if(cash<1e10)return alert("100억 필요"); cash-=1e10; secRisk=Math.max(0,secRisk-15); hofPoints+=100; showToast("🤝 기부 완료", "blue"); window.updateUI(); };
-  window.openHoFModal = function() { 
-      let t=Math.max(0,10000-hofPoints); let lS=hofPoints>=10000?`<span style="color:#d32f2f;font-weight:bold;">🏆 레전드 헌액자 달성!</span>`:`<span style="color:#888;">레전드까지 ${t}점 남음</span>`; 
-      let iB=$id('hof-inductees-list'); if(hofPoints>=10000&&!iB.innerHTML.includes(playerName)){iB.innerHTML+=`<li>👑 ${playerName} (레전드)</li>`;} 
-      if(iB.innerHTML==="")iB.innerHTML="<li>아직 헌액자가 없습니다.</li>"; 
-      setHTML('hof-yearly-records',`명예 포인트: <b style="color:#f57f17;">${hofPoints}점</b><br>등급: <b>${window.getReputation().text}</b><br>${lS}`); 
-      let aB=$id('hof-yearly-accordion'); if(aB){aB.innerHTML=""; let ys=[...new Set(hofYearlyData.map(h=>h.year))].sort((a,b)=>b-a); ys.forEach(y=>{let hL=hofYearlyData.filter(d=>d.year===y); let yI='hof_y_'+y; let ht=`<h4 style="background:#f5f7fa;padding:8px;border:1px solid #ccc;cursor:pointer;" onclick="let d=document.getElementById('${yI}');d.style.display=d.style.display==='none'?'block':'none';">📁 ${y}년 랭킹</h4><div id="${yI}" style="display:none;padding-left:15px;">`; hL.forEach(d=>{if(d.first)ht+=`<div>🥇 1위: ${d.first.name} (${formatCap(d.first.assets)})</div>`;if(d.second)ht+=`<div>🥈 2위: ${d.second.name} (${formatCap(d.second.assets)})</div>`;if(d.third)ht+=`<div>🥉 3위: ${d.third.name} (${formatCap(d.third.assets)})</div>`;}); ht+=`</div>`; aB.innerHTML+=ht;});} 
-      setDisplay('hof-history-modal','flex'); 
-  };
-  window.handleSEC = function(c) { if(c==='fine'){cash-=Math.floor(cash*0.30);showToast(`💰 벌금 납부.`,"black");}else if(c==='lawyer'){if(cash<1e11)return alert("1,000억 필요!");cash-=1e11;showToast(`👨‍⚖️ 전관 선임.`,"blue");} secRisk=0;setDisplay('sec-modal','none');window.updateUI(); };
-
-  window.setTradeQtyPct = function(action, ratio) { 
-      let s = stocks.find(x => x.id === selectedId); if(!s) return; let qty = 0;
-      if(action === 'buy') { let maxBuy = Math.floor(cash / s.price); if(s.isEquity && s.tag !== "인버스" && s.tag !== "레버리지") maxBuy = Math.min(maxBuy, s.issued - s.shares); qty = Math.floor(maxBuy * ratio); } 
-      else if (action === 'sell') { qty = Math.floor(s.shares * ratio); } 
-      else if (action === 'short') { let maxMargin = Math.floor(cash / s.price); let limit = Math.floor(s.issued * 0.5) - s.shortShares; qty = Math.floor(Math.min(maxMargin, Math.max(0, limit)) * ratio); } 
-      else if (action === 'cover') { qty = Math.floor(s.shortShares * ratio); } 
-      $id('trade-qty').value = Math.max(0, qty); 
-  };
-
-  window.quickTrade = function(type, p) { let s = stocks.find(x => x.id === selectedId) || stocks[0]; if(!s) return; s.price = p; window.setTradeQtyPct(type, 0.25); let qs = $id('trade-qty').value; if(qs && parseInt(qs)>0) window.placeOrder(type); else showToast("현금/주식 부족", "black"); };
-
-  window.placeOrder = function(type) { 
-      let qs = $id('trade-qty').value; if(!qs) return alert("수량 입력!"); let qty = parseInt(qs); if(isNaN(qty) || qty <= 0) return alert("수량 오류!"); 
-      let s = stocks.find(x => x.id === selectedId) || stocks[0]; let cost = qty * s.price; 
-      function wag(imp){ if(s.underlying){let u=stocks.find(x=>x.name===s.underlying); if(u)u.price=Math.max(10,Math.round(u.price*(1+Math.min(0.02,Math.max(-0.02,imp*s.beta*0.05)))));} } 
-      if(type === 'buy') { if(s.isEquity && s.tag!=="인버스" && s.tag!=="레버리지" && s.shares+qty>s.issued) return alert("발행 초과"); if(cash < cost) return alert("현금 부족"); cash-=cost; s.shares+=qty; s.cost+=cost; s.price=Math.round(s.price*1.002); wag(0.01); showToast("✅ 매수 완료", "red"); } 
-      else if(type === 'sell') { if(s.shares < qty) return alert("수량 부족"); let avg = s.shares>0 ? s.cost/s.shares : 0; cash+=cost; s.shares-=qty; s.cost-=avg*qty; s.price=Math.round(s.price*0.998); wag(-0.01); showToast("✅ 매도 완료", "blue"); } 
-      else if(type === 'short') { if(s.market==='CRYPTO'||s.market==='BOND') return alert("불가"); if(s.shortShares+qty > Math.floor(s.issued*0.5)) return alert("초과"); if(cash < cost) return alert("증거금 부족"); cash-=cost; s.shortShares+=qty; s.shortCost+=cost; s.price=Math.round(s.price*0.995); wag(-0.02); showToast("🔻 공매도", "black"); } 
-      else if(type === 'cover') { if(s.shortShares < qty) return alert("수량 부족"); let avg = s.shortShares>0 ? s.shortCost/s.shortShares : 0; let prof = (avg-s.price)*qty; cash+=(avg*qty)+prof; s.shortShares-=qty; s.shortCost-=avg*qty; wag(0.02); showToast(`💰 숏청산 수익: ${format(prof)}원`, prof>=0?"red":"blue"); s.price=Math.round(s.price*1.005); } 
-      $id('trade-qty').value = ""; window.updateUI(); 
-  };
-
-  window.indiscriminateBuy = function() { let s = stocks.find(x => x.id === selectedId) || stocks[0]; if(!s || !s.isEquity || s.tag==="인버스" || s.tag==="레버리지") return alert("불가"); let cost = Math.floor(cash * 0.5); let qty = Math.floor(cost / s.price); if(qty <= 0) return alert("현금 부족"); cash-=cost; s.shares+=qty; s.cost+=cost; s.price=Math.round(s.price*1.20); secRisk+=40; showToast(`🔥 무차별 매입! 주가 20% 폭등!`, "event"); if(secRisk>=100) setDisplay('sec-modal','flex'); window.updateUI(); };
-  window.setMarket = function(mkt, pS=false) { currentMarket = mkt; document.querySelectorAll('.m-tab').forEach(b => { if(b.id === `mtab-${mkt}`) b.classList.add('active'); else b.classList.remove('active'); }); if(!pS) { let f = stocks.find(s => s.market === mkt); if(f) selectedId = f.id; } window.updateUI(); };
-  window.setTimeframe = function(d, btn) { currentTimeframe = d; document.querySelectorAll('.tf-btn:not(.opt-tf-btn)').forEach(b => b.classList.remove('active')); btn.classList.add('active'); window.updateUI(); };
-
-  window.openCEOModal = function() { 
-      let s = stocks.find(x => x.id === selectedId) || stocks[0];
-      let myPct = ((s.shares / s.issued) * 100); 
-      if(s.market === 'CRYPTO' || s.market === 'BOND') return alert("경영 개입 불가 종목입니다."); 
-      if(myPct < 50.0) return alert(`지분 50% 이상이 필요합니다.`); 
-      setHTML('ceo-modal-subtitle', `<b>[${s.name}]</b> 지분 ${myPct.toFixed(2)}% 장악`); 
-      setDisplay('ceo-modal', 'flex'); 
-  };
-  window.executeCEOAction = function(a) { 
-      let s = stocks.find(x => x.id === selectedId) || stocks[0];
-      if(a==='buyback'){let bA=Math.floor(s.issued*0.15);let fL=s.issued-s.shares;if(bA>fL)bA=fL;s.issued-=bA;s.price=Math.round(s.price*1.20);showToast(`🔥 자사주 소각! 주가 폭등!`,"red");} 
-      else if(a==='issue_stock'){s.issued+=Math.floor(s.issued*0.30);s.price=Math.round(s.price*0.75);showToast(`💸 유상증자 단행!`,"blue");} 
-      else if(a==='crash'){if(cash<10000000000)return alert("100억 필요");cash-=10000000000;s.price=Math.round(s.price*0.70);secRisk+=20;if(secRisk>=100)setDisplay('sec-modal','flex');showToast(`📉 블록딜 폭락!`,"black");} 
-      else if(a==='succession'){let tax=Math.floor(s.shares*s.price*0.10);if(cash<tax)return alert(`증여세 부족`);cash-=tax;hofPoints+=500;showToast(`👑 승계 완료!`,"red");} 
-      else if(a==='dividend'){let dP=Math.floor(s.shares*(s.price*0.08));cash+=dP;s.price=Math.round(s.price*0.95);showToast(`🎁 배당금 입금!`,"event");} 
-      setDisplay('ceo-modal','none'); window.updateUI(); 
-  };
-  window.openDispatchModal = function() { 
-      setDisplay('ceo-modal','none'); let b=$id('dispatch-employee-list'); b.innerHTML=""; 
-      let av=myEmployees.filter(e=>!e.assignedTo); 
-      if(av.length===0){b.innerHTML="<div style='text-align:center;color:#888;'>파견 가능한 임원이 없습니다.</div>";}
-      else{av.forEach(e=>{let idx=myEmployees.indexOf(e);b.innerHTML+=`<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #ddd;"><div><b>${e.name}</b> <span style="color:#d32f2f;">(${e.stat||'C급'})</span><br><span style="font-size:0.8em;color:#666;">${e.role}</span></div><div><button class="btn-quick" style="background:#1976d2;" onclick="window.dispatchEmployee(${idx}, '사장')">사장 임명</button></div></div>`;});} 
-      setDisplay('dispatch-modal','flex'); 
-  };
-  window.dispatchEmployee = function(idx, role) { 
-      let e=myEmployees[idx]; let s=stocks.find(x=>x.id===selectedId)||stocks[0]; 
-      e.assignedTo=s.name; e.assignedRole=role; 
-      let m=(e.stat==="S급"||e.stat==="A급")?1.20:0.90; s.price=Math.round(s.price*m); 
-      setDisplay('dispatch-modal','none'); showToast(`👔 ${e.name} 파견! 주가 변동!`, m>1?"red":"black"); window.updateUI(); window.renderHR(); 
-  };
-
-  window.toggleOrderbook = function() { obExpanded=!obExpanded; window.updateUI(); if($id('tab-deriv').style.display==='flex') window.updateOptPrice(); };
-
-  window.updateMarketBonds = function() { 
-      let bBox = $id('market-bonds-list'); if(!bBox) return; bBox.innerHTML = ""; 
-      if(corpBond>0) {
-          bBox.innerHTML += `<div style="background:#fff3e0;padding:8px;border-radius:6px;border:1px solid #f57c00;display:flex;justify-content:space-between;align-items:center;"><div><b>[내 회사채] ${playerName} 채권</b><br><span style="font-size:0.8em;color:#555;">발행잔액: ${formatCap(corpBond)}</span></div><div style="text-align:right;"><b>내 부채</b><div style="margin-top:4px;"><button class="btn-quick" style="background:#3e2723;" onclick="window.switchBankTab('loan', document.querySelector('.re-c-btn.active'))">관리 가기</button></div></div></div>`;
-      }
-      marketBonds.forEach(b => { let pStr = b.default ? `<span style="color:red;">부도 (0원)</span>` : formatCap(b.price); let actBtn = b.default ? '' : (b.owned>0 ? `<button class="btn-clear" onclick="window.sellBond('${b.id}')">매각(${b.owned})</button>` : `<button class="btn-quick" style="background:#1976d2;" onclick="window.buyBond('${b.id}')">매입</button>`); bBox.innerHTML += `<div style="background:#fff;padding:8px;border-radius:6px;border:1px solid #ccc;display:flex;justify-content:space-between;align-items:center;"><div><b>[${b.grade}] ${b.name}</b><br><span style="font-size:0.8em;color:#555;">수익률: ${(b.y*100).toFixed(1)}% | 부도위험: ${(b.r*100).toFixed(2)}%</span></div><div style="text-align:right;"><b>${pStr}</b><div style="margin-top:4px;">${actBtn}</div></div></div>`; }); 
-  };
-  window.buyBond = function(id) { let b=marketBonds.find(x=>x.id===id); if(cash<b.price) return alert("자금 부족"); cash-=b.price; b.owned++; showToast("채권 매입", "blue"); window.updateUI(); window.updateMarketBonds(); };
-  window.sellBond = function(id) { let b=marketBonds.find(x=>x.id===id); if(b.owned<=0) return; cash+=b.price; b.owned--; showToast("채권 매각", "red"); window.updateUI(); window.updateMarketBonds(); };
-  window.switchBankTab = function(t, btn) { document.querySelectorAll('#tab-bank .re-c-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); setDisplay('bank-loan-view', t==='loan'?'block':'none'); setDisplay('bank-bond-view', t==='bond'?'flex':'none'); if(t==='bond') window.updateMarketBonds(); };
-
-  window.updateBankRates = function() { let net=window.getPlayerNetAssets(); let depRate = Math.max(0.5, macroIndices.bond10.val - 0.5); let lRate = macroIndices.bond10.val + 2.0; if(loanPrin > net * 0.6) lRate = 15.0; setTxt('bank-dep-rate', depRate.toFixed(2)); setTxt('bank-loan-rate', lRate.toFixed(2)); let mRate = macroIndices.bond10.val + 8.0; let bondVal = Math.floor(corpBond * (12.0 / mRate)); setTxt('my-corp-bond-market', formatCap(bondVal)); let dRatio = loanPrin / net; let myRt = 'AAA'; if(dRatio >= 0.1) myRt = 'AA'; if(dRatio >= 0.2) myRt = 'A'; if(dRatio >= 0.3) myRt = 'BBB'; if(dRatio >= 0.5) myRt = 'BB'; if(dRatio >= 0.7) myRt = 'C'; setTxt('my-corp-rating', myRt); setTxt('my-corp-rate', "12.0%"); return { depRate, lRate, mRate, bondVal }; };
-  window.setBankQty = function(action, ratio) { let targetInput = (action==='dep'||action==='with')?$id('bank-manual-dep'):((action==='bor'||action==='rep')?$id('bank-manual-loan'):$id('bank-manual-corpbond')); let amt=0; if(action==='dep') amt=Math.floor(cash*ratio); else if(action==='with') amt=Math.floor(depPrin*ratio); else if(action==='bor') amt=Math.floor(Math.max(0,maxLoan-loanPrin)*ratio); else if(action==='rep') amt=Math.floor(Math.min(cash,loanPrin)*ratio); else if(action==='ibond') amt=Math.floor(Math.max(0,maxLoan-loanPrin-corpBond)*ratio); else if(action==='rbond') amt=Math.floor(corpBond*ratio); targetInput.value=Math.max(0,amt); };
-  window.manualBank = function(action) { let isDep = action==='deposit'||action==='withdraw'; let isBond=action==='issue_bond'||action==='repay_bond'; let input=isDep?$id('bank-manual-dep'):(isBond?$id('bank-manual-corpbond'):$id('bank-manual-loan')); let amt=parseInt(input.value); if(isNaN(amt)||amt<=0)return alert("금액 오류"); let br=window.updateBankRates(); if(action==='deposit'){if(cash<amt)return alert("현금 부족");cash-=amt;depPrin+=amt;showToast("예금 완료","blue");} else if(action==='withdraw'){if(depPrin<amt)return alert("예금 부족");depPrin-=amt;cash+=amt;showToast("출금 완료","red");} else if(action==='borrow'){loanPrin+=amt;cash+=amt;showToast("대출 실행","black");} else if(action==='repay'){if(cash<amt||loanPrin<amt)return alert("오류");cash-=amt;loanPrin-=amt;showToast("상환 완료","blue");} else if(action==='issue_bond'){let fee=Math.floor(amt*0.2);if(cash<fee)return alert("보증금(20%) 부족");cash-=fee;cash+=amt;corpBond+=amt;corpBondDueDate=new Date(currentDate.getTime()+(90*24*60*60*1000));showToast("회사채 발행 (만기 90일)","black");} else if(action==='repay_bond'){if(corpBond<amt)amt=corpBond;let cost=Math.floor(amt*(12.0/br.mRate));if(cash<cost)return alert(`상환비용(${formatCap(cost)}) 부족`);cash-=cost;corpBond-=amt;if(corpBond<=0){corpBond=0;corpBondDueDate=null;}showToast(`조기상환 (차익: ${formatCap(amt-cost)})`,(amt-cost)>=0?"blue":"red");} input.value=""; window.updateUI(); };
-
-  window.updateUI = function() {
-    try {
-      let s = stocks.find(x => x.id === selectedId) || stocks[0]; if(!s) return;
-      let net = window.getPlayerNetAssets(); maxLoan = net * 0.6; 
-      
-      setTxt('cash', formatCap(cash) + " 원"); 
-      setTxt('total-debt', formatCap(loanPrin) + (corpBond>0 ? " (+회사채 " + formatCap(corpBond) + ")" : "")); 
-      setTxt('my-corp-bond', formatCap(corpBond) + " 원"); setTxt('net-assets', formatCap(net) + " 원"); setTxt('bank-deposit', formatCap(depPrin) + " 원"); setTxt('stock-val', formatCap(stocks.reduce((a,b)=>a+b.shares*b.price,0)) + " 원"); setTxt('hof-points', hofPoints + " 점"); setTxt('sec-risk-val', secRisk + "%");
-      
-      window.updateBankRates(); let r = window.getReputation(); setTxt('rep-badge', r.text);
-      let elRank = $id('player-rank-info'); if(elRank) { let rn=[...rivalFunds,{name:playerName,assets:net}].sort((a,b)=>b.assets-a.assets).findIndex(f=>f.name===playerName)+1; elRank.innerText=`국가:한국 | 규모:${r.compSize} | 직원:${r.empCount}명 | 순위:${rn}위`; }
-
-      let dueTxt = $id('my-corp-bond-due'); if(dueTxt) { if(corpBond>0 && corpBondDueDate) { let dDiff = Math.ceil((corpBondDueDate.getTime() - currentDate.getTime())/(1000*60*60*24)); dueTxt.innerText = "(만기: " + (dDiff>=0?"D-"+dDiff:"D+"+Math.abs(dDiff)) + ")"; } else { dueTxt.innerText = ""; } }
-
-      let lEl = $id('stock-list'); if(lEl) { lEl.innerHTML = ""; stocks.filter(x => x.market === currentMarket).forEach(st => { let d = ((st.price - (st.history[st.history.length-2]||st.price))/(st.history[st.history.length-2]||st.price))*100; let div = document.createElement('div'); div.className = `stock-item ${st.id === selectedId ? 'active' : ''}`; div.onclick = () => { selectedId = st.id; window.updateUI(); }; div.innerHTML = `<div><b>${st.name}</b><span class="stock-tag">${st.tag}</span></div><div style="text-align:right;"><b>${format(st.price)}원</b><div style="font-size:0.75em;" class="${d>=0?'text-up':'text-down'}">${d>=0?'▲':'▼'}${Math.abs(d).toFixed(2)}%</div></div>`; lEl.appendChild(div); }); }
-
-      let isUp = s.price >= (s.history[s.history.length-2]||s.price); setTxt('chart-title', s.name); setTxt('chart-price', format(s.price) + " 원"); setClass('chart-price', `selected-price ${isUp ? 'text-up' : 'text-down'}`); setTxt('chart-desc', `시총: ${s.isEquity?formatCap(s.price*s.issued):'-'} | 발행: ${s.isEquity?formatCap(s.issued):'-'}`); setTxt('chart-finance', `PER: ${s.per||'-'}배 | EPS: ${s.eps?format(s.eps):'-'}원`);
-      let myO = ((s.shares / s.issued) * 100); if(!s.isEquity||s.tag==='인버스') myO=0; setTxt('my-ownership', Math.min(100, myO).toFixed(2) + "%"); setDisplay('ceo-btn', (myO>=50&&!s.underlying&&s.isEquity)?'inline-block':'none');
-      let avg=s.shares>0?s.cost/s.shares:0; let ev=s.shares>0?(s.price*s.shares)-s.cost:0; setTxt('my-shares',format(s.shares)+" 주"); setTxt('avg-price',format(avg)+" 원"); setTxt('eval-profit',format(ev)+" 원"); setClass('eval-profit',ev>=0?'text-up':'text-down');
-      let sAvg=s.shortShares>0?s.shortCost/s.shortShares:0; let sEv=s.shortShares>0?s.shortCost-(s.shortShares*s.price):0; setTxt('short-shares',format(s.shortShares)+" 주"); setTxt('short-avg-price',format(sAvg)+" 원"); setTxt('short-eval-profit',format(sEv)+" 원"); setClass('short-eval-profit',sEv>=0?'text-up':'text-down');
-
-      let obTick = s.price > 100000 ? 500 : (s.price > 10000 ? 100 : (s.price > 1000 ? 10 : 1)); let aH="", bH=""; let lvls = obExpanded ? 10 : 5;
-      for(let i=lvls; i>=1; i--) { let p=s.price+(obTick*i); let v=Math.floor(Math.random()*10000)+100; aH+=`<div style="display:flex;justify-content:space-between;background:#e3f2fd;color:#1976d2;padding:3px 6px;border-radius:4px;cursor:pointer;font-size:0.85em;display:flex;justify-content:space-between;margin-bottom:2px;" onclick="window.quickTrade('buy', ${p})"><span>${format(p)}</span> <b>${format(v)}</b></div>`; }
-      for(let i=1; i<=lvls; i++) { let p=Math.max(1,s.price-(obTick*i)); let v=Math.floor(Math.random()*10000)+100; bH+=`<div style="background:#ffebee;color:#d32f2f;padding:3px 6px;border-radius:4px;cursor:pointer;font-size:0.85em;display:flex;justify-content:space-between;margin-bottom:2px;" onclick="window.quickTrade('sell', ${p})"><span>${format(p)}</span> <b>${format(v)}</b></div>`; }
-      if($id('mid-ask-book')) $id('mid-ask-book').innerHTML=aH; if($id('mid-bid-book')) $id('mid-bid-book').innerHTML=bH;
-
-      if(gChart) { let sl=s.history.slice(-currentTimeframe); gChart.data.labels=Array(sl.length).fill(""); gChart.data.datasets[0].data=sl; gChart.data.datasets[0].borderColor=isUp?'#d32f2f':'#1976d2'; gChart.data.datasets[0].backgroundColor=isUp?'rgba(211,47,47,0.1)':'rgba(25,118,210,0.1)'; gChart.data.datasets[1].data=s.ma20_history.slice(-currentTimeframe); gChart.update(); }
-      if($id('tab-deriv').style.display==='flex') window.updateOptPrice(); if($id('tab-ipo').style.display==='flex') window.renderIpoTab();
-    } catch(e) {}
-  };
-
-  window.switchTab = function(t) { ['trade','portfolio','realestate','politics','politics_run','deriv','wallst','vip','indirect','hr','bank','history','ipo'].forEach(x=>{ setDisplay(`tab-${x}`, x===t?'flex':'none'); if($id(`tab-btn-${x}`)) { if(x===t) $id(`tab-btn-${x}`).classList.add('active'); else $id(`tab-btn-${x}`).classList.remove('active'); }}); if(t==='portfolio')window.renderPortfolio(); if(t==='realestate')window.switchFlexTab('re', document.querySelector('.re-c-btn')); if(t==='politics')window.renderPolitics(); if(t==='politics_run')window.renderPolCandidates(); if(t==='ipo')window.renderIpoTab(); if(t==='deriv'){window.updateOptPrice();window.renderOptPositions();} if(t==='wallst')window.renderWallStList(); if(t==='vip')window.renderVipStore(); if(t==='indirect')window.renderIndirectStore(); if(t==='hr'){if(!currentHRTab)currentHRTab='corp'; if($id('hr-fa-view').style.display==='block')window.renderTransferMarket(currentHRTab);else window.renderHR();} if(t==='history')window.renderHistoryTab(); };
-  window.switchFlexTab = function(t, b) { if(b) { document.querySelectorAll('#tab-realestate .re-c-btn').forEach(x=>x.classList.remove('active')); b.classList.add('active'); } ['re','flex','concert','sports','media'].forEach(x=>setDisplay(`flex-${x}-view`, x===t?'flex':'none')); if(t==='re')window.renderRealEstate(); if(t==='sports'){window.renderClubs();window.renderMyClubs();} if(t==='media'){window.renderMedia();} if(t==='flex'){let bs=$id('flex-bio-sel');if(bs){bs.innerHTML="";stocks.filter(s=>s.tag==='바이오').forEach(s=>bs.innerHTML+=`<option value="${s.id}">${s.name}</option>`);}let rs=$id('flex-rnd-sel');if(rs){rs.innerHTML="";stocks.filter(s=>s.isEquity).forEach(s=>rs.innerHTML+=`<option value="${s.id}">${s.name}</option>`);}} };
-  
-  window.renderPortfolio = function() { let bX=$id('portfolio-list'); if(!bX)return; bX.innerHTML=""; if(currentPortFilter==='all'||currentPortFilter==='stock')stocks.filter(s=>s.shares>0||s.shortShares>0).forEach(s=>{let d=document.createElement('div');d.className="port-item";d.innerHTML=`<div><b>[${s.market}] ${s.name}</b></div><div><span style="color:#d32f2f;">보유 ${s.shares}</span> / <span style="color:#6a1b9a;">공매도 ${s.shortShares}</span></div>`;d.onclick=()=>{selectedId=s.id;currentMarket=s.market;window.switchTab('trade');window.setMarket(s.market,true);};bX.appendChild(d);}); if(currentPortFilter==='all'||currentPortFilter==='realestate')realEstates.filter(r=>r.owned>0).forEach(r=>{let roi=((r.price-r.cost)/r.cost*100).toFixed(2); let d=document.createElement('div');d.className="port-item";d.innerHTML=`<div><b>[부동산] ${r.name}</b></div><div style="color:#2e7d32;">보유: ${r.owned}채 | 수익률: ${roi}%</div>`;d.onclick=()=>window.switchTab('realestate');bX.appendChild(d);}); if(currentPortFilter==='all'||currentPortFilter==='fund')globalLeaders.filter(l=>l.invest&&l.invest.cost>0).forEach(l=>{let roi=((l.invest.current-l.invest.cost)/l.invest.cost*100).toFixed(2); let d=document.createElement('div');d.className="port-item";d.innerHTML=`<div><b>[국채] ${l.country} 펀드</b></div><div style="color:#2e7d32;">평가액: ${formatCap(l.invest.current)} (${roi}%)</div>`;d.onclick=()=>window.switchTab('politics');bX.appendChild(d);}); if(currentPortFilter==='all'||currentPortFilter==='deriv')optPositions.forEach(p=>{let c=window.getAssetPrice(p.asset,p.entryPrice);let diff=(c-p.entryPrice)*window.getAssetMult(p.asset)*p.qty*(p.type==='long'||p.type==='call'?1:-1);let d=document.createElement('div');d.className="port-item";d.innerHTML=`<div><b>[${p.isFut?'선물':'옵션'}] ${p.asset.toUpperCase()}</b> <span style="color:#1976d2;">${p.type.toUpperCase()}</span></div><div><span class="${diff>=0?'text-up':'text-down'}">손익: ${format(diff)}원</span></div>`;d.onclick=()=>window.switchTab('deriv');bX.appendChild(d);}); if(currentPortFilter==='all'||currentPortFilter==='vip')vipAssets.filter(v=>v.owned>0).forEach(v=>{let d=document.createElement('div');d.className="port-item";d.innerHTML=`<div><b>[VIP] ${v.name}</b></div><div style="color:#f57c00;">보유: ${v.owned}점</div>`;d.onclick=()=>window.switchTab('vip');bX.appendChild(d);}); if(currentPortFilter==='all'||currentPortFilter==='fund')indirectFunds.filter(f=>f.invested>0).forEach(f=>{let d=document.createElement('div');d.className="port-item";d.innerHTML=`<div><b>[펀드] ${f.name}</b></div><div style="color:#1976d2;">투자금: ${formatCap(f.invested)}</div>`;d.onclick=()=>window.switchTab('indirect');bX.appendChild(d);}); if(bX.innerHTML==="")bX.innerHTML="<div style='color:#888;text-align:center;'>자산이 없습니다.</div>"; };
-  window.renderPortfolioFilter = function(f, btn) { currentPortFilter = f; document.querySelectorAll('#portfolio-tabs .re-c-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); window.renderPortfolio(); };
-
-  window.renderRealEstate = function() { let tB=$id('re-country-tabs'); if(tB&&tB.children.length===0){D.reCountriesList.forEach(c=>{let b=document.createElement('button'); b.className=`re-c-btn ${c===selectedReCountry?'active':''}`; b.innerText=c; b.onclick=()=>{selectedReCountry=c; document.querySelectorAll('#re-country-tabs .re-c-btn').forEach(x=>x.classList.remove('active')); b.classList.add('active'); window.renderRealEstate();}; tB.appendChild(b);});} let bX=$id('realestate-list'); if(!bX)return; bX.innerHTML=""; realEstates.filter(r=>r.country===selectedReCountry).forEach(re=>{ let rS=re.owned>0?`수익률: <span class="${re.price>=re.cost?'text-up':'text-down'}">${((re.price-re.cost)/re.cost*100).toFixed(2)}%</span>`:''; let d=document.createElement('div'); d.className='port-item'; d.innerHTML=`<div><b style="color:#1a237e;">${re.name}</b> <span style="font-size:0.75em;color:#666;">(${re.type})</span><br><span style="color:#2e7d32;font-size:0.85em;">월세: ${format(re.rent)}원/월</span></div><div style="text-align:right;"><div style="color:#d32f2f;font-weight:bold;">${formatCap(re.price)}</div>${re.owned>0?`<div style="font-size:0.8em;margin-bottom:4px;">${rS}</div><span style="font-weight:bold;color:#1b5e20;font-size:0.8em;">보유:${re.owned}채</span> <button class="btn-clear" onclick="window.sellRE('${re.id}')">매각</button>`:`<button class="btn-quick" style="background:#1565c0;padding:6px 12px;" onclick="window.buyRE('${re.id}')">매입</button>`}</div>`; bX.appendChild(d); }); };
-  window.buyRE = function(id) { let r=realEstates.find(x=>x.id===id); if(cash<r.price)return alert("자금 부족"); cash-=r.price; r.owned++; r.cost=r.price; showToast(`🏢 매입 완료!`, "blue"); window.updateUI(); window.renderRealEstate(); };
-  window.sellRE = function(id) { let r=realEstates.find(x=>x.id===id); if(r.owned<=0)return; let prof=r.price-r.cost; cash+=r.price; r.owned--; showToast(`💰 차익: ${formatCap(prof)}`, prof>=0?"red":"blue"); window.updateUI(); window.renderRealEstate(); };
-  
-  window.sellFlex = function(id) { let r=realEstates.find(x=>x.id===id); if(!r || r.owned<=0)return; let prof=r.price-r.cost; cash+=r.price; r.owned--; showToast(`💰 매각 완료! 차익: ${formatCap(prof)}원`, prof>=0?"red":"blue"); window.updateUI(); window.switchFlexTab('flex', document.querySelectorAll('#tab-realestate .re-c-btn')[1]); };
-  
-  window.buyFlex = function(type) { 
-      let valid = ["한국","미국","일본","영국","프랑스","스페인","호주","중국","싱가포르","홍콩","글로벌"];
-      if(type==='island'){if(cash<1e12)return alert("자금 부족."); let c=prompt("어느 국가에 섬을 매입하시겠습니까?\n(글로벌, 한국 등)","글로벌"); if(!valid.includes(c))c="글로벌"; let n=prompt("섬 이름","프라이빗 아일랜드"); if(!n)return; cash-=1e12;hofPoints+=1000;realEstates.push({id:'re_i_'+Date.now(),country:c,name:n,type:"개인섬",price:1e12,cost:1e12,rent:0,owned:1});showToast(`🏝️ ${n} 매입 완료! (부동산 탭 연동)`,"event");} 
-      if(type==='charity'){if(cash<5e10)return alert("자금 부족.");cash-=5e10;secRisk=Math.max(0,secRisk-50);hofPoints+=1000;showToast("🤝 기부 완료! 명성 상승","blue");} 
-      if(type==='org'){if(cash<1e13)return alert("자금 부족.");let n=prompt("국제기구 이름","글로벌 평화재단");if(!n)return;cash-=1e13;hofPoints+=5000;hrDepts['org_'+Date.now()]={name:n,count:1,salary:5e9,desc:"국제기구",agencies:["자체"],effDesc:"매월 글로벌 우호도 및 명성 보정"};showToast("🏛️ 기구 창설 완료! (HR 연동)","event");} 
-      if(type==='school'){if(cash<5e12)return alert("자금 부족.");let c=prompt("설립 국가 지정","미국"); if(!valid.includes(c))c="미국"; let n=prompt("이름","아이비리그 글로벌 대학");if(!n)return;cash-=5e12;hofPoints+=2000;realEstates.push({id:'re_sc_'+Date.now(),country:c,name:n,type:"명문사학",price:5e12,cost:5e12,rent:5e10,owned:1});showToast(`🏫 ${n} 설립 완료! (부동산 연동)`,"event");} 
-      if(type==='safari'){let c=prompt("건설 국가 지정","글로벌"); if(!valid.includes(c))c="글로벌"; let n=prompt("이름","대자연 랜드");if(!n)return;if(cash<2e12)return alert("자금 부족");cash-=2e12;realEstates.push({id:'re_sf_'+Date.now(),country:c,name:n+" 사파리",type:"관광지",price:2e12,cost:2e12,rent:2e10,owned:1});showToast("🦁 사파리 건설!","event");}
-      if(type==='mega'){let ans=prompt("무엇을 매입합니까?\n1.글로벌 프랜차이즈(3조)\n2.국가 소유권(1000조)\n3.세계 최대 강(500조)"); if(ans==='1'){if(cash<3e12)return;cash-=3e12;realEstates.push({id:'re_f_'+Date.now(),country:"글로벌",name:prompt("이름")||"월드 햄버거",type:"상업용",price:3e12,cost:3e12,rent:1.5e11,owned:1});showToast("매입완료","blue");} else if(ans==='2'){if(cash<1000e12)return;cash-=1000e12;realEstates.push({id:'re_c_'+Date.now(),country:"글로벌",name:prompt("국가명")||"어느 국가",type:"국가",price:1000e12,cost:1000e12,rent:5e12,owned:1});showToast("국가 매입 완료!","event");} else if(ans==='3'){if(cash<500e12)return;cash-=500e12;realEstates.push({id:'re_r_'+Date.now(),country:"글로벌",name:prompt("강 이름")||"아마존 강",type:"자연원",price:500e12,cost:500e12,rent:2e12,owned:1});showToast("강 소유권 획득!","event");} }
-      window.updateUI(); 
-  };
-  window.devDrug = function() { let sid=$id('flex-bio-sel').value; if(!sid)return; let s=stocks.find(x=>x.id===sid); if(cash<5e11)return alert("자금 부족"); cash-=5e11; if(Math.random()<0.25){cash+=5e12;hofPoints+=3000;showToast(`🔬 [${s.name}] 신약 대성공! 주가 3배 폭등!`,"event"); s.price=Math.round(s.price*3.0);} else {showToast("📉 임상 실패..","black"); s.price=Math.round(s.price*0.8);} window.updateUI(); };
-  window.investRND = function() { let sid=$id('flex-rnd-sel').value; if(!sid)return; let s=stocks.find(x=>x.id===sid); if(cash<1e12)return alert("자금 부족"); cash-=1e12; if(Math.random()<0.5){showToast(`💡 [${s.name}] 기술혁신 대성공!`,"event"); s.price=Math.round(s.price*1.5);} else {showToast("📉 R&D 미비","black");} window.updateUI(); };
-  window.buildMegaTower = function() { let c=$id('tower-country').value||"한국"; let fl=parseInt($id('tower-floors').value); if(isNaN(fl)||fl<50)return alert("50층 이상 입력"); let cost=fl*5e10; if(cash<cost)return alert(`비용 부족`); cash-=cost; hofPoints+=Math.floor(fl*10); realEstates.push({id:`re_m_${Date.now()}`,country:c,name:`${c} ${fl}층 랜드마크`,type:"랜드마크",price:cost,cost:cost,rent:Math.floor(cost*0.005),owned:1}); showToast(`🏢 ${c}에 빌딩 건설!`, "event"); window.updateUI(); };
-  
-  window.hostConcert = function() { let ix=parseInt($id('concert-artist').value); let ar=window.concertArtistsList[ix]; let d=parseInt($id('concert-days').value); if(isNaN(d)||d<1||d>100)return alert("1~100일 입력"); let cost=ar.b+(d*5e9); if(cash<cost)return alert(`총 비용 부족.`); cash-=cost; let suc=Math.random()*ar.m; let rev=cost*(0.3+suc); cash+=rev; let prof=rev-cost; showToast(`🎤 투어 종료! 손익:${formatCap(prof)}원`, prof>=0?"red":"blue"); window.updateUI(); };
-  window.renderClubs = function() { let c=$id('sports-country').value; let box=$id('sports-clubs-list'); if(!box)return; box.innerHTML=""; let clist=D.clubsData[c]; clist.forEach(cb=>{let isOwned=myClubs.includes(cb.id); box.innerHTML+=`<div style="display:flex;justify-content:space-between;align-items:center;background:#fff;padding:8px;border:1px solid #ccc;border-radius:6px;"><div><b>${cb.n}</b></div>${isOwned?`<span style="color:#2e7d32;font-weight:bold;">보유중 <button class="btn-clear" onclick="window.sellClub('${cb.id}')">매각</button></span>`:`<button class="btn-quick" style="background:#1565c0;" onclick="window.buyClub('${cb.id}', '${cb.n}', ${cb.p})">인수 (${formatCap(cb.p)})</button>`}</div>`;}); };
-  window.buyClub = function(id, name, price) { if(cash<price)return alert("자금 부족."); cash-=price; myClubs.push(id); hofPoints+=1000; showToast(`⚽ ${name} 인수 완료!`, "event"); window.renderClubs(); window.renderMyClubs(); window.updateUI(); };
-  window.sellClub = function(id) { let f=false; for(let k in D.clubsData){let c=D.clubsData[k].find(x=>x.id===id); if(c){cash+=c.p; myClubs=myClubs.filter(x=>x!==id); f=true; showToast(`⚽ 구단 매각 완료`, "blue"); break;}} if(f){window.renderClubs(); window.renderMyClubs(); window.updateUI();} };
-  window.renderMyClubs = function() { let box=$id('my-clubs-list'); if(!box)return; box.innerHTML=""; if(myClubs.length===0)box.innerHTML="<div style='color:#888;text-align:center;'>소유 구단 없음</div>"; let allNames=[]; for(let k in D.clubsData){D.clubsData[k].forEach(c=>{if(myClubs.includes(c.id))allNames.push(c.n);});} allNames.forEach(n=>{box.innerHTML+=`<div style="background:#e8eaf6;padding:8px;border-radius:6px;font-weight:bold;color:#1a237e;">⚽ ${n} (매일 수익)</div>`;}); };
-  
-  window.renderMedia = function() { let box=$id('media-list'); if(!box)return; box.innerHTML=""; mediaList.forEach(m=>{ let isO=myMedias.includes(m.id); box.innerHTML+=`<div style="display:flex;justify-content:space-between;align-items:center;background:#fff;padding:12px;border:1px solid #ddd;border-radius:8px;"><div><b>${m.n}</b><br><span style="font-size:0.8em;color:#555;">월 수익률 ${(m.r*100).toFixed(1)}%</span></div>${isO?`<span style="color:#1b5e20;font-weight:bold;">소유중 <button class="btn-clear" onclick="window.sellMedia('${m.id}')">매각</button></span>`:`<button class="btn-quick" style="background:#4e342e;" onclick="window.buyMedia('${m.id}',${m.p})">매입 (${formatCap(m.p)})</button>`}</div>`; }); };
-  window.buyMedia = function(id,p) { if(cash<p)return alert("자본 부족"); cash-=p; myMedias.push(id); hofPoints+=2000; showToast("📺 언론사 매입 완료!", "event"); window.renderMedia(); window.updateUI(); };
-  window.sellMedia = function(id) { let m=mediaList.find(x=>x.id===id); cash+=m.p; myMedias=myMedias.filter(x=>x!==id); showToast("📺 언론사 매각", "blue"); window.renderMedia(); window.updateUI(); };
-  window.renderVipStore = function() { let box = $id('vip-items-list'); if(!box) return; box.innerHTML = ""; let filter = $id('vip-category-filter') ? $id('vip-category-filter').value : 'all'; let filteredVIP = vipAssets.filter(v => filter === 'all' || v.category === filter); filteredVIP.slice(0,50).forEach(v => { let krwPrice = v.usdPrice * macroIndices.usdkrw.val; let div = document.createElement('div'); div.className = 'vip-card'; div.innerHTML = `<div style="display:flex;justify-content:space-between;background:#fff;padding:10px;border-radius:6px;border:1px solid #ddd;"><div><b>${v.name}</b> <span style="font-size:0.75em; color:#888;">(${v.category})</span></div><div><span style="color:#d32f2f; font-weight:bold; margin-right:8px;">${formatCap(krwPrice)}</span>${v.owned > 0 ? `<span style="color:#1b5e20; font-weight:bold; margin-right:4px;">보유:${v.owned}</span><button class="btn-quick" style="background:#b71c1c;" onclick="window.sellVip('${v.id}')">매각</button>` : `<button class="btn-quick" style="background:#f57f17;" onclick="window.buyVip('${v.id}')">구매</button>`}</div></div>`; box.appendChild(div); }); };
-  window.buyVip = function(id) { let v = vipAssets.find(x => x.id === id); let krwPrice = v.usdPrice * macroIndices.usdkrw.val; if(cash < krwPrice) return alert("자금 부족"); cash -= krwPrice; v.owned++; hofPoints += 50; window.updateUI(); window.renderVipStore(); };
-  window.sellVip = function(id) { let v = vipAssets.find(x => x.id === id); let krwPrice = v.usdPrice * macroIndices.usdkrw.val; if(v.owned <= 0) return; cash += krwPrice; v.owned--; window.updateUI(); window.renderVipStore(); };
-
-  window.setOptQty = function(r) { let a=$id('opt-asset').value; let b=window.getAssetPrice(a,2000); let m=window.getAssetMult(a); let l=parseInt($id('opt-leverage').value)||10; let mar=Math.round((b*m*0.1)/l); let maxC=Math.floor(cash/mar); let tQ=Math.floor(maxC*r); $id('opt-qty').value=Math.max(1,tQ); window.updateOptPrice(); };
-  window.setOptTimeframe = function(d,b) { optTimeframeVal=d; document.querySelectorAll('.opt-tf-btn').forEach(x=>x.classList.remove('active')); b.classList.add('active'); window.updateOptPrice(); };
-  window.tradeFutures = function(type) { 
-      let a=$id('opt-asset').value; let q=parseInt($id('opt-qty').value)||1; let mod=$id('opt-margin-mode').value; let l=parseInt($id('opt-leverage').value)||10; let b=window.getAssetPrice(a,2000); let mul=window.getAssetMult(a); let mar=Math.round((b*mul*0.1*q)/l); let fee=Math.round(b*mul*q*0.0004); 
-      if(cash < mar+fee) return alert(`증거금+수수료(${formatCap(mar+fee)}) 부족`); cash -= (mar+fee);
-      let ext=optPositions.find(p=>p.isFut&&p.asset===a&&p.type===type&&p.mode===mod&&p.lev===l); 
-      if(ext){ let tQ=ext.qty+q; ext.entryPrice=((ext.entryPrice*ext.qty)+(b*q))/tQ; ext.margin+=mar; ext.qty=tQ; let lD=mod==='cross'?(cash/(mul*tQ))*0.8:(ext.margin/(mul*tQ))*0.8; ext.liqPrice=type==='long'?Math.max(0,ext.entryPrice-lD):(ext.entryPrice+lD); showToast(`📈 [물타기] 선물 ${type} 평단가 자동 합산! (수수료 ${format(fee)})`, "blue"); } 
-      else { let lD=mod==='cross'?(cash/(mul*q))*0.8:(mar/(mul*q))*0.8; let lP=type==='long'?Math.max(0,b-lD):(b+lD); optPositions.push({id:Date.now(),isFut:true,asset:a,type,qty:q,entryPrice:b,margin:mar,mode:mod,liqPrice:lP,lev:l,targetPrice:0}); showToast(`📈 선물 ${type} 진입 (수수료 ${format(fee)})`, "blue"); }
-      window.updateUI(); window.renderOptPositions(); 
-  };
-  window.tradeOption = function(optType, side) { let a=$id('opt-asset').value; let q=parseInt($id('opt-qty').value)||1; let b=window.getAssetPrice(a,2000); let m=window.getAssetMult(a); let pr=Math.round(b*m*0.02*q); let fee=Math.round(b*m*q*0.0002); if(cash<pr+fee)return alert("자금 부족"); cash-=(pr+fee); optPositions.push({id:Date.now(),isFut:false,asset:a,type:optType,side:'buy',qty:q,entryPrice:b,prem:pr,targetPrice:0}); showToast(`📈 옵션 진입 (수수료 ${format(fee)})`, "blue"); window.updateUI(); window.renderOptPositions(); };
-  window.closeOptPosition = function(id, auto=false) { let i=optPositions.findIndex(p=>p.id===id); if(i===-1)return; let p=optPositions[i]; let c=window.getAssetPrice(p.asset,p.entryPrice); let m=window.getAssetMult(p.asset); let fee=Math.round(c*m*p.qty*(p.isFut?0.0004:0.0002)); let diff=(c-p.entryPrice)*m*p.qty*(p.type==='long'||p.type==='call'?1:-1); cash+=(p.isFut?p.margin:p.prem)+diff-fee; optPositions.splice(i,1); showToast(auto?`🤖 예약 청산: ${format(diff)} (수수료제외)`:`💰 수동 청산: ${format(diff)} (수수료제외)`,diff>=0?"red":"blue"); window.updateUI(); window.renderOptPositions(); };
-  window.setLimitOrder = function(id) { let p=optPositions.find(x=>x.id===id); if(!p)return; let tg=parseFloat($id(`limit_in_${id}`).value); if(isNaN(tg)||tg<=0)return alert("목표가 입력오류"); p.targetPrice=tg; showToast("✅ 예약 매도 설정완료", "black"); window.renderOptPositions(); };
-  window.cancelLimitOrder = function(id) { let p=optPositions.find(x=>x.id===id); if(p){p.targetPrice=0; showToast("🚫 예약 취소됨", "black"); window.renderOptPositions();} };
-  window.updateOptPrice = function() { 
-    let a=$id('opt-asset').value; let q=parseInt($id('opt-qty').value)||1; let mod=$id('opt-margin-mode').value; let l=parseInt($id('opt-leverage').value)||10; if($id('lev-display'))$id('lev-display').innerText=l;
-    let b=window.getAssetPrice(a,2000); let m=window.getAssetMult(a); let cV=b*m; let sI=parseFloat($id('opt-strike').value); let st=sI||b; if(!sI&&$id('opt-strike'))$id('opt-strike').value=Math.round(b);
-    setTxt('opt-curr-val', format(cV)); let d=(b-st)/b; let isC=b>st; let stat=Math.abs(d)<0.01?"등가격(ATM)":(isC?"Call ITM":"Call OTM"); let pr=Math.round(cV*(0.02+Math.abs(d)*0.1));
-    let mar=Math.round((cV*0.1*q)/l); let lD=mod==='cross'?(cash/(m*q))*0.8:(mar/(m*q))*0.8; setTxt('opt-liq-display', `청산가(Long): ${format(Math.max(0,b-lD))}원`); setTxt('opt-status', stat); 
-    let obB=$id('opt-orderbook'); if(obB) { let h=""; let t=a.includes('BTC')?50000:(a.includes('ETH')?5000:(b>10000?500:(b>100?5:0.1))); let lv=obExpanded?10:5; for(let i=lv;i>=1;i--){let p=b+(t*i); h+=`<div style="display:flex;justify-content:space-between;background:#e3f2fd;color:#1976d2;padding:2px 4px;border-radius:3px;cursor:pointer;" onclick="$id('opt-strike').value=${p}; window.updateOptPrice();"><span>${p<100?p.toFixed(2):format(p)}</span><span>${Math.floor(Math.random()*5000)+100}</span></div>`;} h+=`<div style="text-align:center;font-weight:bold;font-size:0.8em;margin:2px 0;color:#555;cursor:pointer;" onclick="$id('opt-strike').value=${b}; window.updateOptPrice();">기준가: ${b<100?b.toFixed(2):format(b)}</div>`; for(let i=1;i<=lv;i++){let p=Math.max(0.1,b-(t*i)); h+=`<div style="display:flex;justify-content:space-between;background:#ffebee;color:#d32f2f;padding:2px 4px;border-radius:3px;cursor:pointer;" onclick="$id('opt-strike').value=${p}; window.updateOptPrice();"><span>${p<100?p.toFixed(2):format(p)}</span><span>${Math.floor(Math.random()*5000)+100}</span></div>`;} obB.innerHTML=h; }
-    if(oChart) { let ha=(macroIndices[a]&&macroIndices[a].history)?macroIndices[a].history:(stocks.find(x=>x.name===a)?stocks.find(x=>x.name===a).history:Array(365).fill(b)); let sl=ha.slice(-optTimeframeVal); oChart.data.labels=Array(sl.length).fill(""); oChart.data.datasets[0].data=sl; let ac=optPositions.find(p=>p.asset===a); if(ac){oChart.data.datasets[1].data=Array(sl.length).fill(ac.entryPrice); if(ac.isFut)oChart.data.datasets[2].data=Array(sl.length).fill(ac.liqPrice); else oChart.data.datasets[2].data=[];}else{oChart.data.datasets[1].data=[];oChart.data.datasets[2].data=[];} oChart.update(); }
-  };
-  window.renderOptPositions = function() { let t=$id('opt-position-table'); if(!t)return; t.innerHTML="<tr><th>포지션</th><th>평단가/예약</th><th>손익</th><th>관리</th></tr>"; optPositions.forEach(p=>{let c=window.getAssetPrice(p.asset,p.entryPrice); let d=(c-p.entryPrice)*window.getAssetMult(p.asset)*p.qty*(p.type==='long'||p.type==='call'?1:-1); let lS=p.targetPrice>0?`<div style="color:#d32f2f;font-size:0.8em;">예약: ${format(p.targetPrice)} <button style="font-size:0.8em;padding:1px 4px;" onclick="window.cancelLimitOrder(${p.id})">취소</button></div>`:`<div style="display:flex;gap:2px;"><input type="number" id="limit_in_${p.id}" placeholder="목표가" style="width:60px;font-size:0.7em;padding:2px;"><button style="font-size:0.7em;" onclick="window.setLimitOrder(${p.id})">설정</button></div>`; let tr=document.createElement('tr'); tr.innerHTML=`<td><b>${p.asset}</b><br><span style="font-size:0.8em;color:#666;">${p.isFut?'선물':'옵션'} ${p.type} ${p.lev?p.lev+'x':''} (${p.qty})</span></td><td>${format(p.entryPrice)}<br>${lS}</td><td class="${d>=0?'text-up':'text-down'}">${format(d)}</td><td><button class="btn-clear" onclick="window.closeOptPosition(${p.id})">청산</button></td>`; t.appendChild(tr);}); };
-
-  // 월가 M&A
-  window.switchWallStTab = function(t, b) { document.querySelectorAll('#tab-wallst .re-c-btn').forEach(x=>x.classList.remove('active')); b.classList.add('active'); setDisplay('wallst-market-view', t==='list'?'flex':'none'); setDisplay('wallst-org-view', t==='org'?'block':'none'); if(t==='org') window.renderOrgChart(); };
-  window.renderOrgChart = function() { let o=$id('wallst-org-view'); if(!o)return; o.innerHTML=`<h4 style="color:#1a237e;">🏢 ${playerName} 펀드 연결 조직도</h4>`; if(acquiredFunds.length===0)o.innerHTML+=`<div style="text-align:center;">인수한 자회사가 없습니다.</div>`; acquiredFunds.forEach(f=>{o.innerHTML+=`<div style="background:#e8eaf6;padding:10px;margin-bottom:8px;border-left:4px solid #1a237e;"><b>${f.name}</b> <span style="font-size:0.75em;">[${f.type}]</span><br><span style="color:#2e7d32;">AUM: ${formatCap(f.assets)}</span></div>`;}); };
-  window.renderWallStList = function() { let l=$id('wallst-fund-list'); if(!l)return; l.innerHTML=""; let m=document.createElement('div'); m.className=`fund-item`; m.style.background="#e3f2fd"; m.style.borderColor="#1976d2"; m.innerHTML=`<b>⭐ 내 펀드</b><br><span style="font-size:0.75em;">AUM: ${formatCap(window.getPlayerNetAssets())}</span>`; l.appendChild(m); rivalFunds.forEach(f=>{let d=document.createElement('div');d.className=`fund-item ${f.id===selectedFundId?'active':''}`;d.innerHTML=`<b>${f.name}</b> <span style="font-size:0.7em;">[${f.type}]</span><br><span style="font-size:0.75em;">AUM: ${formatCap(f.assets)}</span>`;d.onclick=()=>{selectedFundId=f.id;window.renderWallStDetail();window.renderWallStList();};l.appendChild(d);}); if(!selectedFundId&&rivalFunds.length>0){selectedFundId=rivalFunds[0].id;window.renderWallStDetail();} };
-  window.renderWallStDetail = function() { let d=$id('wallst-fund-detail'); if(!d)return; let f=rivalFunds.find(x=>x.id===selectedFundId); if(!f)return; let sP=((f.myShares/f.issued)*100).toFixed(1); let c10=Math.floor(f.assets*0.1); let ob=sP>=51.0?`<hr><h4 style="color:#d32f2f;">🔥 경영권 행사</h4><button class="action-btn" style="width:100%;background:#43a047;margin-bottom:5px;" onclick="window.mergeRivalFund('${f.id}')">🤝 합병 상장 (IPO)</button><button class="action-btn" style="width:100%;background:#b71c1c;" onclick="window.liquidateRivalFund('${f.id}')">💣 완전 청산</button>`:''; d.innerHTML=`<h4 style="color:var(--primary);">${f.name}</h4><p style="font-size:0.8em;"><b>AUM:</b> ${formatCap(f.assets)}<br><b>내 지분율:</b> <span style="color:#d32f2f;font-weight:bold;">${sP}%</span></p><button class="action-btn btn-buy" style="width:100%;margin-bottom:5px;" onclick="window.buyRivalShares('${f.id}', 0.1)">지분 10% 적대적 인수 (${formatCap(c10)})</button>${ob}`; };
-  window.buyRivalShares = function(id, r) { let f=rivalFunds.find(x=>x.id===id); let c=Math.floor(f.assets*r); if(cash<c)return alert(`자금 부족`); cash-=c; f.myShares=Math.min(f.issued,f.myShares+Math.floor(f.issued*r)); hofPoints+=Math.floor(r*1000); showToast(`지분 인수 성공!`,"event"); window.updateUI(); window.renderWallStDetail(); };
-  window.mergeRivalFund = function(id) { 
-      let f=rivalFunds.find(x=>x.id===id); 
-      let doIpo=confirm(`[${f.name}] 증시에 직상장(IPO) 시키겠습니까?\n[확인] 커스텀 상장 (내 지분율만큼 주식 획득)\n[취소] 비상장 자회사로 100% 흡수 합병`); 
-      if(doIpo){
-          let n=prompt("상장 기업명", f.name); if(!n)n=f.name; 
-          let t=prompt("업종", f.type); if(!t)t="일반"; 
-          let vStr=prompt("발행 총 주식수", "10000000"); let v=parseInt(vStr); if(isNaN(v)||v<100000)v=10000000; 
-          let pr=Math.floor(f.assets/v*0.5); 
-          let myS = Math.floor(v * (f.myShares/f.issued)); 
-          stocks.push({id:'s_ma_'+Date.now(), name:n, market:"KOSPI", tag:t, price:Math.max(500,pr), beta:1.2, issued:v, isEquity:true, shares:myS, cost:myS*pr, shortShares:0, shortCost:0, history:Array(365).fill(pr), ma20_history:Array(365).fill(pr)}); 
-          acquiredFunds.push({name:n, type:"상장사", assets:f.assets}); 
-          showToast(`🎉 [${n}] 상장! 내 지분 ${format(myS)}주 획득`,"event");
-      } else {
-          cash+=f.assets; acquiredFunds.push({name:f.name, type:f.type, assets:f.assets}); showToast(`🤝 자회사 편입 완료.`,"blue");
-      } 
-      rivalFunds=rivalFunds.filter(x=>x.id!==id); selectedFundId=null; window.updateUI(); window.renderWallStList(); 
-  };
-  window.liquidateRivalFund = function(id) { let f=rivalFunds.find(x=>x.id===id); cash+=Math.floor(f.assets*0.4); rivalFunds=rivalFunds.filter(x=>x.id!==id); selectedFundId=null; showToast(`💣 청산 완료.`,"black"); window.updateUI(); window.renderWallStList(); };
-
-  window.renderIpoTab = function() {
-      let box = $id('ipo-status'); let actBox = $id('ipo-action'); if(!box || !actBox) return;
-      let net = window.getPlayerNetAssets(); let empCount = myEmployees.length; for(let k in hrDepts) empCount += hrDepts[k].count * 10;
-      let compSize = empCount < 10 ? "스타트업" : (empCount < 30 ? "중소기업" : (empCount < 50 ? "중견기업" : (empCount < 100 ? "대기업" : "글로벌기업")));
-      let tCnt = hrDepts.trading.count; let rCnt = hrDepts.research.count; let lCnt = hrDepts.lobby.count;
-      let lvlNames = ["비상장", "KOSDAQ 상장사", "KOSPI 대기업", "S&P500 글로벌", "NASDAQ 빅테크"];
-      box.innerHTML = `<h3 style="color:#e91e63;margin:0 0 10px 0;">현재 등급: ${lvlNames[myIpoLevel]}</h3><div>내 자산: <b>${formatCap(net)}원</b> | 임직원: <b>${empCount}명 (${compSize})</b></div><div style="font-size:0.85em;color:#555;margin-top:5px;">보유 부서: 트레이딩(${tCnt}), 리서치(${rCnt}), 로비(${lCnt})</div>`;
-      if(myIpoLevel === 0) { actBox.innerHTML = `<div class="info-box" style="margin-bottom:10px;"><b>[조건] KOSDAQ 상장</b><br>자산 100억 | 직원 10명+ | 트레이딩 1개+</div>`; if(net >= 10000000000 && empCount >= 10 && tCnt >= 1) actBox.innerHTML += `<button class="action-btn" style="width:100%;background:#e91e63;" onclick="window.executeIpo(1)">상장 심사 청구</button>`; } 
-      else if(myIpoLevel === 1) { actBox.innerHTML = `<div class="info-box" style="margin-bottom:10px;"><b>[조건] KOSPI 이전 상장</b><br>자산 1,000억 | 직원 30명+ | 트레이딩 3개+, 리서치 1개+</div>`; if(net >= 100000000000 && empCount >= 30 && tCnt >= 3 && rCnt >= 1) actBox.innerHTML += `<button class="action-btn" style="width:100%;background:#e91e63;" onclick="window.executeIpo(2)">이전 상장 추진</button>`; } 
-      else if(myIpoLevel === 2) { actBox.innerHTML = `<div class="info-box" style="margin-bottom:10px;"><b>[조건] S&P500 글로벌 진출</b><br>자산 10조 | 직원 50명+ | 트레이딩 5+, 리서치 3+, 로비 1+</div>`; if(net >= 10000000000000 && empCount >= 50 && tCnt >= 5 && rCnt >= 3 && lCnt >= 1) actBox.innerHTML += `<button class="action-btn" style="width:100%;background:#e91e63;" onclick="window.executeIpo(3)">뉴욕 증시 진출</button>`; } 
-      else if(myIpoLevel === 3) { actBox.innerHTML = `<div class="info-box" style="margin-bottom:10px;"><b>[조건] NASDAQ 빅테크 편입</b><br>자산 100조 | 직원 100명+ | 트레이딩 10+, 리서치 5+, 로비 3+</div>`; if(net >= 100000000000000 && empCount >= 100 && tCnt >= 10 && rCnt >= 5 && lCnt >= 3) actBox.innerHTML += `<button class="action-btn" style="width:100%;background:#e91e63;" onclick="window.executeIpo(4)">나스닥 최종 진출</button>`; } 
-      else { actBox.innerHTML = `<div style="color:#2e7d32;font-weight:bold;text-align:center;padding:10px;">🎉 최고의 글로벌 기업입니다!</div>`; }
-  };
-  window.executeIpo = function(tL) {
-      if(Math.random() < 0.2) { showToast("❌ 심사 탈락...", "black"); return; }
-      let sN = `${playerName} 홀딩스`; let myComp = stocks.find(x=>x.name===sN);
-      if(tL === 1) { let neg = confirm("공모가 협상?\n[확인] 성공+20%, 실패-10%\n[취소] 5만원 상장"); let pP=50000; if(neg){if(Math.random()>0.5){pP=60000;showToast("협상 성공","red");}else{pP=45000;showToast("협상 실패","blue");}} let pN=prompt("회사명", sN); if(pN)sN=pN; let sObj={id:'s_my_'+Date.now(),name:sN,market:"KOSDAQ",tag:"지주사",price:pP,beta:1.5,issued:20000000,isEquity:true,shares:10000000,cost:pP*10000000,shortShares:0,shortCost:0,history:Array(365).fill(pP),ma20_history:Array(365).fill(pP)}; sObj.per=15.0; sObj.eps=Math.floor(pP/15); stocks.push(sObj); showToast(`🚀 KOSDAQ 상장 성공!`,"event"); } 
-      else if(tL===2){ if(myComp){ myComp.market="KOSPI"; myComp.price=Math.round(myComp.price*1.5); showToast(`🚀 KOSPI 이전 성공!`,"red"); } } 
-      else if(tL===3||tL===4){ let mkt=tL===3?"SNP500":"NASDAQ"; if(!myComp) return; let isAdr=confirm(`미국 증시 진출!\n[확인] ADR 상장\n[취소] 직상장`); if(isAdr){ let aN=myComp.name+"(ADR)"; let aP=Math.round(myComp.price*2.0); let sObj={id:'s_my_adr_'+Date.now(),name:aN,market:mkt,tag:"지주사(ADR)",price:aP,beta:2.0,issued:10000000,isEquity:true,shares:5000000,cost:5000000*aP,shortShares:0,shortCost:0,history:Array(365).fill(aP),ma20_history:Array(365).fill(aP)}; sObj.per=20.0; sObj.eps=Math.floor(aP/20); stocks.push(sObj); showToast(`🚀 ADR 상장!`,"event"); } else { myComp.market=mkt; myComp.price=Math.round(myComp.price*3.0); showToast(`🚀 직상장 완료!`,"event"); } } 
-      myIpoLevel=tL; window.renderIpoTab(); window.updateUI();
-  };
-
-  window.renderHistoryTab = function() { let box = $id('company-history-list'); if(!box) return; box.innerHTML = ""; let years = [...new Set(companyHistory.map(h => h.year))].sort((a,b) => b-a); years.forEach(y => { let yId = 'hist_y_' + y; box.innerHTML += `<h3 style="background:#1a237e; color:white; padding:6px; border-radius:4px; font-size:1em; margin:10px 0 5px 0; cursor:pointer;" onclick="let d=document.getElementById('${yId}'); d.style.display=d.style.display==='none'?'block':'none';">📁 ${y}년 기록 (클릭하여 여닫기)</h3>`; let contentHTML = `<div id="${yId}" style="display:${y===currentDate.getFullYear()?'block':'none'}; padding-left:10px;">`; companyHistory.filter(h => h.year === y).forEach(h => { contentHTML += `<div class="history-event"><div style="font-weight:bold; color:#1a237e;">${h.date}</div><div style="font-weight:bold;">${h.title}</div><div style="font-size:0.85em; color:#555;">${h.desc}</div></div>`; }); contentHTML += `</div>`; box.innerHTML += contentHTML; }); };
-  window.renderIndirectStore = function() { let box = $id('indirect-list'); if(!box) return; box.innerHTML = ""; indirectFunds.forEach(f => { let div = document.createElement('div'); div.style.cssText = "background:white; border:1px solid #ddd; padding:10px; border-radius:8px;"; div.innerHTML = `<div style="display:flex; justify-content:space-between;"><b>${f.name}</b><span style="color:#1976d2; font-weight:bold;">투자금: ${formatCap(f.invested)}원</span></div><div style="display:flex; gap:4px; margin-top:6px;"><button class="btn-quick" style="background:#43a047;" onclick="window.investIndirect('${f.id}', 10000000)">1천만</button><button class="btn-quick" style="background:#388e3c;" onclick="window.investIndirect('${f.id}', 100000000)">1억</button><button class="btn-quick" style="background:#2e7d32;" onclick="window.investIndirect('${f.id}', 1000000000)">10억</button><button class="btn-quick" style="background:#1b5e20;" onclick="window.investIndirect('${f.id}', 10000000000)">100억</button><button class="btn-quick" style="background:#003300;" onclick="window.investIndirect('${f.id}', 100000000000)">1천억</button><button class="btn-quick" style="background:#000;" onclick="window.investIndirect('${f.id}', 1000000000000)">1조</button><button class="btn-quick" style="background:#b71c1c;" onclick="window.redeemIndirect('${f.id}')">전액 환매</button></div>`; box.appendChild(div); }); };
-  window.investIndirect = function(id, amt) { if(cash < amt) return alert("자금 부족"); let f = indirectFunds.find(x => x.id === id); cash -= amt; f.invested += amt; window.updateUI(); window.renderIndirectStore(); };
-  window.redeemIndirect = function(id) { let f = indirectFunds.find(x => x.id === id); if(f.invested <= 0) return; cash += f.invested; f.invested = 0; window.updateUI(); window.renderIndirectStore(); };
-
-  window.switchHRTab = function(t, btn) { document.querySelectorAll('#tab-hr .re-c-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); setDisplay('hr-fa-view', (t==='fa' || t==='pol') ? 'block' : 'none'); setDisplay('hr-hired-view', t==='hired' ? 'block' : 'none'); setDisplay('hr-manage-view', t==='manage' ? 'block' : 'none'); if(t==='fa' || t==='pol') { currentHRTab = t; hrPage=1; window.renderTransferMarket(); } else if(t==='hired') { hrPage=1; window.renderHR(); } else if(t==='manage') { window.renderDept(); } };
-  window.renderTransferMarket = function() { let tb=$id('hr-transfer-market'); if(!tb)return; tb.style.display='block'; tb.innerHTML=currentHRTab==='corp'?"<h4 style='margin:0 0 5px 0;color:#1a237e;'>🌐 글로벌 인재 (FA)</h4>":"<h4 style='margin:0 0 5px 0;color:#b71c1c;'>🏛️ 정계 인사 (로비)</h4>"; let fA=transferMarket.filter(p=>currentHRTab==='corp'?p.comp==="FA(자유계약)":p.comp!=="FA(자유계약)"); let total = Math.ceil(fA.length / 10); if(total===0)total=1; if(hrPage>total) hrPage=total; let sliced = fA.slice((hrPage-1)*10, hrPage*10); if(sliced.length===0){tb.innerHTML+=`<div style="text-align:center;color:#888;">인사가 없습니다.</div>`;} sliced.forEach((p)=>{ let ix=transferMarket.indexOf(p); tb.innerHTML+=`<div class="hr-market-card" style="background:#fff;padding:8px;border-radius:6px;margin-bottom:6px;border:1px solid #ccc;"><div style="display:flex;justify-content:space-between;"><b>${p.name}</b> <span style="color:#d32f2f;font-weight:bold;">${p.stat}</span></div><div style="color:#555;font-size:0.85em;">${p.comp} 출신 | ${p.nation} | ${p.spec}</div><div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px;"><span style="color:#1b5e20;font-weight:bold;">${formatCap(p.cost)}</span><button class="btn-quick" style="${currentHRTab==='pol'?'background:#b71c1c;':'background:#1976d2;'}" onclick="window.signFreeAgent(${ix})">영입</button></div></div>`; }); tb.innerHTML += `<div style="text-align:center; margin-top:10px;"><button onclick="hrPage=Math.max(1,hrPage-1);window.renderTransferMarket()">이전</button> <span style="margin:0 10px;font-weight:bold;">${hrPage} / ${total}</span> <button onclick="hrPage=Math.min(${total},hrPage+1);window.renderTransferMarket()">다음</button></div>`; };
-  window.signFreeAgent = function(ix) { let p=transferMarket[ix]; if(cash<p.cost)return alert("현금 부족"); cash-=p.cost; myEmployees.push({name:p.name,role:p.spec,stat:p.stat,salary:Math.floor(p.cost*0.1),assignedTo:null,assignedRole:null}); transferMarket.splice(ix,1); window.fillHRMarket(); showToast(`👨‍💼 영입 성공!`, "blue"); window.updateUI(); window.renderTransferMarket(); window.renderHR(); };
-  window.negSalary = function(ix, t) { let e=myEmployees[ix]; if(t==='up'){e.salary=Math.floor(e.salary*1.2);e.stat='S급';showToast(`💸 ${e.name} 연봉 인상`,'blue');} else if(t==='freeze'){showToast(`🤝 동결 합의`,'black');} else if(t==='down'){if(Math.random()<0.3){showToast(`😡 분노 퇴사!`,'red');myEmployees.splice(ix,1);}else{e.salary=Math.floor(e.salary*0.8);showToast(`📉 삭감 수용`,'black');}} window.renderHR(); window.renderPolCandidates(); window.updateUI(); };
-  window.renderHR = function() { let b=$id('hr-employee-list'); let pb=$id('hr-pagination'); if(!b) return; let fE=myEmployees.filter(e=>currentHiredFilter==='all'||(currentHiredFilter==='corp'?!e.role.includes("후보")&&!e.role.includes("당선")&&!e.role.includes("장관")&&!e.role.includes("대통령"):(e.role.includes("후보")||e.role.includes("당선")||e.role.includes("장관")||e.role.includes("대통령")))); let total = Math.ceil(fE.length / 10); if(total===0)total=1; if(hrPage>total) hrPage=total; let sliced = fE.slice((hrPage-1)*10, hrPage*10); b.innerHTML=sliced.length===0?"<div style='color:#888;text-align:center;'>채용 인원 없음</div>":sliced.map((e)=>{let ix=myEmployees.indexOf(e);let aS=e.assignedTo?`<span style="color:#d32f2f;font-weight:bold;">[${e.assignedTo}]</span>`:`<span style="color:#2e7d32;">[대기중]</span>`;return `<div style="display:flex;flex-direction:column;padding:6px 0;border-bottom:1px dotted #ccc;"><div style="display:flex;justify-content:space-between;margin-bottom:4px;"><div><b>${e.name}</b> <span style="color:#b71c1c;">(${e.stat} ${e.role})</span> ${aS}</div><button class="btn-clear" onclick="window.fireEmployee(${ix})">해고</button></div><div style="display:flex;justify-content:space-between;"><span>${formatCap(e.salary)}</span><div style="display:flex;gap:2px;"><button class="btn-quick" style="background:#2e7d32;" onclick="window.negSalary(${ix},'up')">인상</button><button class="btn-quick" style="background:#546e7a;" onclick="window.negSalary(${ix},'freeze')">동결</button><button class="btn-quick" style="background:#c62828;" onclick="window.negSalary(${ix},'down')">삭감</button></div></div></div>`;}).join(''); if(pb) pb.innerHTML = total > 1 ? `<button onclick="hrPage=Math.max(1,hrPage-1);window.renderHR()">이전</button> <span style="margin:0 10px;font-weight:bold;">${hrPage} / ${total}</span> <button onclick="hrPage=Math.min(${total},hrPage+1);window.renderHR()">다음</button>` : ''; };
-  window.renderDept = function() { let dB=$id('hr-departments'); if(!dB) return; dB.innerHTML=""; for(let k in hrDepts){ let d=hrDepts[k]; let v=document.createElement('div'); v.style.cssText="background:#f9f9f9;padding:8px;border-radius:6px;margin-bottom:5px;border:1px solid #ddd;"; v.innerHTML=`<div style="display:flex;justify-content:space-between;"><b>${d.name}</b> <span>${d.agencies.join(', ')}</span></div><div style="font-size:0.75em;color:#d32f2f;font-weight:bold;margin-top:2px;">효과: ${d.effDesc}</div><div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px;"><span style="color:#2e7d32;font-weight:bold;">${d.count}팀 가동중</span><div><button class="action-btn" style="background:#1976d2;" onclick="window.hireDept('${k}')">확장(+${formatCap(d.salary)})</button> <button class="action-btn" style="background:#e53935;" onclick="window.fireDept('${k}')">축소</button></div></div>`; dB.appendChild(v); } };
-  window.fireDept = function(k){if(hrDepts[k].count>0){hrDepts[k].count--;window.updateUI();window.renderDept();}}; 
-  window.fireEmployee = function(ix){if(!confirm("해고?"))return;let f=myEmployees.splice(ix,1)[0];showToast(`👋 ${f.name} 해고됨`,"black");window.updateUI();window.renderHR();window.renderPolCandidates();}; 
-  window.hireDept = function(k){let d=hrDepts[k];if(cash<d.salary)return alert("자금 부족");cash-=d.salary;d.count++;window.updateUI();window.renderDept();};
-
-  window.renderPolitics = function() { 
-      let pBox = $id('politics-list'); if(!pBox) return; pBox.innerHTML = ""; 
-      globalLeaders.forEach(l => { 
-          let investDiv = l.rep >= 50 ? `<div style="margin-top:6px; background:#fff3e0; padding:6px; border-radius:4px;"><span style="font-size:0.8em; color:#e65100; font-weight:bold;">[국채 매입]</span> <div style="display:flex; gap:4px; margin-top:4px;"><button class="btn-quick" style="background:#43a047;" onclick="window.investCountry('${l.id}', 1e10)">100억</button><button class="btn-quick" style="background:#388e3c;" onclick="window.investCountry('${l.id}', 1e11)">1천억</button><button class="btn-quick" style="background:#2e7d32;" onclick="window.investCountry('${l.id}', 1e12)">1조</button><button class="btn-quick" style="background:#1b5e20;" onclick="window.investCountry('${l.id}', 1e13)">10조</button><button class="btn-quick" style="background:#003300;" onclick="window.investCountry('${l.id}', 1e14)">100조</button></div></div>` : `<div style="font-size:0.8em; color:#888; margin-top:4px;">🔒 우호도 50 달성 시 국채 투자 가능</div>`; 
-          let div = document.createElement('div'); div.style.cssText = "background:white; border:1px solid #ccc; padding:8px; border-radius:6px; font-size:0.82em;"; 
-          div.innerHTML = `<div style="display:flex; justify-content:space-between; align-items:center;"><div><b>${l.country} ${l.name}</b> <span style="font-size:0.75em; background:#e0f2f1; padding:2px 4px; border-radius:4px; color:#00695c;">경제: ${l.state}</span> | 우호: <b>${l.rep}/100</b></div><button class="action-btn" style="background:#00695c; padding:4px 8px; font-size:0.75em;" onclick="window.lobbyLeader('${l.id}')">로비 (5억)</button></div><div style="display:flex; gap:4px; margin-top:6px;"><button class="btn-quick" style="background:#e53935;" onclick="window.countryAction('${l.id}', 'rate_up')">금리인상 조장</button><button class="btn-quick" style="background:#1976d2;" onclick="window.countryAction('${l.id}', 'rate_down')">금리인하 유도</button><button class="btn-quick" style="background:#d32f2f;" onclick="window.triggerWar('${l.id}')">국지전 유발</button><button class="btn-quick" style="background:#6a1b9a;" onclick="window.countryAction('${l.id}', 'oil')">석유 조작</button></div>${investDiv}`; 
-          if(l.invest && l.invest.cost > 0) { let roi = ((l.invest.current - l.invest.cost) / l.invest.cost * 100).toFixed(2); div.innerHTML += `<div style="margin-top:4px; color:#2e7d32;">평가액: ${formatCap(l.invest.current)} (${roi}%) <button class="btn-clear" onclick="window.sellCountry('${l.id}')">전액 매각</button></div>`; } 
-          pBox.appendChild(div); 
-      }); 
-      let gBox = $id('ops-grid'); if(!gBox) return; gBox.innerHTML=""; 
-      blackOpsList.forEach(op => { let btn = document.createElement('button'); btn.className = 'ops-btn'; btn.innerHTML = `<b>${op.title}</b><span style="font-size:0.85em; display:block; color:#ffcdd2; margin-top:3px;">비용: ${formatCap(op.cost)}</span><span style="font-size:0.75em; color:#ddd; font-weight:normal; display:block; margin-top:2px;">${op.desc}</span>`; btn.onclick = () => window.executeBlackOpsAction(op); gBox.appendChild(btn); }); 
-  };
-  window.lobbyLeader = function(id) { let l = globalLeaders.find(x => x.id === id); if(cash < 500000000) return alert("자금 부족"); cash -= 500000000; l.rep = Math.min(100, l.rep + 20); showToast(`🤝 로비 완료!`, "blue"); window.updateUI(); window.renderPolitics(); };
-  window.investCountry = function(id, amt) { let l = globalLeaders.find(x => x.id === id); if(cash < amt) return alert("현금 부족"); cash -= amt; if(!l.invest) l.invest = {cost:0, current:0}; l.invest.cost += amt; l.invest.current += amt; let cName = l.country.split(' ')[1]; let bonds = stocks.filter(s => s.market === 'BOND' && s.name.includes(cName)); bonds.forEach(b => { b.price = Math.round(b.price * 1.05); }); showToast(`💵 [${cName}] 국채 투자!`, "red"); window.updateUI(); window.renderPolitics(); };
-  window.sellCountry = function(id) { let l = globalLeaders.find(x => x.id === id); if(!l.invest || l.invest.cost === 0) return; let profit = l.invest.current - l.invest.cost; cash += l.invest.current; l.invest = {cost:0, current:0}; showToast(`💰 국채 매각 완료`, "blue"); window.updateUI(); window.renderPolitics(); };
-  window.triggerWar = function(id) { if(cash < 50000000000) return alert("비용 500억 부족"); let t = prompt("어느 국가/지역을 공격하시겠습니까?"); if(t) { cash -= 50000000000; macroIndices.wti.val *= 1.25; macroIndices.gold.val *= 1.15; macroIndices.kospi.val *= 0.85; secRisk += 10; if(secRisk >= 100) setDisplay('sec-modal', 'flex'); showToast(`💥 ${t} 국지전 발생!`, "event"); window.updateUI(); window.renderPolitics(); } };
-  window.countryAction = function(id, type) { let l = globalLeaders.find(x => x.id === id); if(cash < 50000000000) return alert("비용 500억 부족"); cash -= 50000000000; if(type === 'rate_up') { macroIndices.bond10.val *= 1.1; macroIndices.reIndex.val *= 0.8; showToast(`📈 금리 인상 유도!`, "black"); } if(type === 'rate_down') { macroIndices.bond10.val *= 0.9; macroIndices.reIndex.val *= 1.2; showToast(`📉 금리 인하 유도!`, "red"); } if(type === 'oil') { let isUp = Math.random() > 0.5; macroIndices.wti.val *= isUp ? 1.3 : 0.7; showToast(`🛢️ 유가 ${isUp?'급등':'폭락'}!`, isUp?"event":"blue"); } secRisk += 10; if(secRisk >= 100) setDisplay('sec-modal', 'flex'); window.updateUI(); window.renderPolitics(); };
-  window.executeBlackOpsAction = function(op) { if(cash < op.cost) return alert(`자금 부족!`); cash -= op.cost; for(let k in op.eff) { if(macroIndices[k]) macroIndices[k].val *= (1 + op.eff[k]); } if(op.eff.reIndex) macroIndices.reIndex.val *= (1 + op.eff.reIndex); if(op.tag === "ALL") { stocks.forEach(s => s.price = Math.max(10, Math.round(s.price * (1 + op.tagRate)))); } else if(op.tag) { stocks.forEach(s => { if(s.tag === op.tag) s.price = Math.max(10, Math.round(s.price * (1 + op.tagRate))); }); } let penalty = 20; if(hrDepts.lobby && hrDepts.lobby.count > 0) penalty -= (hrDepts.lobby.count * 3); if(penalty < 0) penalty = 0; secRisk += penalty; if(secRisk >= 100) setDisplay('sec-modal', 'flex'); showToast(`🚨 [공작 발동] ${op.title}`, "event"); window.addNewsBoard(`[딥스테이트] ${op.title}`); window.updateUI(); };
-
-  window.runForPolitics = function(type) { 
-      let requiredRole = type === 'assembly' ? "국회의원 후보" : (type === 'minister' ? "장관 후보" : "대통령 후보"); 
-      let cand = myEmployees.find(e => e.role === requiredRole); 
-      if(!cand) return alert(`HR 탭에서 [${requiredRole}] 출신 인재를 고용하세요.`); 
-      let maxRep = Math.max(...globalLeaders.map(l => l.rep)); 
-      if(type === 'assembly') { if(maxRep < 60) return alert("외교 우호도 60 이상 필요."); if(cash < 10000000000) return alert("자금 부족."); cash -= 10000000000; if(Math.random() < 0.5) { hofPoints += 50; cand.role = "국회의원 (당선)"; showToast("당선 성공!", "red"); } else { showToast("낙선...", "black"); cand.role = "일반 정치인"; } } 
-      else if(type === 'minister') { if(maxRep < 80) return alert("외교 우호도 80 이상 필요."); if(cash < 50000000000) return alert("자금 부족."); cash -= 50000000000; if(Math.random() < 0.4) { hofPoints += 200; secRisk = 0; cand.role = "장관 (임명)"; showToast("장관 임명 성공! SEC 초기화", "red"); } else { showToast("인준 실패...", "black"); cand.role = "일반 정치인"; } } 
-      else if(type === 'president') { if(maxRep < 100) return alert("외교 우호도 100 필요."); if(cash < 1000000000000) return alert("자금 1조 부족."); cash -= 1000000000000; if(Math.random() < 0.3) { hofPoints += 1000; secRisk = 0; cand.role = "대통령 (당선)"; showToast("🎉 대통령 당선!! 글로벌 통제권 획득", "event"); } else { showToast("대선 패배...", "black"); cand.role = "일반 정치인"; } } 
-      window.updateUI(); window.renderHR(); window.renderPolCandidates(); 
-  };
-  window.renderPolCandidates = function() { let listBox = $id('my-politicians-list'); if(listBox) { listBox.innerHTML = ""; let pols = myEmployees.filter(e => e.role && (e.role.includes("당선") || e.role.includes("임명"))); if(pols.length === 0) { listBox.innerHTML = "<div style='color:#888; text-align:center;'>현재 정계 진출자가 없습니다.<br>HR에서 영입 후 출마시키세요.</div>"; } else { pols.forEach(p => { listBox.innerHTML += `<div style="background:#e8eaf6; padding:10px; border-radius:8px; margin-bottom:8px; border:1px solid #c5cae9;"><div><b>${p.name}</b> <span style="color:#d32f2f; font-size:0.85em; font-weight:bold;">[${p.role}]</span></div><div style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px;"><button class="btn-quick" style="background:#d32f2f;" onclick="window.polInfluence('rate_up')">금리인상</button><button class="btn-quick" style="background:#1976d2;" onclick="window.polInfluence('rate_down')">금리인하</button><button class="btn-quick" style="background:#6a1b9a;" onclick="window.polInfluence('yen_carry')">엔캐리 청산</button><button class="btn-quick" style="background:#f57f17;" onclick="window.polInfluence('fx_weak')">환율 상승</button><button class="btn-quick" style="background:#388e3c;" onclick="window.polInfluence('fx_strong')">환율 하락</button><button class="btn-quick" style="background:#4e342e;" onclick="window.polInfluence('oil_up')">유가 상승</button><button class="btn-quick" style="background:#00838f;" onclick="window.polInfluence('oil_down')">유가 하락</button></div></div>`; }); } } };
-  window.polInfluence = function(type) { let cost = 50000000000; if(cash < cost) return alert("자금 500억 필요"); cash -= cost; if(type === 'rate_up') { macroIndices.bond10.val *= 1.1; macroIndices.reIndex.val *= 0.8; showToast("📈 금리 인상 유도!", "black"); } if(type === 'rate_down') { macroIndices.bond10.val *= 0.9; macroIndices.reIndex.val *= 1.2; showToast("📉 금리 인하 유도!", "red"); } if(type === 'yen_carry') { macroIndices.kospi.val *= 0.85; macroIndices.nasdaq.val *= 0.9; showToast("💴 엔캐리 청산 발생!", "black"); } if(type === 'fx_weak') { macroIndices.usdkrw.val *= 1.1; showToast("💵 환율 급등!", "red"); } if(type === 'fx_strong') { macroIndices.usdkrw.val *= 0.9; showToast("💵 환율 급락!", "blue"); } if(type === 'oil_up') { macroIndices.wti.val *= 1.2; showToast("🛢️ 유가 상승!", "red"); } if(type === 'oil_down') { macroIndices.wti.val *= 0.8; showToast("🛢️ 유가 하락!", "blue"); } secRisk += 5; if(secRisk >= 100) setDisplay('sec-modal', 'flex'); window.updateUI(); };
-
-  window.gameLoop = function() {
-    try {
-      currentDate.setDate(currentDate.getDate() + 1);
-      let y=currentDate.getFullYear(); let m=currentDate.getMonth()+1; let d=currentDate.getDate(); setTxt('date-display', `${y}년 ${m}월 ${d}일`);
-      if(cash>9e15){ let ex=cash-9e15; cash=9e15; depPrin+=ex; showToast("⚠️ 현금 한도 초과 자동 예금 전환", "black"); }
-
-      if(m===1 && d===1) {
-          if(futureEvents[y]) {
-              let ev = futureEvents[y]; showToast(`🌍 [시대 전환] ${ev.title}`, "event"); window.addNewsBoard(`[메가트렌드] ${ev.news}`);
-              if(ev.buffTag) stocks.filter(s=>s.tag===ev.buffTag).forEach(s=>s.price=Math.round(s.price*1.5));
-              if(ev.nerfTag) stocks.filter(s=>s.tag===ev.nerfTag).forEach(s=>s.price=Math.round(s.price*0.7));
-              if(ev.newStock) stocks.push({id:'s'+(idCounter++), name:ev.newStock, market:"NASDAQ", tag:"미래산업", price:100000, beta:3.0, issued:10000000, isEquity:true, shares:0, cost:0, shortShares:0, shortCost:0, history:Array(365).fill(100000), ma20_history:Array(365).fill(100000)});
-          }
-      }
-
-      for(let k in macroIndices){ macroIndices[k].prev=macroIndices[k].val; macroIndices[k].val=Math.max(0.1,macroIndices[k].val*(1+(Math.random()-0.495)*(k.includes('bond')?0.008:0.015))); if(!macroIndices[k].history)macroIndices[k].history=Array(365).fill(macroIndices[k].prev); macroIndices[k].history.push(macroIndices[k].val); if(macroIndices[k].history.length>365)macroIndices[k].history.shift(); }
-      let bD=(macroIndices.bond10.val-macroIndices.bond10.prev)/macroIndices.bond10.prev;
-      macroIndices.reIndex.val=Math.max(100,Math.round(macroIndices.reIndex.val*(1-bD*3.0+(Math.random()-0.495)*0.01))); let reR=(macroIndices.reIndex.val-macroIndices.reIndex.prev)/macroIndices.reIndex.prev; realEstates.forEach(r=>r.price=Math.max(1e8,Math.round(r.price*(1+reR))));
-
-      stocks.forEach(s=>s.prevPrice=s.price);
-      stocks.filter(s=>!s.underlying).forEach(s=>{ let mK=s.market.toLowerCase()==='snp500'?'snp500':s.market.toLowerCase(); let mD=0;if(mK==='crypto')mD=(macroIndices.nasdaq.val-macroIndices.nasdaq.prev)/macroIndices.nasdaq.prev;else if(mK==='bond')mD=-bD*2.0;else mD=macroIndices[mK]?(macroIndices[mK].val-macroIndices[mK].prev)/macroIndices[mK].prev:0; let vol=s.market==='CRYPTO'?4.0:(s.market==='BOND'?0.3:1.0); let del=(mD*s.beta)+((Math.random()-0.495)*0.02*vol); let r=s.price/s.initialPrice;if(r>3.0)del-=0.015*(r-3.0);if(r<0.3)del+=0.015*(0.3-r); s.price=Math.max(10,Math.round(s.price*(1+del))); s.history.push(s.price); let sum=0;let cnt=Math.min(20,s.history.length);for(let i=0;i<cnt;i++)sum+=s.history[s.history.length-1-i]; s.ma20_history.push(sum/cnt); if(s.history.length>365){s.history.shift();s.ma20_history.shift();} });
-      stocks.filter(s=>s.underlying).forEach(s=>{ let u=stocks.find(x=>x.name===s.underlying); let mD=0;if(u&&u.prevPrice)mD=(u.price-u.prevPrice)/u.prevPrice; else{let uK=s.underlying.toLowerCase();if(s.underlying==="비트코인(BTC)")uK="nasdaq";if(s.underlying==="미국 국채 10년물")uK="bond10";if(macroIndices[uK])mD=(macroIndices[uK].val-macroIndices[uK].prev)/macroIndices[uK].prev;} s.price=Math.max(10,Math.round(s.price*(1+(mD*s.beta)))); s.history.push(s.price); let sum=0;let cnt=Math.min(20,s.history.length);for(let i=0;i<cnt;i++)sum+=s.history[s.history.length-1-i]; s.ma20_history.push(sum/cnt); if(s.history.length>365){s.history.shift();s.ma20_history.shift();} });
-
-      for(let i=optPositions.length-1; i>=0; i--) {
-         let p=optPositions[i]; let cur=window.getAssetPrice(p.asset,p.entryPrice);
-         if(p.targetPrice>0){if((p.type==='long'&&cur>=p.targetPrice)||(p.type==='short'&&cur<=p.targetPrice)){window.closeOptPosition(p.id,true);continue;}}
-         if(p.isFut){let isLiq=(p.type==='long'&&cur<=p.liqPrice)||(p.type==='short'&&cur>=p.liqPrice); if(isLiq){let diff=(p.liqPrice-p.entryPrice)*window.getAssetMult(p.asset)*p.qty*(p.type==='long'?1:-1); if(p.mode==='cross')cash+=diff; optPositions.splice(i,1); showToast(`💥 ${p.asset} 마진콜 청산`, "black");}else if(p.mode==='cross'){let mul=window.getAssetMult(p.asset); p.liqPrice=p.type==='long'?(p.entryPrice-(cash/(mul*p.qty))*0.8):(p.entryPrice+(cash/(mul*p.qty))*0.8);}}
-      }
-
-      globalLeaders.forEach(l=>{ if(l.invest&&l.invest.cost>0)l.invest.current=Math.max(100,Math.round(l.invest.current*(1-bD+(Math.random()-0.49)*0.01))); if(l.rep>=70&&Math.random()<0.01){let mS=stocks.filter(s=>s.shares>0&&s.isEquity);if(mS.length>0){let rs=mS[Math.floor(Math.random()*mS.length)];rs.price=Math.round(rs.price*1.10);window.addNewsBoard(`🤝 [외교] ${l.country} 수주 성공, ${rs.name} 폭등`);}} if(l.rep>=60&&Math.random()<0.05){let role=l.rep>=100?"대통령 후보":(l.rep>=80?"장관 후보":"국회의원 후보");let cC=l.rep>=100?5e10:(l.rep>=80?1e10:1e9);if(!transferMarket.some(x=>x.comp===l.country&&x.spec===role)){transferMarket.unshift({id:'hr_pol_'+Date.now(),name:`[정치인] ${l.country} 유력인사`,comp:l.country,nation:l.country.split(' ')[1],spec:role,cost:cC,stat:"S급"});showToast(`🕵️ 이적시장에 ${role} 등장`,"event");}} });
-
-      let eqS=stocks.filter(s=>s.isEquity); let shS=eqS.filter(st=>st.shortShares>0); if(shS.length>0&&Math.random()<0.005){let t=shS[Math.floor(Math.random()*shS.length)];t.price=Math.round(t.price*(3.0+Math.random()));let eb=$id('event-banner');eb.innerText=`🦍 [개미 반란] ${t.name} 숏스퀴즈 폭등!`;eb.style.display='block';setTimeout(()=>eb.style.display='none',8000);let cL=(t.shortShares*t.price)-t.shortCost;if(cash<cL){loanPrin+=(cL-cash); cash=0; t.shortShares=0; t.shortCost=0; showToast(`💥 [마진콜] ${t.name} 강제 청산`,"black");}}
-      if(hrDepts.trading&&hrDepts.trading.count>0)cash+=(hrDepts.trading.count*1e9); if(myClubs.length>0)cash+=(myClubs.length*5e8);
-      if(myMedias.length>0) { let mV=mediaList.reduce((a,b)=>a+(myMedias.includes(b.id)?b.p*b.r:0),0); cash+=mV; }
-
-      if(Math.random()<0.015&&eqS.length>0){let rS=eqS[Math.floor(Math.random()*eqS.length)];let evts=[{type:'bad',text:'공장 화재 발생',m:0.85,i:'🔥'},{type:'bad',text:'회계부정 스캔들',m:0.80,i:'🚨'},{type:'good',text:'혁신 신기술 발표',m:1.25,i:'🔬'},{type:'good',text:'초대형 글로벌 수주',m:1.20,i:'🤝'}];let ev=evts[Math.floor(Math.random()*evts.length)];rS.price=Math.round(rS.price*ev.m);window.addNewsBoard(`${ev.i} ${rS.name}, ${ev.text}`);}
-
-      if(window.getPlayerNetAssets()<=-Math.floor(maxLoan*0.5)){clearInterval(gameInterval);setDisplay('bankrupt-modal','flex');return;}
-      let cbInt=Math.floor(corpBond*(12.0/1200)); cash-=cbInt; if(corpBond>0&&window.getPlayerNetAssets()<corpBond){clearInterval(gameInterval);$id('bankrupt-modal').querySelector('p').innerHTML=`<b style="color:red">회사채 부도 (자본잠식)</b>`;setDisplay('bankrupt-modal','flex');return;}
-
-      if(d===1) {
-        let tR=realEstates.reduce((a,b)=>a+(b.rent*b.owned),0); let tD=globalLeaders.reduce((a,b)=>a+Math.floor((b.invest?b.invest.cost:0)*0.005),0); let br=window.updateBankRates(); let dI=Math.floor(depPrin*(br.depRate/1200)); let lI=Math.floor(loanPrin*(br.lRate/1200)); cash+=dI; cash-=lI; cash+=(tR+tD); let tS=myEmployees.reduce((a,b)=>a+b.salary,0); for(let k in hrDepts)tS+=hrDepts[k].count*hrDepts[k].salary; cash-=tS; if(hrDepts.lobby&&hrDepts.lobby.count>0)secRisk=Math.max(0,secRisk-(hrDepts.lobby.count*5));
-        
-        if(marketBonds.length > 0) {
-          marketBonds.forEach(b => {
-              if(!b.default) {
-                  if(Math.random() < (b.r / 30)) { b.default=true; b.price=0; if(b.owned>0){ showToast(`🚨 보유중인 ${b.name} 파산! 가치 소멸!`, "black"); } }
-                  else { let bD2 = (macroIndices.bond10.val-macroIndices.bond10.prev)/macroIndices.bond10.prev; b.price = Math.max(1, Math.round(b.price * (1 - (bD2*1.5)))); }
-              }
-          });
-          if($id('tab-bank').style.display==='flex' && $id('bank-bond-view').style.display==='flex') window.updateMarketBonds();
-        }
-        let bondYield = 0; marketBonds.forEach(b => { if(!b.default && b.owned>0) bondYield += Math.floor(b.face * b.owned * (b.y/12)); });
-        if(bondYield > 0) { cash += bondYield; showToast(`📜 채권 이자 ${formatCap(bondYield)}원 입금`, "blue"); }
-
-        if(corpBond>0 && corpBondDueDate && currentDate > corpBondDueDate) { let pnl = Math.floor(corpBond * 0.1); cash -= pnl; showToast저는 언어 모델일 뿐이라 그것을 이해하고 대응할 능력이 없기 때문에 도와드릴 수가 없습니다.
+</body>
+</html>
