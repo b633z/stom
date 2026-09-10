@@ -19,6 +19,169 @@ function format(v){if(isNaN(v)||!isFinite(v))return"0";return Math.round(v).toLo
 function formatPrice(v){if(isNaN(v)||!isFinite(v))return"0";if(Math.abs(v)<100)return Number(v).toFixed(2);return Math.round(v).toLocaleString("ko-KR");}
 function formatCap(v){if(isNaN(v)||!isFinite(v))return"0";if(v>=1e16)return(v/1e16).toFixed(2)+"경";if(v>=1e12)return(v/1e12).toFixed(2)+"조";if(v>=1e8)return Math.floor(v/1e8)+"억";return format(v);}
 function formatK(v){let abs=Math.abs(v);if(abs>=1e12)return(v/1e12).toFixed(2)+"조";if(abs>=1e8)return(v/1e8).toFixed(1)+"억";if(abs>=1e4)return(v/1e4).toFixed(0)+"만";return v;}
+
+// ======================= 저장 / 불러오기 =======================
+function getSaveState(){
+  return {
+    version: 5,
+    playerName, cash, depPrin, loanPrin, corpBond,
+    corpBondDueDate: corpBondDueDate ? corpBondDueDate.toISOString() : null,
+    maxLoan, hofPoints, secRisk, selectedId, currentMarket,
+    currentTimeframe, lastMonth, selectedFundId, selectedReCountry,
+    idCounter, currentHRTab, currentHiredFilter, hrPage, myIpoLevel,
+    obExpanded, isMobileView, currentPortFilter, optTimeframeVal,
+    currentDate: currentDate.toISOString(),
+    macroCycle, macroIndices,
+    stocks, realEstates, vipAssets, rivalFunds, acquiredFunds,
+    indirectFunds, optPositions, companyHistory, monthlyNewsList,
+    myEmployees, transferMarket, globalLeaders, blackOpsList,
+    hofYearlyData, myClubs, marketBonds, mediaList, myMedias,
+    hrDepts
+  };
+}
+
+function applySaveState(s){
+  if(!s || typeof s !== 'object') throw new Error("저장 데이터 형식이 올바르지 않습니다.");
+  playerName=s.playerName || "투자자";
+  cash=Number(s.cash ?? 100000000000);
+  depPrin=Number(s.depPrin ?? 0);
+  loanPrin=Number(s.loanPrin ?? 0);
+  corpBond=Number(s.corpBond ?? 0);
+  corpBondDueDate=s.corpBondDueDate ? new Date(s.corpBondDueDate) : null;
+  maxLoan=Number(s.maxLoan ?? 1e10);
+  hofPoints=Number(s.hofPoints ?? 0);
+  secRisk=Number(s.secRisk ?? 0);
+  selectedId=s.selectedId ?? null;
+  currentMarket=s.currentMarket || "KOSPI";
+  currentTimeframe=Number(s.currentTimeframe ?? 90);
+  lastMonth=Number(s.lastMonth ?? 1);
+  selectedFundId=s.selectedFundId ?? null;
+  selectedReCountry=s.selectedReCountry || "한국";
+  idCounter=Number(s.idCounter ?? 1);
+  currentHRTab=s.currentHRTab || "corp";
+  currentHiredFilter=s.currentHiredFilter || "all";
+  hrPage=Number(s.hrPage ?? 1);
+  myIpoLevel=Number(s.myIpoLevel ?? 0);
+  obExpanded=!!s.obExpanded;
+  isMobileView=!!s.isMobileView;
+  currentPortFilter=s.currentPortFilter || "all";
+  optTimeframeVal=Number(s.optTimeframeVal ?? 90);
+  currentDate=s.currentDate ? new Date(s.currentDate) : new Date(2025,0,1);
+  macroCycle=Object.assign({day:0,length:360,phase:0,regime:"회복",lastShockDay:-999}, s.macroCycle||{});
+  macroIndices=s.macroIndices || macroIndices;
+
+  stocks=Array.isArray(s.stocks)?s.stocks:[];
+  realEstates=Array.isArray(s.realEstates)?s.realEstates:[];
+  vipAssets=Array.isArray(s.vipAssets)?s.vipAssets:[];
+  rivalFunds=Array.isArray(s.rivalFunds)?s.rivalFunds:[];
+  acquiredFunds=Array.isArray(s.acquiredFunds)?s.acquiredFunds:[];
+  indirectFunds=Array.isArray(s.indirectFunds)?s.indirectFunds:[];
+  optPositions=Array.isArray(s.optPositions)?s.optPositions:[];
+  companyHistory=Array.isArray(s.companyHistory)?s.companyHistory:[];
+  monthlyNewsList=Array.isArray(s.monthlyNewsList)?s.monthlyNewsList:[];
+  myEmployees=Array.isArray(s.myEmployees)?s.myEmployees:[];
+  transferMarket=Array.isArray(s.transferMarket)?s.transferMarket:[];
+  globalLeaders=Array.isArray(s.globalLeaders)?s.globalLeaders:[];
+  blackOpsList=Array.isArray(s.blackOpsList)?s.blackOpsList:[];
+  hofYearlyData=Array.isArray(s.hofYearlyData)?s.hofYearlyData:[];
+  myClubs=Array.isArray(s.myClubs)?s.myClubs:[];
+  marketBonds=Array.isArray(s.marketBonds)?s.marketBonds:[];
+  mediaList=Array.isArray(s.mediaList)?s.mediaList:[];
+  myMedias=Array.isArray(s.myMedias)?s.myMedias:[];
+  hrDepts=Object.assign(hrDepts, s.hrDepts||{});
+}
+
+window.saveLocalGame = function(){
+  try{
+    localStorage.setItem("economyGameSaveV5", JSON.stringify(getSaveState()));
+    localStorage.setItem("economyGameHasSave", "1");
+    const loadUI=$id("local-load-ui");
+    if(loadUI) loadUI.style.display="block";
+    showToast("💾 게임 저장 완료", "blue");
+    window.updateUI();
+  }catch(e){
+    console.error("Save error:",e);
+    alert("저장에 실패했습니다. 브라우저 저장공간을 확인해주세요.");
+  }
+};
+
+window.loadLocalGame = function(){
+  try{
+    const raw=localStorage.getItem("economyGameSaveV5");
+    if(!raw) return alert("저장된 게임이 없습니다.");
+    applySaveState(JSON.parse(raw));
+    setDisplay("start-modal","none");
+    const wr=$id("main-wrapper");
+    if(wr) wr.style.filter="none";
+    window.initGameSystemUIOnly();
+    window.setMarket(currentMarket,true);
+    window.updateUI();
+    if(gameInterval) clearInterval(gameInterval);
+    gameInterval=setInterval(window.gameLoop,currentSpeed);
+    showToast("📂 저장된 게임을 불러왔습니다.", "blue");
+  }catch(e){
+    console.error("Load error:",e);
+    alert("저장본을 불러오지 못했습니다.");
+  }
+};
+
+window.exportJSON = function(){
+  try{
+    const blob=new Blob([JSON.stringify(getSaveState(),null,2)],{type:"application/json"});
+    const a=document.createElement("a");
+    a.href=URL.createObjectURL(blob);
+    a.download=`economy_game_${currentDate.getFullYear()}_${currentDate.getMonth()+1}_${currentDate.getDate()}.json`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+    showToast("📦 백업 파일 생성 완료","blue");
+  }catch(e){
+    console.error("Export error:",e);
+    alert("백업 파일 생성에 실패했습니다.");
+  }
+};
+
+window.importJSON = function(ev){
+  const file=ev && ev.target && ev.target.files ? ev.target.files[0] : null;
+  if(!file) return;
+  const reader=new FileReader();
+  reader.onload=function(){
+    try{
+      applySaveState(JSON.parse(reader.result));
+      localStorage.setItem("economyGameSaveV5",JSON.stringify(getSaveState()));
+      localStorage.setItem("economyGameHasSave","1");
+      setDisplay("start-modal","none");
+      const wr=$id("main-wrapper");
+      if(wr) wr.style.filter="none";
+      window.initGameSystemUIOnly();
+      window.setMarket(currentMarket,true);
+      window.updateUI();
+      if(gameInterval)clearInterval(gameInterval);
+      gameInterval=setInterval(window.gameLoop,currentSpeed);
+      showToast("📂 백업 불러오기 완료","blue");
+    }catch(e){
+      console.error("Import error:",e);
+      alert("백업 파일을 읽지 못했습니다.");
+    }
+    ev.target.value="";
+  };
+  reader.readAsText(file);
+};
+
+window.initGameSystemUIOnly = function(){
+  setTxt("player-name-display",playerName);
+  const loadUI=$id("local-load-ui");
+  if(loadUI) loadUI.style.display="block";
+  if(isMobileView) window.toggleViewMode();
+  if(typeof window.renderDept==="function") window.renderDept();
+  if(typeof window.renderHR==="function") window.renderHR();
+  if(typeof window.renderTransferMarket==="function") window.renderTransferMarket();
+  if(typeof window.renderPolitics==="function") window.renderPolitics();
+  if(typeof window.renderIndirectStore==="function") window.renderIndirectStore();
+  if(typeof window.renderMarketBonds==="function") window.renderMarketBonds();
+};
+
 window.showToast = function(m,t="black"){let b=document.createElement('div');b.className='toast'+(t==="event"?' event':'');if(t==="red")b.style.background="rgba(211,47,47,0.95)";if(t==="blue")b.style.background="rgba(25,118,210,0.95)";b.innerText=m;$id('toast-container').appendChild(b);setTimeout(()=>b.remove(),3000);};
 
 let stocks=[], realEstates=[], vipAssets=[], rivalFunds=[], acquiredFunds=[], indirectFunds=[], optPositions=[];
@@ -32,6 +195,17 @@ let selectedFundId=null, selectedReCountry="한국", idCounter=1, currentHRTab='
 let currentPortFilter='all', optTimeframeVal=90;
 let currentDate = new Date(2025, 0, 1);
 let gChart=null, oChart=null;
+// 글로벌 경기순환(게임용): 회복 → 호황 → 둔화 → 침체 → 회복을 반복하며 모든 자산에 연동
+let macroCycle = { day:0, length:360, phase:0, regime:'회복', lastShockDay:-999 };
+const MACRO_CYCLE_NAMES = ['회복','호황','둔화','침체'];
+function getMacroCycle(){
+  const x=(macroCycle.day % macroCycle.length)/macroCycle.length;
+  const angle=2*Math.PI*x + macroCycle.phase;
+  const wave=Math.sin(angle);
+  let idx=Math.floor(((x + 0.125) % 1) * 4);
+  macroCycle.regime=MACRO_CYCLE_NAMES[idx];
+  return {wave, regime:macroCycle.regime};
+}
 let concertArtistsList = [], personPool = [];
 
 // 기본 데이터 세팅
@@ -42,7 +216,7 @@ window.addCompanyHistory = function(title,desc){let y=currentDate.getFullYear();
 
 // ======================= 시스템 & 시작 설정 =======================
 window.initGameSystem = function() {
-    stocks = []; idCounter = 1;
+    stocks = []; idCounter = 1; macroCycle={day:0,length:360,phase:Math.random()*Math.PI*2,regime:'회복',lastShockDay:-999};
     let sLists = [ {m:"KOSPI", str:D.rawKospi, p:80000}, {m:"KOSDAQ", str:D.rawKosdaq, p:65000}, {m:"NASDAQ", str:D.rawNasdaq, p:250000}, {m:"SNP500", str:D.rawSnp, p:180000}, {m:"CRYPTO", str:D.rawCrypto, p:150000} ];
     sLists.forEach(l => {
         l.str.split(',').forEach(n => {
@@ -100,7 +274,22 @@ window.initGameSystem = function() {
     selectedId = stocks[0].id;
   };
 
+  function ensureOptChart(){
+    if(typeof Chart==='undefined') return;
+    const c=$id('optChart');
+    if(!c) return;
+    if(!oChart){
+      oChart=new Chart(c.getContext('2d'),{type:'line',data:{labels:[],datasets:[
+        {label:'가격',data:[],borderColor:'#00838f',borderWidth:2,pointRadius:0,tension:0.1},
+        {label:'평균가',data:[],borderColor:'#1976d2',borderWidth:1.5,borderDash:[5,5],pointRadius:0,fill:false,tension:0},
+        {label:'청산가',data:[],borderColor:'#d32f2f',borderWidth:1.5,borderDash:[2,2],pointRadius:0,fill:false,tension:0}
+      ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},animation:false,scales:{x:{display:false},y:{display:true,position:'right',ticks:{callback:function(v){return formatPrice(v);}}}}}});
+    }
+    try{oChart.resize();}catch(e){}
+  }
+
   window.startGame = function() {
+
       cash = 100000000000;
       let ni = $id('player-name-input'); playerName = (ni && ni.value.trim() !== "") ? ni.value.trim() : "글로벌 마스터";
       setTxt('player-name-display', playerName); 
@@ -108,7 +297,8 @@ window.initGameSystem = function() {
       let mw = $id('main-wrapper'); if(mw) mw.style.filter = 'none';
       if(typeof Chart!=='undefined'&&!gChart){let c=$id('mainChart');if(c){gChart=new Chart(c.getContext('2d'),{type:'line',data:{labels:[],datasets:[{label:'주가',data:[],borderColor:'#d32f2f',backgroundColor:'rgba(211,47,47,0.1)',borderWidth:2,fill:true,pointRadius:0,tension:0.1},{label:'MA20',data:[],borderColor:'#f57c00',borderWidth:1.5,borderDash:[5,5],pointRadius:0,fill:false,tension:0.2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},animation:false,scales:{x:{display:false},y:{display:true,position:'right',ticks:{callback:function(v){return formatPrice(v);}}}}}});}}
       if(typeof Chart!=='undefined'&&!oChart){let c=$id('optChart');if(c){oChart=new Chart(c.getContext('2d'),{type:'line',data:{labels:[],datasets:[{label:'가격',data:[],borderColor:'#00838f',borderWidth:2,pointRadius:0,tension:0.1},{label:'평균가',data:[],borderColor:'#1976d2',borderWidth:1.5,borderDash:[5,5],pointRadius:0,fill:false,tension:0},{label:'청산가',data:[],borderColor:'#d32f2f',borderWidth:1.5,borderDash:[2,2],pointRadius:0,fill:false,tension:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},animation:false,scales:{x:{display:false},y:{display:true,position:'right',ticks:{callback:function(v){return formatPrice(v);}}}}}});}}
-      window.initGameSystem(); window.setMarket('KOSPI'); window.updateUI(); 
+      window.initGameSystem(); window.setMarket('KOSPI'); window.updateUI();
+      if($id("local-load-ui") && localStorage.getItem("economyGameHasSave")) $id("local-load-ui").style.display="block"; 
       if(gameInterval) clearInterval(gameInterval); gameInterval = setInterval(window.gameLoop, currentSpeed);
   };
 
@@ -162,7 +352,7 @@ window.initGameSystem = function() {
   window.donateToSociety = function() { if(cash<1e10)return alert("100억 필요"); cash-=1e10; secRisk=Math.max(0,secRisk-15); hofPoints+=100; showToast("🤝 기부 완료", "blue"); window.updateUI(); };
   window.openHoFModal = function() { let t=Math.max(0,10000-hofPoints); let lS=hofPoints>=10000?`<span style="color:#d32f2f;font-weight:bold;">🏆 레전드 헌액자 달성!</span>`:`<span style="color:#888;">레전드까지 ${t}점 남음</span>`; let iB=$id('hof-inductees-list'); if(hofPoints>=10000&&!iB.innerHTML.includes(playerName)){iB.innerHTML+=`<li>👑 ${playerName} (레전드)</li>`;} if(iB.innerHTML==="")iB.innerHTML="<li>아직 헌액자가 없습니다.</li>"; setHTML('hof-yearly-records',`명예 포인트: <b style="color:#f57f17;">${hofPoints}점</b><br>등급: <b>${window.getReputation().text}</b><br>${lS}`); let aB=$id('hof-yearly-accordion'); if(aB){aB.innerHTML=""; let ys=[...new Set(hofYearlyData.map(h=>h.year))].sort((a,b)=>b-a); ys.forEach(y=>{let hL=hofYearlyData.filter(d=>d.year===y); let yI='hof_y_'+y; let ht=`<h4 style="background:#f5f7fa;padding:8px;border:1px solid #ccc;cursor:pointer;" onclick="let d=document.getElementById('${yI}');d.style.display=d.style.display==='none'?'block':'none';">📁 ${y}년 랭킹</h4><div id="${yI}" style="display:none;padding-left:15px;">`; hL.forEach(d=>{if(d.first)ht+=`<div>🥇 1위: ${d.first.name} (${formatCap(d.first.assets)})</div>`;if(d.second)ht+=`<div>🥈 2위: ${d.second.name} (${formatCap(d.second.assets)})</div>`;if(d.third)ht+=`<div>🥉 3위: ${d.third.name} (${formatCap(d.third.assets)})</div>`;}); ht+=`</div>`; aB.innerHTML+=ht;});} setDisplay('hof-history-modal','flex'); };
   window.handleSEC = function(c) { if(c==='fine'){cash-=Math.floor(cash*0.30);showToast(`💰 벌금 납부.`,"black");}else if(c==='lawyer'){if(cash<1e11)return alert("1,000억 필요!");cash-=1e11;showToast(`👨‍⚖️ 전관 선임.`,"blue");} secRisk=0;setDisplay('sec-modal','none');window.updateUI(); };
-  window.switchTab = function(t) { ['trade','portfolio','realestate','politics','politics_run','deriv','wallst','vip','indirect','hr','bank','history','ipo'].forEach(x=>{ setDisplay(`tab-${x}`, x===t?'flex':'none'); if($id(`tab-btn-${x}`)) { if(x===t) $id(`tab-btn-${x}`).classList.add('active'); else $id(`tab-btn-${x}`).classList.remove('active'); }}); if(t==='portfolio')window.renderPortfolio(); if(t==='realestate')window.switchFlexTab('re', document.querySelector('#tab-realestate .re-c-btn')); if(t==='politics')window.renderPolitics(); if(t==='politics_run')window.renderPolCandidates(); if(t==='ipo')window.renderIpoTab(); if(t==='deriv'){window.updateOptPrice();window.renderOptPositions();} if(t==='wallst')window.renderWallStList(); if(t==='vip')window.renderVipStore(); if(t==='indirect')window.renderIndirectStore(); if(t==='hr'){if(!currentHRTab)currentHRTab='corp'; if($id('hr-fa-view').style.display==='block')window.renderTransferMarket();else window.renderHR();} if(t==='history')window.renderHistoryTab(); };
+  window.switchTab = function(t) { ['trade','portfolio','realestate','politics','politics_run','deriv','wallst','vip','indirect','hr','bank','history','ipo'].forEach(x=>{ setDisplay(`tab-${x}`, x===t?'flex':'none'); if($id(`tab-btn-${x}`)) { if(x===t) $id(`tab-btn-${x}`).classList.add('active'); else $id(`tab-btn-${x}`).classList.remove('active'); }}); if(t==='portfolio')window.renderPortfolio(); if(t==='realestate')window.switchFlexTab('re', document.querySelector('#tab-realestate .re-c-btn')); if(t==='politics')window.renderPolitics(); if(t==='politics_run')window.renderPolCandidates(); if(t==='ipo')window.renderIpoTab(); if(t==='deriv'){ensureOptChart(); requestAnimationFrame(()=>{try{if(oChart)oChart.resize();}catch(e){} window.updateOptPrice(); window.renderOptPositions();});} if(t==='wallst')window.renderWallStList(); if(t==='vip')window.renderVipStore(); if(t==='indirect')window.renderIndirectStore(); if(t==='hr'){if(!currentHRTab)currentHRTab='corp'; if($id('hr-fa-view').style.display==='block')window.renderTransferMarket();else window.renderHR();} if(t==='history')window.renderHistoryTab(); };
   window.switchFlexTab = function(t, b) { if(b) { document.querySelectorAll('#tab-realestate .re-c-btn').forEach(x=>x.classList.remove('active')); b.classList.add('active'); } ['re','flex','concert','sports','media'].forEach(x=>setDisplay(`flex-${x}-view`, x===t?'flex':'none')); if(t==='re')window.renderRealEstate(); if(t==='sports'){window.renderClubs();window.renderMyClubs();} if(t==='media'){window.renderMedia();} if(t==='flex'){let bs=$id('flex-bio-sel');if(bs){bs.innerHTML="";stocks.filter(s=>s.tag==='바이오').forEach(s=>bs.innerHTML+=`<option value="${s.id}">${s.name}</option>`);}let rs=$id('flex-rnd-sel');if(rs){rs.innerHTML="";stocks.filter(s=>s.isEquity).forEach(s=>rs.innerHTML+=`<option value="${s.id}">${s.name}</option>`);}} };
   window.renderPortfolioFilter = function(f, btn) { currentPortFilter = f; document.querySelectorAll('#tab-portfolio .re-c-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); window.renderPortfolio(); };
   window.toggleOrderbook = function() { obExpanded=!obExpanded; window.updateUI(); if($id('tab-deriv').style.display==='flex') window.updateOptPrice(); };
@@ -218,12 +408,24 @@ window.initGameSystem = function() {
   window.closeOptPosition = function(id, auto=false) { let i=optPositions.findIndex(p=>p.id===id); if(i===-1)return; let p=optPositions[i]; let c=window.getAssetPrice(p.asset,p.entryPrice); let m=window.getAssetMult(p.asset); let fee=Math.round(c*m*p.qty*(p.isFut?0.0004:0.0002)); let diff=(c-p.entryPrice)*m*p.qty*(p.type==='long'||p.type==='call'?1:-1); cash+=(p.isFut?p.margin:p.prem)+diff-fee; optPositions.splice(i,1); showToast(auto?`🤖 청산: ${format(diff)}`:`💰 청산: ${format(diff)}`,diff>=0?"red":"blue"); window.updateUI(); window.renderOptPositions(); };
   window.setLimitOrder = function(id) { let p=optPositions.find(x=>x.id===id); if(!p)return; let tg=parseFloat($id(`limit_in_${id}`).value); if(isNaN(tg)||tg<=0)return alert("오류"); p.targetPrice=tg; showToast("✅ 예약 완료", "black"); window.renderOptPositions(); };
   window.cancelLimitOrder = function(id) { let p=optPositions.find(x=>x.id===id); if(p){p.targetPrice=0; showToast("🚫 예약 취소", "black"); window.renderOptPositions();} };
-  window.updateOptPrice = function() { let a=$id('opt-asset').value; let q=parseInt($id('opt-qty').value)||1; let mod=$id('opt-margin-mode').value; let l=parseInt($id('opt-leverage').value)||10; if($id('lev-display'))$id('lev-display').innerText=l; let b=window.getAssetPrice(a,2000); let m=window.getAssetMult(a); let cV=b*m; let sI=parseFloat($id('opt-strike').value); let st=sI||b; if(!sI&&$id('opt-strike'))$id('opt-strike').value=Math.round(b); setTxt('opt-curr-val', format(cV)); let d=(b-st)/b; let isC=b>st; let stat=Math.abs(d)<0.01?"등가격(ATM)":(isC?"Call ITM":"Call OTM"); let mar=Math.round((cV*0.1*q)/l); let lD=mod==='cross'?(cash/(m*q))*0.8:(mar/(m*q))*0.8; setTxt('opt-liq-display', `청산가(Long): ${format(Math.max(0,b-lD))}원`); setTxt('opt-status', stat); let obB=$id('opt-orderbook'); if(obB) { let h=""; let t=a.includes('BTC')?50000:(a.includes('ETH')?5000:(b>10000?500:(b>100?5:0.1))); let lv=obExpanded?10:5; for(let i=lv;i>=1;i--){let p=b+(t*i); h+=`<div style="display:flex;justify-content:space-between;background:#e3f2fd;color:#1976d2;padding:2px 4px;border-radius:3px;cursor:pointer;" onclick="$id('opt-strike').value=${p}; window.updateOptPrice();"><span>${p<100?p.toFixed(2):format(p)}</span><span>${Math.floor(Math.random()*5000)+100}</span></div>`;} h+=`<div style="text-align:center;font-weight:bold;font-size:0.8em;margin:2px 0;color:#555;cursor:pointer;" onclick="$id('opt-strike').value=${b}; window.updateOptPrice();">기준가: ${b<100?b.toFixed(2):format(b)}</div>`; for(let i=1;i<=lv;i++){let p=Math.max(0.1,b-(t*i)); h+=`<div style="display:flex;justify-content:space-between;background:#ffebee;color:#d32f2f;padding:2px 4px;border-radius:3px;cursor:pointer;" onclick="$id('opt-strike').value=${p}; window.updateOptPrice();"><span>${p<100?p.toFixed(2):format(p)}</span><span>${Math.floor(Math.random()*5000)+100}</span></div>`;} obB.innerHTML=h; } if(oChart) { let ha=(macroIndices[a]&&macroIndices[a].history)?macroIndices[a].history:(stocks.find(x=>x.name===a)?stocks.find(x=>x.name===a).history:Array(365).fill(b)); let sl=ha.slice(-optTimeframeVal); oChart.data.labels=Array(sl.length).fill(""); oChart.data.datasets[0].data=sl; let ac=optPositions.find(p=>p.asset===a); if(ac){oChart.data.datasets[1].data=Array(sl.length).fill(ac.entryPrice); if(ac.isFut)oChart.data.datasets[2].data=Array(sl.length).fill(ac.liqPrice); else oChart.data.datasets[2].data=[];}else{oChart.data.datasets[1].data=[];oChart.data.datasets[2].data=[];} oChart.update(); } };
+  window.updateOptPrice = function() { ensureOptChart(); let a=$id('opt-asset').value; let q=parseInt($id('opt-qty').value)||1; let mod=$id('opt-margin-mode').value; let l=parseInt($id('opt-leverage').value)||10; if($id('lev-display'))$id('lev-display').innerText=l; let b=window.getAssetPrice(a,2000); let m=window.getAssetMult(a); let cV=b*m; let sI=parseFloat($id('opt-strike').value); let st=sI||b; if(!sI&&$id('opt-strike'))$id('opt-strike').value=Math.round(b); setTxt('opt-curr-val', format(cV)); let d=(b-st)/b; let isC=b>st; let stat=Math.abs(d)<0.01?"등가격(ATM)":(isC?"Call ITM":"Call OTM"); let mar=Math.round((cV*0.1*q)/l); let equityForLiq=mod==='cross'?Math.max(0,cash):Math.max(0,mar); let leverageFactor=Math.max(1,l); let lD=(equityForLiq/(m*q))*0.8/leverageFactor; let liqLong=Math.max(0,b-lD); let liqShort=b+lD; setTxt('opt-liq-display', `청산가(Long): ${format(liqLong)}원 | Short: ${format(liqShort)}원`); setTxt('opt-status', stat); let obB=$id('opt-orderbook'); if(obB) { let h=""; let t=a.includes('BTC')?50000:(a.includes('ETH')?5000:(b>10000?500:(b>100?5:0.1))); let lv=obExpanded?10:5; for(let i=lv;i>=1;i--){let p=b+(t*i); h+=`<div style="display:flex;justify-content:space-between;background:#e3f2fd;color:#1976d2;padding:2px 4px;border-radius:3px;cursor:pointer;" onclick="$id('opt-strike').value=${p}; window.updateOptPrice();"><span>${p<100?p.toFixed(2):format(p)}</span><span>${Math.floor(Math.random()*5000)+100}</span></div>`;} h+=`<div style="text-align:center;font-weight:bold;font-size:0.8em;margin:2px 0;color:#555;cursor:pointer;" onclick="$id('opt-strike').value=${b}; window.updateOptPrice();">기준가: ${b<100?b.toFixed(2):format(b)}</div>`; for(let i=1;i<=lv;i++){let p=Math.max(0.1,b-(t*i)); h+=`<div style="display:flex;justify-content:space-between;background:#ffebee;color:#d32f2f;padding:2px 4px;border-radius:3px;cursor:pointer;" onclick="$id('opt-strike').value=${p}; window.updateOptPrice();"><span>${p<100?p.toFixed(2):format(p)}</span><span>${Math.floor(Math.random()*5000)+100}</span></div>`;} obB.innerHTML=h; } if(oChart) { let ha=(macroIndices[a]&&macroIndices[a].history)?macroIndices[a].history:(stocks.find(x=>x.name===a)?stocks.find(x=>x.name===a).history:Array(365).fill(b)); let sl=ha.slice(-optTimeframeVal); oChart.data.labels=Array(sl.length).fill(""); oChart.data.datasets[0].data=sl; let ac=optPositions.find(p=>p.asset===a); if(ac){oChart.data.datasets[1].data=Array(sl.length).fill(ac.entryPrice); if(ac.isFut)oChart.data.datasets[2].data=Array(sl.length).fill(ac.liqPrice); else oChart.data.datasets[2].data=[];}else{oChart.data.datasets[1].data=[];oChart.data.datasets[2].data=[];} oChart.update(); } };
   window.renderOptPositions = function() { let t=$id('opt-position-table'); if(!t)return; t.innerHTML="<tr><th>포지션</th><th>평단가/예약</th><th>손익</th><th>관리</th></tr>"; optPositions.forEach(p=>{let c=window.getAssetPrice(p.asset,p.entryPrice); let d=(c-p.entryPrice)*window.getAssetMult(p.asset)*p.qty*(p.type==='long'||p.type==='call'?1:-1); let lS=p.targetPrice>0?`<div style="color:#d32f2f;font-size:0.8em;">예약: ${format(p.targetPrice)} <button style="font-size:0.8em;padding:1px 4px;" onclick="window.cancelLimitOrder(${p.id})">취소</button></div>`:`<div style="display:flex;gap:2px;"><input type="number" id="limit_in_${p.id}" placeholder="목표가" style="width:60px;font-size:0.7em;padding:2px;"><button style="font-size:0.7em;" onclick="window.setLimitOrder(${p.id})">설정</button></div>`; let tr=document.createElement('tr'); tr.innerHTML=`<td><b>${p.asset}</b><br><span style="font-size:0.8em;color:#666;">${p.isFut?'선물':'옵션'} ${p.type} ${p.lev?p.lev+'x':''} (${p.qty})</span></td><td>${format(p.entryPrice)}<br>${lS}</td><td class="${d>=0?'text-up':'text-down'}">${format(d)}</td><td><button class="btn-clear" onclick="window.closeOptPosition(${p.id})">청산</button></td>`; t.appendChild(tr);}); };
 
   // [개선 7] 월가 M&A 및 내 주식 획득
   window.switchWallStTab = function(t, b) { document.querySelectorAll('#tab-wallst .re-c-btn').forEach(x=>x.classList.remove('active')); b.classList.add('active'); setDisplay('wallst-market-view', t==='list'?'flex':'none'); setDisplay('wallst-org-view', t==='org'?'block':'none'); if(t==='org') window.renderOrgChart(); };
   window.renderOrgChart = function() { let o=$id('wallst-org-view'); if(!o)return; o.innerHTML=`<h4 style="color:#1a237e;">🏢 ${playerName} 펀드 연결 조직도</h4>`; if(acquiredFunds.length===0)o.innerHTML+=`<div style="text-align:center;">인수한 자회사가 없습니다.</div>`; acquiredFunds.forEach(f=>{o.innerHTML+=`<div style="background:#e8eaf6;padding:10px;margin-bottom:8px;border-left:4px solid #1a237e;"><b>${f.name}</b> <span style="font-size:0.75em;">[${f.type}]</span><br><span style="color:#2e7d32;">AUM: ${formatCap(f.assets)}</span></div>`;}); };
+  window.renderIndirectStore = function(){
+    let box=$id('indirect-list'); if(!box)return; box.innerHTML='';
+    box.innerHTML += `<div style="background:#e8eaf6;border:1px solid #9fa8da;padding:10px;border-radius:8px;margin-bottom:8px;"><b>📈 월가 사모 인덱스 펀드</b><div style="font-size:.8em;color:#555;margin-top:3px;">글로벌 경기순환과 주요 시장의 영향을 받아 가치가 변동합니다.</div></div>`;
+    indirectFunds.forEach(f=>{
+      let val=Math.max(0, f.invested*(1 + (getMacroCycle().wave*0.08)));
+      let pnl=val-f.invested;
+      box.innerHTML += `<div class="port-item" style="background:#fff;border:1px solid #ddd;"><div><b>${f.name}</b><br><span style="font-size:.8em;color:#666;">${f.type}</span></div><div style="text-align:right;"><div>투자금: ${formatCap(f.invested)}원</div><div class="${pnl>=0?'text-up':'text-down'}">평가: ${formatCap(val)}원 (${pnl>=0?'+':''}${f.invested?((pnl/f.invested)*100).toFixed(1):'0.0'}%)</div><div style="display:flex;gap:3px;justify-content:flex-end;margin-top:4px;"><button class="btn-quick" style="background:#1976d2;" onclick="window.investIndirect('${f.id}',10000000000)">100억 투자</button><button class="btn-clear" onclick="window.redeemIndirect('${f.id}')">환매</button></div></div></div>`;
+    });
+  };
+  window.investIndirect=function(id,amount){let f=indirectFunds.find(x=>x.id===id);if(!f)return;if(cash<amount)return alert('현금 부족');cash-=amount;f.invested+=amount;showToast(`📊 ${f.name}에 ${formatCap(amount)}원 투자`,'blue');window.updateUI();window.renderIndirectStore();};
+  window.redeemIndirect=function(id){let f=indirectFunds.find(x=>x.id===id);if(!f||f.invested<=0)return;let cycle=getMacroCycle();let val=Math.max(0,Math.round(f.invested*(1+cycle.wave*0.08)));cash+=val;f.invested=0;showToast(`💰 ${f.name} 환매: ${formatCap(val)}원`, 'blue');window.updateUI();window.renderIndirectStore();};
+
   window.renderWallStList = function() { let l=$id('wallst-fund-list'); if(!l)return; l.innerHTML=""; let m=document.createElement('div'); m.className=`fund-item`; m.style.background="#e3f2fd"; m.style.borderColor="#1976d2"; m.innerHTML=`<b>⭐ 내 펀드</b><br><span style="font-size:0.75em;">AUM: ${formatCap(window.getPlayerNetAssets())}</span>`; l.appendChild(m); rivalFunds.forEach(f=>{let d=document.createElement('div');d.className=`fund-item ${f.id===selectedFundId?'active':''}`;d.innerHTML=`<b>${f.name}</b> <span style="font-size:0.7em;">[${f.type}]</span><br><span style="font-size:0.75em;">AUM: ${formatCap(f.assets)}</span>`;d.onclick=()=>{selectedFundId=f.id;window.renderWallStDetail();window.renderWallStList();};l.appendChild(d);}); if(!selectedFundId&&rivalFunds.length>0){selectedFundId=rivalFunds[0].id;window.renderWallStDetail();} };
   window.renderWallStDetail = function() { let d=$id('wallst-fund-detail'); if(!d)return; let f=rivalFunds.find(x=>x.id===selectedFundId); if(!f)return; let sP=((f.myShares/f.issued)*100).toFixed(1); let c10=Math.floor(f.assets*0.1); let ob=sP>=51.0?`<hr><h4 style="color:#d32f2f;">🔥 경영권 행사</h4><button class="action-btn" style="width:100%;background:#43a047;margin-bottom:5px;" onclick="window.mergeRivalFund('${f.id}')">🤝 합병 상장 (IPO)</button><button class="action-btn" style="width:100%;background:#b71c1c;" onclick="window.liquidateRivalFund('${f.id}')">💣 완전 청산</button>`:''; d.innerHTML=`<h4 style="color:var(--primary);">${f.name}</h4><p style="font-size:0.8em;"><b>AUM:</b> ${formatCap(f.assets)}<br><b>내 지분율:</b> <span style="color:#d32f2f;font-weight:bold;">${sP}%</span></p><button class="action-btn btn-buy" style="width:100%;margin-bottom:5px;" onclick="window.buyRivalShares('${f.id}', 0.1)">지분 10% 적대적 인수 (${formatCap(c10)})</button>${ob}`; };
   window.buyRivalShares = function(id, r) { let f=rivalFunds.find(x=>x.id===id); let c=Math.floor(f.assets*r); if(cash<c)return alert(`자금 부족`); cash-=c; f.myShares=Math.min(f.issued,f.myShares+Math.floor(f.issued*r)); hofPoints+=Math.floor(r*1000); showToast(`지분 인수 성공!`,"event"); window.updateUI(); window.renderWallStDetail(); };
@@ -425,18 +627,46 @@ window.initGameSystem = function() {
           }
       }
 
-      for(let k in macroIndices){ macroIndices[k].prev=macroIndices[k].val; macroIndices[k].val=Math.max(0.1,macroIndices[k].val*(1+(Math.random()-0.495)*(k.includes('bond')?0.008:0.015))); if(!macroIndices[k].history)macroIndices[k].history=Array(365).fill(macroIndices[k].prev); macroIndices[k].history.push(macroIndices[k].val); if(macroIndices[k].history.length>365)macroIndices[k].history.shift(); }
+      macroCycle.day++;
+      if(macroCycle.day % 10 === 0){
+        try{
+          localStorage.setItem("economyGameSaveV5", JSON.stringify(getSaveState()));
+          localStorage.setItem("economyGameHasSave","1");
+          if($id("local-load-ui")) $id("local-load-ui").style.display="block";
+        }catch(e){ console.warn("Auto-save skipped:",e); }
+      }
+      let cyc=getMacroCycle();
+      // 주기설 기반 공통 경기충격: 같은 날 여러 시장이 함께 움직이도록 상관관계를 부여
+      let commonDrift=cyc.wave*0.0018;
+      let cycleShock=0;
+      if(macroCycle.day-macroCycle.lastShockDay>90 && Math.random()<0.018){
+        cycleShock=(Math.random()<0.55?-1:1)*(0.015+Math.random()*0.035);
+        macroCycle.lastShockDay=macroCycle.day;
+        addNewsBoard(cycleShock<0?`🌧️ [경기순환] ${cyc.regime} 국면에서 글로벌 위험회피가 확대되었습니다.`:`☀️ [경기순환] ${cyc.regime} 국면에서 글로벌 위험선호가 회복되었습니다.`);
+        showToast(cycleShock<0?'🌧️ 글로벌 경기 충격':'☀️ 글로벌 경기 회복','event');
+      }
+      for(let k in macroIndices){
+        macroIndices[k].prev=macroIndices[k].val;
+        let noise=(Math.random()-0.5)*(k.includes('bond')?0.006:0.012);
+        let drift=commonDrift+noise+cycleShock;
+        if(k==='bond10'||k==='bond30') drift = -commonDrift*0.7 + noise*0.6 - cycleShock*0.45;
+        if(k==='usdkrw') drift = -commonDrift*0.25 + noise + cycleShock*0.35;
+        macroIndices[k].val=Math.max(0.1,macroIndices[k].val*(1+drift));
+        if(!macroIndices[k].history)macroIndices[k].history=Array(365).fill(macroIndices[k].prev);
+        macroIndices[k].history.push(macroIndices[k].val); if(macroIndices[k].history.length>365)macroIndices[k].history.shift();
+      }
+      setTxt('macro-cycle-regime', `경기순환: ${cyc.regime}`);
       let bD=(macroIndices.bond10.val-macroIndices.bond10.prev)/macroIndices.bond10.prev;
       macroIndices.reIndex.val=Math.max(100,Math.round(macroIndices.reIndex.val*(1-bD*3.0+(Math.random()-0.495)*0.01))); let reR=(macroIndices.reIndex.val-macroIndices.reIndex.prev)/macroIndices.reIndex.prev; realEstates.forEach(r=>r.price=Math.max(1e8,Math.round(r.price*(1+reR))));
 
       stocks.forEach(s=>s.prevPrice=s.price);
-      stocks.filter(s=>!s.underlying).forEach(s=>{ let mK=s.market.toLowerCase()==='snp500'?'snp500':s.market.toLowerCase(); let mD=0;if(mK==='crypto')mD=(macroIndices.nasdaq.val-macroIndices.nasdaq.prev)/macroIndices.nasdaq.prev;else if(mK==='bond')mD=-bD*2.0;else mD=macroIndices[mK]?(macroIndices[mK].val-macroIndices[mK].prev)/macroIndices[mK].prev:0; let vol=s.market==='CRYPTO'?4.0:(s.market==='BOND'?0.3:1.0); let del=(mD*s.beta)+((Math.random()-0.495)*0.02*vol); let r=s.price/s.initialPrice;if(r>3.0)del-=0.015*(r-3.0);if(r<0.3)del+=0.015*(0.3-r); s.price=Math.max(10,Math.round(s.price*(1+del))); s.history.push(s.price); let sum=0;let cnt=Math.min(20,s.history.length);for(let i=0;i<cnt;i++)sum+=s.history[s.history.length-1-i]; s.ma20_history.push(sum/cnt); if(s.history.length>365){s.history.shift();s.ma20_history.shift();} });
+      stocks.filter(s=>!s.underlying).forEach(s=>{ let mK=s.market.toLowerCase()==='snp500'?'snp500':s.market.toLowerCase(); let mD=0;if(mK==='crypto')mD=(macroIndices.nasdaq.val-macroIndices.nasdaq.prev)/macroIndices.nasdaq.prev;else if(mK==='bond')mD=-bD*2.0;else mD=macroIndices[mK]?(macroIndices[mK].val-macroIndices[mK].prev)/macroIndices[mK].prev:0; let vol=s.market==='CRYPTO'?4.0:(s.market==='BOND'?0.3:1.0); let del=(mD*s.beta)+(cyc.wave*0.0008*s.beta)+((Math.random()-0.5)*0.02*vol)+(cycleShock*0.65*s.beta); let r=s.price/s.initialPrice;if(r>3.0)del-=0.015*(r-3.0);if(r<0.3)del+=0.015*(0.3-r); s.price=Math.max(10,Math.round(s.price*(1+del))); s.history.push(s.price); let sum=0;let cnt=Math.min(20,s.history.length);for(let i=0;i<cnt;i++)sum+=s.history[s.history.length-1-i]; s.ma20_history.push(sum/cnt); if(s.history.length>365){s.history.shift();s.ma20_history.shift();} });
       stocks.filter(s=>s.underlying).forEach(s=>{ let u=stocks.find(x=>x.name===s.underlying); let mD=0;if(u&&u.prevPrice)mD=(u.price-u.prevPrice)/u.prevPrice; else{let uK=s.underlying.toLowerCase();if(s.underlying==="비트코인(BTC)")uK="nasdaq";if(s.underlying==="미국 국채 10년물")uK="bond10";if(macroIndices[uK])mD=(macroIndices[uK].val-macroIndices[uK].prev)/macroIndices[uK].prev;} s.price=Math.max(10,Math.round(s.price*(1+(mD*s.beta)))); s.history.push(s.price); let sum=0;let cnt=Math.min(20,s.history.length);for(let i=0;i<cnt;i++)sum+=s.history[s.history.length-1-i]; s.ma20_history.push(sum/cnt); if(s.history.length>365){s.history.shift();s.ma20_history.shift();} });
 
       for(let i=optPositions.length-1; i>=0; i--) {
          let p=optPositions[i]; let cur=window.getAssetPrice(p.asset,p.entryPrice);
          if(p.targetPrice>0){if((p.type==='long'&&cur>=p.targetPrice)||(p.type==='short'&&cur<=p.targetPrice)){window.closeOptPosition(p.id,true);continue;}}
-         if(p.isFut){let isLiq=(p.type==='long'&&cur<=p.liqPrice)||(p.type==='short'&&cur>=p.liqPrice); if(isLiq){let diff=(p.liqPrice-p.entryPrice)*window.getAssetMult(p.asset)*p.qty*(p.type==='long'?1:-1); if(p.mode==='cross')cash+=diff; optPositions.splice(i,1); showToast(`💥 ${p.asset} 마진콜 청산`, "black");}else if(p.mode==='cross'){let mul=window.getAssetMult(p.asset); p.liqPrice=p.type==='long'?(p.entryPrice-(cash/(mul*p.qty))*0.8):(p.entryPrice+(cash/(mul*p.qty))*0.8);}}
+         if(p.isFut){let isLiq=(p.type==='long'&&cur<=p.liqPrice)||(p.type==='short'&&cur>=p.liqPrice); if(isLiq){let diff=(p.liqPrice-p.entryPrice)*window.getAssetMult(p.asset)*p.qty*(p.type==='long'?1:-1); if(p.mode==='cross')cash+=diff; optPositions.splice(i,1); showToast(`💥 ${p.asset} 마진콜 청산`, "black");}else if(p.mode==='cross'){let mul=window.getAssetMult(p.asset); let levF=Math.max(1,p.lev||10); let liqD=(cash/(mul*p.qty))*0.8/levF; p.liqPrice=p.type==='long'?(p.entryPrice-liqD):(p.entryPrice+liqD);}}
       }
 
       globalLeaders.forEach(l=>{ if(l.invest&&l.invest.cost>0)l.invest.current=Math.max(100,Math.round(l.invest.current*(1-bD+(Math.random()-0.49)*0.01))); if(l.rep>=70&&Math.random()<0.01){let mS=stocks.filter(s=>s.shares>0&&s.isEquity);if(mS.length>0){let rs=mS[Math.floor(Math.random()*mS.length)];rs.price=Math.round(rs.price*1.10);addNewsBoard(`🤝 [외교] ${l.country} 수주 성공, ${rs.name} 폭등`);}} if(l.rep>=60&&Math.random()<0.05){let role=l.rep>=100?"대통령 후보":(l.rep>=80?"장관 후보":"국회의원 후보");let cC=l.rep>=100?5e10:(l.rep>=80?1e10:1e9);if(!transferMarket.some(x=>x.comp===l.country&&x.spec===role)){transferMarket.unshift({id:'hr_pol_'+Date.now(),name:`[정치인] ${l.country} 유력인사`,comp:l.country,nation:l.country.split(' ')[1],spec:role,cost:cC,stat:"S급"});showToast(`🕵️ 이적시장에 ${role} 등장`,"event");}} });
